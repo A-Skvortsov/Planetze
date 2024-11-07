@@ -105,8 +105,51 @@ public class Init_Survey extends AppCompatActivity {
     protected double transportEmissions(int[] arr) {
         return 0.0;
     }
+    //sample method that computes total co2 emissions from food.
+    //should be called by button iterator once user answers all food emissions questions.
     protected double foodEmissions(int[] arr) {
-        return 0.0;
+        double totalkg = 0.0;
+        boolean meat = false;
+        switch (arr[0]) {
+            case 0: totalkg += 1000;break;
+            case 1: totalkg += 500;break;
+            case 2: totalkg += 1500;break;
+            default: meat = true;break;
+        }
+        if (meat) {
+            switch (arr[1]) {
+                case 0: totalkg += 2500;break;
+                case 1: totalkg += 1900;break;
+                case 2: totalkg += 1300;break;
+                default: break;
+            }
+            switch (arr[2]) {
+                case 0: totalkg += 1450;break;
+                case 1: totalkg += 860;break;
+                case 2: totalkg += 450;break;
+                default: break;
+            }
+            switch (arr[3]) {
+                case 0: totalkg += 950;break;
+                case 1: totalkg += 600;break;
+                case 2: totalkg += 200;break;
+                default: break;
+            }
+            switch (arr[4]) {
+                case 0: totalkg += 800;break;
+                case 1: totalkg += 500;break;
+                case 2: totalkg += 150;break;
+                default: break;
+            }
+        }
+        switch (arr[5]) {
+            case 0: break;
+            case 1: totalkg += 23.4;break;
+            case 2: totalkg += 70.2;break;
+            default: totalkg += 140.4;break;
+        }
+
+        return totalkg;
     }
 
 }
