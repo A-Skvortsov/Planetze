@@ -32,9 +32,13 @@ public class MainActivity extends AppCompatActivity {
 //        myRef.setValue("B07 Demo!");
         myRef.child("movies").setValue("B07 Demo!");
 
+        //below opens app to Init_survey
+        Intent intent = new Intent(this, Init_Survey.class);
+        startActivity(intent);
+        /*  //this is default starter settings. Opens app to HomeFragment
         if (savedInstanceState == null) {
             loadFragment(new HomeFragment());
-        }
+        }*/
     }
 
     private void loadFragment(Fragment fragment) {
