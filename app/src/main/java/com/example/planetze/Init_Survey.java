@@ -2,7 +2,11 @@ package com.example.planetze;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -12,38 +16,38 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 public class Init_Survey extends AppCompatActivity {
-    String[] categories = {"Transportation",
-    "Food", "Housing", "Consumption"};
-    String[] questions = {"Do you own or regularly use a car?",
-                    "What type of car do you drive?",
-                    "How many kilometers/miles do you drive per year?",
-                    "How often do you use public transportation?",
-                    "How much time do you spend on public transport per week?",
-                    "How many short-haul flights have you taken in the past year?",
-                    "How many long-haul flights have you taken in the past year?",
-                    "-",
-                    "What best describes your diet?",
-                    "How often do you eat beef?",
-                    "How often do you eat pork?",
-                    "How often do you eat chicken?",
-                    "How often do you eat fish?",
-                    "How often do you waste food or throw away uneaten leftovers?",
-                    "-",
-                    "What type of home do you live in?",
-                    "How many people live in your household?",
-                    "What is the size of your home?",
-                    "What type of energy do you use to heat your home?",
-                    "What is your average monthly electricity bill?",
-                    "What type of energy do you use to heat water?",
-                    "Do you use any renewable energy sources for electricity or heating?",
-                    "-",
-                    "How often do you buy new clothes?",
-                    "Do you buy second-hand or eco-friendly products?",
-                    "How many electronic devices have you purchased in the past year?",
-                    "How often do you recycle?"};
-    String[][] answers = {{"Yes", "No"}, {}};  //for each q, array of choices (answers)
+    int current_cat = 0;  //0-transportation,1-food, 2-housing,3-consumption
     int current_q = 0;  //index of current question
-    int current_cat = 0;  //index of current category
+    Double[] co2PerCategory = {0.0, 0.0, 0.0, 0.0};
+    final String[] categories = {"Transportation", "Food", "Housing", "Consumption"};
+    final String[][] questions = {{"Do you own or regularly use a car?", "Yes", "No"},
+                    {"What type of car do you drive?", "Gasoline", "Diesel", "Hybrid", "Electric", "I don't know"},
+                    {"How many kilometers/miles do you drive per year?", "Up to 5,000 km", "5,000–10,000 km", "10,000–15,000 km", "15,000–20,000 km", "20,000–25,000 km", "More than 25,000 km"},
+                    {"How often do you use public transportation?", "Never", "Occasionally (1-2 times/week)", "Frequently (3-4 times/week)", "Always (5+ times/week)"},
+                    {"How much time do you spend on public transport per week?", "Under 1 hour", "1-3 hours", "3-5 hours", "5-10 hours", "More than 10 hours"},
+                    {"How many short-haul flights have you taken in the past year?", "None", "1-2 flights", "3-5 flights", "6-10 flights", "More than 10 flights"},
+                    {"How many long-haul flights have you taken in the past year?", "None", "1-2 flights", "3-5 flights", "6-10 flights", "More than 10 flights"},
+                    {"-"},
+                    {"What best describes your diet?", "Vegetarian", "Vegan", "Pescatarian", "Meat-based"},
+                    {"How often do you eat beef?", "Daily", "Frequently (3-5 times/week)", "Occasionally (1-2 times/week)", "Never"},
+                    {"How often do you eat pork?", "Daily", "Frequently (3-5 times/week)", "Occasionally (1-2 times/week)", "Never"},
+                    {"How often do you eat chicken?", "Daily", "Frequently (3-5 times/week)", "Occasionally (1-2 times/week)", "Never"},
+                    {"How often do you eat fish?", "Daily", "Frequently (3-5 times/week)", "Occasionally (1-2 times/week)", "Never"},
+                    {"How often do you waste food or throw away uneaten leftovers?", "Never", "Rarely", "Occasionally", "Frequently"},
+                    {"-"},
+                    {"What type of home do you live in?", "Detached house", "Semi-detached house", "Townhouse", "Condo/Apartment", "Other"},
+                    {"How many people live in your household?", "1", "2", "3-4", "5 or more"},
+                    {"What is the size of your home?", "Under 1000 sq. ft.", "1000-2000 sq. ft.", "Over 2000 sq. ft."},
+                    {"What type of energy do you use to heat your home?", "Natural Gas", "Electricity", "Oil", "Propane", "Wood", "Other"},
+                    {"What is your average monthly electricity bill?", "Under $50", "$50-$100", "$100-$150", "$150-$200", "Over $200"},
+                    {"What type of energy do you use to heat water?", "Natural Gas", "Electricity", "Oil", "Propane", "Wood", "Other"},
+                    {"Do you use any renewable energy sources for electricity or heating?", "Yes, primarily", "Yes, partially", "No"},
+                    {"-"},
+                    {"How often do you buy new clothes?", "Monthly", "Quarterly", "Annually", "Rarely"},
+                    {"Do you buy second-hand or eco-friendly products?", "Yes, regularly", "Yes, occasionally", "No"},
+                    {"How many electronic devices have you purchased in the past year?", "None", "1", "2", "3 or more"},
+                    {"How often do you recycle?", "Never", "Occasionally", "Frequently", "Always"}};
+    String[][] answers = {{"Yes", "No"}, {}};  //for each q, array of choices (answers)
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,27 +60,53 @@ public class Init_Survey extends AppCompatActivity {
             return insets;
         });
 
-        //not sure why, Android docs put "final" on the button declaration. Will keep for now
         final Button iteratorBtn = findViewById(R.id.iteratorButton);
         final TextView category = findViewById(R.id.category);
         final TextView question = findViewById(R.id.question);
+        final RadioGroup options = findViewById(R.id.options);
+            //nested code is initializing survey at first question
             category.setText(categories[current_cat]);
-            question.setText(questions[current_q]);
+            question.setText(questions[current_q][0]);
+            for (int i = 1; i < questions[current_q].length; i++) {
+                RadioButton btn = new RadioButton(Init_Survey.this);
+                btn.setId(i);
+                btn.setText(questions[current_q][i]);
+                options.addView(btn);
+            }
+        //method to iterate through questions
         iteratorBtn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if (current_q > questions.length || current_cat > categories.length)
-                    return;
-
-                current_q++;
-                if (questions[current_q].equals("-")) {
+                current_q++;  //iterates to next q
+                if (questions[current_q][0].equals("-")) {
                     current_q++;
                     current_cat++;
                     category.setText(categories[current_cat]);
                 }
-                question.setText(questions[current_q]);
+                question.setText(questions[current_q][0]);  //displays q
+
+                options.removeAllViews();  //deleting all previous options
+                RadioButton btn;  //loading all answer options for the current q
+                for (int i = 1; i < questions[current_q].length; i++) {
+                    btn = new RadioButton(Init_Survey.this);
+                    //configure button settings here
+                    btn.setId(i);
+                    btn.setText(questions[current_q][i]);
+                    options.addView(btn);
+                }
+
+                //seeing which option was selected (should be done first before
+                //deleting previous question options)
+
             }
         });
     }
 
+
+    protected double transportEmissions(int[] arr) {
+        return 0.0;
+    }
+    protected double foodEmissions(int[] arr) {
+        return 0.0;
+    }
 
 }

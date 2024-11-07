@@ -9,18 +9,18 @@
 
     <!-- Interactive part (box) -->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="410dp"
-        android:layout_height="478dp"
+        android:layout_width="406dp"
+        android:layout_height="594dp"
         android:background="@color/palette_light_blue"
         android:padding="10dp"
         android:radius="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
 
-        app:layout_constraintVertical_bias="0.41">
+        app:layout_constraintVertical_bias="0.413">
 
         <!-- Category of question -->
         <TextView
@@ -29,13 +29,13 @@
             android:layout_height="34dp"
             android:layout_marginStart="28dp"
             android:layout_marginTop="32dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             android:gravity="center_vertical"
-
             android:text="Transportation"
+            android:textColor="@color/palette_light_gray"
+
             android:textStyle="italic|bold"
-            android:textColor="@color/palette_light_gray"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <!-- Question box -->
         <TextView
@@ -48,7 +48,7 @@
             android:gravity="center_vertical"
 
             android:padding="8dp"
-            android:text="Q: How old are you?"
+            android:text=""
             android:textColor="@color/black"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,32 +56,14 @@
 
         <!-- Multiple Choice Buttons -->
         <RadioGroup
-            android:layout_width="349dp"
-            android:layout_height="149dp"
+            android:id="@+id/options"
+            android:layout_width="342dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="28dp"
-            android:layout_marginBottom="125dp"
             android:background="@color/white"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
-
-            <RadioButton
-                android:id="@+id/radioButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="RadioButton" />
-
-            <RadioButton
-                android:id="@+id/radioButton2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="RadioButton" />
-
-            <RadioButton
-                android:id="@+id/radioButton3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="RadioButton" />
-        </RadioGroup>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/question"
+            android:layout_marginTop="10dp"/>
 
         <!-- "Next" button -->
         <Button
