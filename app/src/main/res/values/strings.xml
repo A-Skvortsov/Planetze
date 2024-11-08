@@ -14,6 +14,27 @@
         <item>Books</item>
         <item>Movies</item>
     </string-array>
+    <!-- Strings related to login/signup -->
+    <string name="prompt_email">type your email</string>
+    <string name="prompt_user">type your username</string>
+    <string name="prompt_password">type your password</string>
+    <string name="login"><u>Log in</u></string>
+    <string name="title_signup"><b>Sign in</b></string>
+    <string name="have_account">Already have an account?</string>
+    <string name="create_account">Create Account</string>
+    <string name="or_signup">or sign up with</string>
+    <string name="email">Email</string>
+    <string name="user">Username</string>
+    <string name="password">Password</string>
+
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+
+
 
 
 </resources>

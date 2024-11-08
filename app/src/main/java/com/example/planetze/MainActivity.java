@@ -20,17 +20,18 @@ import com.google.firebase.database.FirebaseDatabase;
 public class MainActivity extends AppCompatActivity {
 
     FirebaseDatabase db;
+    String firebaseLink = "https://planetze-c3c95-default-rtdb.firebaseio.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        db = FirebaseDatabase.getInstance("https://b07-demo-summer-2024-default-rtdb.firebaseio.com/");
-        DatabaseReference myRef = db.getReference("testDemo");
+        db = FirebaseDatabase.getInstance(firebaseLink);
+        DatabaseReference myRef = db.getReference("testbranch");
 
-//        myRef.setValue("B07 Demo!");
-        myRef.child("movies").setValue("B07 Demo!");
+        //myRef.setValue(34);
+        myRef.child("testdata").setValue(20);
 
         if (savedInstanceState == null) {
             loadFragment(new HomeFragment());
