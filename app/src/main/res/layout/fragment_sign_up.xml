@@ -46,37 +46,10 @@
         app:layout_constraintTop_toBottomOf="@+id/signup_title" />
 
     <TextView
-        android:id="@+id/user"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="255dp"
-        android:layout_marginEnd="255dp"
-        android:text="@string/user"
-        android:textSize="18sp"
-        android:textColor="@color/palette_stormy_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/edit_username"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="35dp"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="35dp"
-        android:backgroundTint="@color/palette_light_gray"
-        android:hint="@string/prompt_user"
-        android:textColorHint="@color/palette_light_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_email" />
-
-    <TextView
         android:id="@+id/password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="340dp"
+        android:layout_marginTop="255dp"
         android:layout_marginEnd="255dp"
         android:text="@string/password"
         android:textSize="18sp"
@@ -86,7 +59,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editPassword"
+        android:id="@+id/edit_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="35dp"
@@ -97,10 +70,37 @@
         android:textColorHint="@color/palette_light_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_username" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_email" />
+
+    <TextView
+        android:id="@+id/confirmpassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="340dp"
+        android:layout_marginEnd="188dp"
+        android:text="@string/confirmpassword"
+        android:textColor="@color/palette_stormy_gray"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editConfirmPassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="35dp"
+        android:backgroundTint="@color/palette_light_gray"
+        android:hint="@string/prompt_confirmpassword"
+        android:textColorHint="@color/palette_light_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_password" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/createaccount_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
@@ -113,7 +113,7 @@
 
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/or_signup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
@@ -121,10 +121,10 @@
         android:textColor="@color/palette_stormy_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/createaccount_button" />
 
     <TextView
-        android:id="@+id/textView4"
+        android:id="@+id/haveaccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="160dp"
@@ -133,7 +133,7 @@
         android:textColor="@color/palette_stormy_gray"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintTop_toBottomOf="@+id/createaccount_button" />
 
     <Button
         android:id="@+id/button2"
@@ -146,8 +146,8 @@
         android:textColor="@color/palette_turquoise"
         android:textColorLink="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textView4"
-        app:layout_constraintTop_toBottomOf="@+id/button" />
+        app:layout_constraintStart_toEndOf="@+id/haveaccount"
+        app:layout_constraintTop_toBottomOf="@+id/createaccount_button" />
 
 
 
