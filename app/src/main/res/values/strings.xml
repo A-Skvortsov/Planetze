@@ -14,6 +14,9 @@
         <item>Books</item>
         <item>Movies</item>
     </string-array>
+
+
+
     <!-- Strings related to login/signup -->
     <string name="prompt_email">type your email</string>
     <string name="prompt_password">type your password</string>
