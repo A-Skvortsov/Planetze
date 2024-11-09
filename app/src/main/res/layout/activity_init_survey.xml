@@ -9,8 +9,8 @@
 
     <!-- Interactive part (box) -->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="406dp"
-        android:layout_height="594dp"
+        android:layout_width="387dp"
+        android:layout_height="419dp"
         android:background="@color/palette_light_blue"
         android:padding="10dp"
         android:radius="16dp"
@@ -23,27 +23,32 @@
         app:layout_constraintVertical_bias="0.413">
 
         <!-- Category of question -->
+
+        <!-- Question box -->
+
         <TextView
             android:id="@+id/category"
             android:layout_width="244dp"
             android:layout_height="34dp"
-            android:layout_marginStart="28dp"
             android:layout_marginTop="32dp"
             android:gravity="center_vertical"
             android:text="Transportation"
             android:textColor="@color/palette_light_gray"
 
             android:textStyle="italic|bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.113"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Question box -->
+        <!-- Multiple Choice Buttons -->
+
+        <!-- "Next" button -->
         <TextView
             android:id="@+id/question"
             android:layout_width="341dp"
             android:layout_height="55dp"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="68dp"
+            android:layout_marginTop="64dp"
             android:background="@color/white"
             android:gravity="center_vertical"
 
@@ -51,27 +56,30 @@
             android:text=""
             android:textColor="@color/palette_black"
             android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.538"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Multiple Choice Buttons -->
         <RadioGroup
             android:id="@+id/options"
             android:layout_width="342dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.56"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/question" />
+            app:layout_constraintTop_toBottomOf="@+id/question">
 
-        <!-- "Next" button -->
+        </RadioGroup>
+
         <Button
             android:id="@+id/iteratorButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="33dp"
-            android:layout_marginBottom="34dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="12dp"
             android:backgroundTint="@color/palette_turquoise"
             android:text="Next"
 
@@ -79,29 +87,36 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <!-- "Please select an answer" prompt for when user tries to proceed without answering-->
+        <TextView
+            android:id="@+id/please_answer2"
+            android:layout_width="17dp"
+            android:layout_height="12dp"
+
+            android:layout_marginTop="8dp"
+            android:text="*"
+            android:textColor="@android:color/holo_red_light"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.04"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/options" />
+
         <TextView
             android:id="@+id/please_answer1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@+id/please_answer2"
-            app:layout_constraintTop_toBottomOf="@+id/options"
 
+            android:layout_marginTop="8dp"
             android:text="Please select an answer"
             android:textColor="@color/palette_black"
-            android:visibility="invisible"/>
-        <!-- also part of the "select an answer" prompt-->
-        <TextView
-            android:id="@+id/please_answer2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            app:layout_constraintStart_toStartOf="@+id/options"
-            app:layout_constraintTop_toBottomOf="@+id/options"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/please_answer2"
+            app:layout_constraintTop_toBottomOf="@+id/options" />
 
-            android:text="*"
-            android:textColor="@android:color/holo_red_light"
-            android:visibility="invisible"/>
+        <!-- "Please select an answer" prompt for when user tries to proceed without answering-->
+        <!-- also part of the "select an answer" prompt-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
