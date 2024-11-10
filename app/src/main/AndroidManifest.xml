@@ -13,8 +13,11 @@
         android:theme="@style/Theme.Planetze"
         tools:targetApi="31">
         <activity
+            android:name=".SurveyResults"
+            android:exported="false" />
+        <activity
             android:name=".Init_Survey"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".ItemAdapter"
             android:exported="false" />

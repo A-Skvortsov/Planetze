@@ -31,11 +31,11 @@ public class Init_Survey extends AppCompatActivity {
     final int num_food_qs = Constants.food_qs;
     final int num_housing_qs = Constants.housing_qs;
     final int num_consumption_qs = Constants.consumption_qs;
-    //final int total_qs = num_transport_qs + num_food_qs + num_housing_qs + num_consumption_qs;
     final double[][][][][] housing_emissions = Constants.housing_emissions;
-    //elements of arrays below specify which answer option is selected for a particular question
     final double[][] public_transport_emissions = Constants.public_trans_emissions;
     final double[][][] recycling_reduction = Constants.recycling_reduction;
+    //elements of arrays below specify which answer option
+    //(represented as int) is selected for a particular question
     int[] transport_ans = new int[num_transport_qs];  //7 qs in transportation category
     int[] food_ans = new int [num_food_qs];
     int[] housing_ans = new int[num_housing_qs];
@@ -70,8 +70,11 @@ public class Init_Survey extends AppCompatActivity {
                 options.addView(btn);
             }
 
-        //method to iterate through questions on button click
         iterator_btn.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Updates survey info (model of MVP) and UI (view) after each click of "next" by user
+             * @param v The view that was clicked.
+             */
             public void onClick(View v) {
                 //if no answer selected, should not proceed. Should prompt user to answer
                 if (!saveAnswer(options, current_cat, current_q)) {  //saves user's answer to prev question
