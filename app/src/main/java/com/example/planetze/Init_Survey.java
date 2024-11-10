@@ -1,5 +1,6 @@
 package com.example.planetze;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,6 +91,9 @@ public class Init_Survey extends AppCompatActivity {
                     question.setVisibility(View.INVISIBLE);
                     options.setVisibility(View.INVISIBLE);
                     result.setText(String.valueOf(sum(co2PerCategory)));
+                    Intent intent = new Intent(Init_Survey.this, SurveyResults.class);
+                    intent.putExtra("co2PerCategory", co2PerCategory);
+                    startActivity(intent);
                     return;
                 }
                 if (questions[current_q][0].equals("-")) {  //iter'n to next category if necessary

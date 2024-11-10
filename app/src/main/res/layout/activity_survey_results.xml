@@ -25,13 +25,160 @@
         android:textStyle="bold|italic"
         android:textSize="26dp"/>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/graph_constraint"
+        android:layout_width="358dp"
+        android:layout_height="222dp"
+        android:layout_marginTop="72dp"
+        android:background="@color/palette_light_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title">
+
+        <!-- labels -->
+
+        <TextView
+            android:id="@+id/bycategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="0dp"
+
+            android:text="Breakdown by Category (tons):"
+            android:textColor="@color/black"
+            android:textSize="15dp"
+            android:textStyle="italic"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/transport_label"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+
+            android:text="Transportation"
+            android:textSize="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bycategory" />
+
+        <TextView
+            android:id="@+id/food_label"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+
+            android:text="Food"
+            android:textSize="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/transport_label" />
+
+        <TextView
+            android:id="@+id/housing_label"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+
+            android:text="Housing"
+            android:textSize="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/food_label" />
+
+        <TextView
+            android:id="@+id/cons_label"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+
+            android:text="Consumption"
+            android:textSize="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/housing_label" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="90dp" />
+
+        <!-- Bars -->
+
+        <TextView
+            android:id="@+id/transport"
+            android:layout_width="10dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="104dp"
+            android:layout_marginTop="24dp"
+            android:background="@color/palette_turquoise"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/palette_light_gray"
+            android:textSize="10dp"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bycategory" />
+
+        <TextView
+            android:id="@+id/food"
+            android:layout_width="10dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="104dp"
+            android:layout_marginTop="24dp"
+            android:background="@color/palette_turquoise"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/palette_light_gray"
+            android:textSize="10dp"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/transport" />
+
+        <TextView
+            android:id="@+id/housing"
+            android:layout_width="10dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="104dp"
+            android:layout_marginTop="24dp"
+            android:background="@color/palette_turquoise"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/palette_light_gray"
+            android:textSize="10dp"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/food" />
+
+        <TextView
+            android:id="@+id/consumption"
+            android:layout_width="10dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="104dp"
+            android:layout_marginTop="24dp"
+            android:background="@color/palette_turquoise"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/palette_light_gray"
+            android:textSize="10dp"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/housing" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--
     <com.jjoe64.graphview.GraphView
         android:id="@+id/graph"
-        android:layout_width="302dp"
-        android:layout_height="275dp"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="96dp"
+        android:layout_width="336dp"
+        android:layout_height="197dp"
+        android:layout_marginStart="36dp"
+        android:layout_marginTop="80dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+        app:layout_constraintTop_toBottomOf="@+id/title" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

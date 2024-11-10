@@ -34,12 +34,12 @@ public class MainActivity extends AppCompatActivity {
 
 
         //opens app to SurveyResults
-        Intent intent = new Intent(this, SurveyResults.class);
-        startActivity(intent);
-        /*
+        /*Intent intent = new Intent(this, SurveyResults.class);
+        startActivity(intent);*/
+
         //opens app to Init_survey
         Intent intent = new Intent(this, Init_Survey.class);
-        startActivity(intent);*/
+        startActivity(intent);
           //this is default starter settings. Opens app to HomeFragment
         /*if (savedInstanceState == null) {
             loadFragment(new HomeFragment());
