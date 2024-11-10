@@ -21,4 +21,4 @@ List those managing the branches involved.
 - [ ] Code runs without errors
 - [ ] Code is compatible with the branch being merged into
 - [ ] Code is documented
-- [ ] Files, variables, and functions adhere to naming conventions.
+- [ ] Files, variables, and functions adhere to naming conventions
