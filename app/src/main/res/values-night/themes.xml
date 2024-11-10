@@ -3,5 +3,11 @@
     <style name="Base.Theme.Planetze" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+
+        <!-- Main colours -->
+        <item name="colorPrimary">@color/palette_turquoise</item>
+        <item name="colorSecondary">@color/palette_light_blue</item>
+        <item name="colorOnBackground">@color/palette_black</item>
+        <item name="colorSurface">@color/palette_stormy_gray</item>
     </style>
 </resources>
