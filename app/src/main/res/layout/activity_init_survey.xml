@@ -115,6 +115,14 @@
             app:layout_constraintStart_toEndOf="@+id/please_answer2"
             app:layout_constraintTop_toBottomOf="@+id/options" />
 
+        <TextView
+            android:id="@+id/result_test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/question" />
+
         <!-- "Please select an answer" prompt for when user tries to proceed without answering-->
         <!-- also part of the "select an answer" prompt-->
 

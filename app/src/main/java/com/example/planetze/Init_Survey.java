@@ -15,6 +15,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import java.util.stream.IntStream;
+
 import utilities.Constants;
 
 public class Init_Survey extends AppCompatActivity {
@@ -22,11 +24,14 @@ public class Init_Survey extends AppCompatActivity {
     int current_q = 0;  //index of current question
     double[] co2PerCategory = {0.0, 0.0, 0.0, 0.0};
     final String[] categories = Constants.categories;
+    //final int total_cats = categories.length;
     final String[][] questions = Constants.questions;
+    final int num_qs = size(questions);
     final int num_transport_qs = Constants.transport_qs;
     final int num_food_qs = Constants.food_qs;
     final int num_housing_qs = Constants.housing_qs;
     final int num_consumption_qs = Constants.consumption_qs;
+    //final int total_qs = num_transport_qs + num_food_qs + num_housing_qs + num_consumption_qs;
     final double[][][][][] housing_emissions = Constants.housing_emissions;
     //elements of arrays below specify which answer option is selected for a particular question
     final double[][] public_transport_emissions = Constants.public_trans_emissions;
@@ -54,12 +59,13 @@ public class Init_Survey extends AppCompatActivity {
         final TextView category = findViewById(R.id.category);
         final TextView question = findViewById(R.id.question);
         final RadioGroup options = findViewById(R.id.options);
+        final TextView result = findViewById(R.id.result_test);
             //nested code initializes survey at first question
             category.setText(categories[current_cat]);
             question.setText(questions[current_q][0]);
             for (int i = 1; i < questions[current_q].length; i++) {
                 RadioButton btn = new RadioButton(Init_Survey.this);
-                btn.setId(i);
+                btn.setId(i - 1);
                 btn.setText(questions[current_q][i]);
                 options.addView(btn);
             }
@@ -75,6 +81,14 @@ public class Init_Survey extends AppCompatActivity {
                 please_answer1.setVisibility(View.INVISIBLE); please_answer2.setVisibility(View.INVISIBLE);
 
                 current_q++;  //iterates to next q
+                if (current_q >= num_qs) {  //true if survey is finished
+                    computeCatEmissions(current_cat);
+                    category.setVisibility(View.INVISIBLE);
+                    question.setVisibility(View.INVISIBLE);
+                    options.setVisibility(View.INVISIBLE);
+                    result.setText(String.valueOf(sum(co2PerCategory)));
+                    return;
+                }
                 if (questions[current_q][0].equals("-")) {  //iter'n to next category if necessary
                     computeCatEmissions(current_cat);  //computes emissions for the finished category
                     current_q++; current_cat++;
@@ -85,7 +99,7 @@ public class Init_Survey extends AppCompatActivity {
                 options.removeAllViews(); options.clearCheck();  //remove previous answer options
                 for (int i = 1; i < questions[current_q].length; i++) { //loading answer options for the new q
                     RadioButton btn = new RadioButton(Init_Survey.this);
-                    btn.setId(i);  //standard btn configurations
+                    btn.setId(i - 1);  //standard btn configurations
                     btn.setText(questions[current_q][i]);
                     options.addView(btn);  //adds btn to the RadioGroup (btn container)
                 }
@@ -107,10 +121,13 @@ public class Init_Survey extends AppCompatActivity {
         switch(cat) {
             case 0:
                 transport_ans[q] = btnId;
+                if (q == 0 && transport_ans[0] == 1) current_q += 2;  //skips follow-ups if user says no to car
+                if (q == 3 && transport_ans[3] == 0) current_q += 1;  //same but for public transport
                 break;
             case 1:
                 //index subtractions rely on construction of questions array
                 food_ans[q - num_transport_qs - 1] = btnId;
+                if (q == 8 && food_ans[0] != 3) current_q += 4;  //skips follow-ups if user says no to meat
                 break;
             case 2:
                 housing_ans[q - num_transport_qs - num_food_qs - 2] = btnId;
@@ -154,8 +171,8 @@ public class Init_Survey extends AppCompatActivity {
             switch(transport_ans[1]) {  //which car they drive
                 case 0: r = 0.24; break;  //gas emissions rate
                 case 1: r = 0.27; break;  //diesel, etc.
-                case 2: r = 0.16; break;  //hybrid
-                default: r = 0.05; break;  //electric
+                case 3: r = 0.05; break;  //electric
+                default: r = 0.16; break;  //hybrid or "i don't know" (default to hybrid)
             }
             switch(transport_ans[2]) {  //how much they drive
                 case 0: totalkg += r * 5000; break;  //constants are distances driven
@@ -243,6 +260,8 @@ public class Init_Survey extends AppCompatActivity {
         int[] i = housing_ans;
         if (i[3] != i[5]) totalkg += 233;
 
+        System.out.println(i[0] + " " + i[1] + " " + i[2] + " " + i[4] + " " + i[3]);
+        if (i[0] == 4) i[0] = 2;  //sets "other" answer option to "townhouse" (as instructed in formula spreadsheet)
         totalkg += housing_emissions[i[0]][i[1]][i[2]][i[4]][i[3]];  //home heating (i[3]; fourth question of category)
         totalkg += housing_emissions[i[0]][i[1]][i[2]][i[4]][i[5]];  //water heating (i[5]; sixth question of category)
         switch(i[6]) {  //7th question of housing category; re: renewable energy use
@@ -283,6 +302,28 @@ public class Init_Survey extends AppCompatActivity {
         totalkg -= recycling_reduction[i[2]][i[0]][i[3]];  //how often they recycle (see Constants.java)
 
         return totalkg;
+    }
+
+    private double sum(double[] arr) {
+        double s = 0.0;
+        for (int i = 0; i < arr.length; i++) {
+            s += arr[i];
+        }
+        return s;
+    }
+
+    private int size(String[][] arr) {
+        int s = 0;
+        String x = "";
+        for (int i = 0; true; i++) {
+            try {
+                x = questions[i][0];
+                s++;
+            } catch (Exception e) {
+                break;
+            }
+        }
+        return s;
     }
 
 }

@@ -35,8 +35,8 @@ public class MainActivity extends AppCompatActivity {
         //below opens app to Init_survey
         Intent intent = new Intent(this, Init_Survey.class);
         startActivity(intent);
-        /*  //this is default starter settings. Opens app to HomeFragment
-        if (savedInstanceState == null) {
+          //this is default starter settings. Opens app to HomeFragment
+        /*if (savedInstanceState == null) {
             loadFragment(new HomeFragment());
         }*/
     }
