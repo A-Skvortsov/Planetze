@@ -36,8 +36,72 @@ public class Constants {
             {"-"},
             {"How often do you buy new clothes?", "Monthly", "Quarterly", "Annually", "Rarely"},
             {"Do you buy second-hand or eco-friendly products?", "Yes, regularly", "Yes, occasionally", "No"},
-            {"How many electronic devices have you purchased in the past year?", "None", "1", "2", "3 or more"},
+            {"How many electronic devices have you purchased in the past year?", "None", "1", "2", "3", "4 or more"},
             {"How often do you recycle?", "Never", "Occasionally", "Frequently", "Always"}};
+
+    public static final double[][] public_trans_emissions = {
+            {  //never use public transport
+                0,  //under 1 hour
+                0,  //1-3 hours
+                0,  //3-5 hours
+                0,  //5-10 hours
+                0  //10+ hours
+            },
+            {246, 819, 1638, 3071, 4095},  //occasionally use
+            {573, 1911, 3822, 7166, 9555},  //frequently use
+            {573, 1911, 3822, 7166, 9555}
+    };  //always use
+
+
+    public static final double[][][] recycling_reduction = {
+            {  //no electronic devices
+                    {  //monthly clothes
+                            0,  //never recycle (always 0)
+                            54,  //occasionally recycle, etc.
+                            108,
+                            180},
+                    {  //quarterly clothes, etc.
+                            0,
+                            15,
+                            30,
+                            50},
+                    {  //note that annually and quarterly are kept same since quarterly data omitted from given excel file
+                            0,
+                            15,
+                            30,
+                            50},
+                    {
+                            0,
+                            0.75,
+                            1.5,
+                            2.5}
+            },
+            {  //1 electronic device, etc.
+                    {0, 54 + 45, 108 + 60, 180 + 90},
+                    {0, 15 + 45, 30 + 60, 50 + 90},
+                    {0, 15 + 45, 30 + 60, 50 + 90},
+                    {0, 0.75 + 45, 1.5 + 60, 2.5 + 90}
+            },
+            {
+                    {0, 54 + 60, 108 + 120, 180 + 180},
+                    {0, 15 + 60, 30 + 120, 50 + 180},
+                    {0, 15 + 60, 30 + 120, 50 + 180},
+                    {0, 0.75 + 60, 1.5 + 120, 2.5 + 180}
+            },
+            {
+                    {0, 54 + 90, 108 + 180, 180 + 270},
+                    {0, 15 + 90, 30 + 180, 50 + 270},
+                    {0, 15 + 90, 30 + 180, 50 + 270},
+                    {0, 0.75 + 90, 1.5 + 180, 2.5 + 270}
+            },
+            {
+                    {0, 54 + 120, 108 + 240, 180 + 360},
+                    {0, 15 + 120, 30 + 240, 50 + 360},
+                    {0, 15 + 120, 30 + 240, 50 + 360},
+                    {0, 0.75 + 120, 1.5 + 240, 2.5 + 360}
+            }
+    };
+
 
     public static final double[][][][][] housing_emissions = {
             {  //detached house

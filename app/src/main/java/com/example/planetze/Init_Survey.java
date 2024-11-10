@@ -23,16 +23,18 @@ public class Init_Survey extends AppCompatActivity {
     double[] co2PerCategory = {0.0, 0.0, 0.0, 0.0};
     final String[] categories = Constants.categories;
     final String[][] questions = Constants.questions;
-    final int transport_qs = Constants.transport_qs;
-    final int food_qs = Constants.food_qs;
-    final int housing_qs = Constants.housing_qs;
-    final int consumption_qs = Constants.consumption_qs;
-    final double[][][][][] housing_answers = Constants.housing_answers;
+    final int num_transport_qs = Constants.transport_qs;
+    final int num_food_qs = Constants.food_qs;
+    final int num_housing_qs = Constants.housing_qs;
+    final int num_consumption_qs = Constants.consumption_qs;
+    final double[][][][][] housing_emissions = Constants.housing_emissions;
     //elements of arrays below specify which answer option is selected for a particular question
-    int[] transport_ans = new int[transport_qs];  //7 qs in transportation category
-    int[] food_ans = new int [food_qs];
-    int[] housing_ans = new int[housing_qs];
-    int[] consumption_ans = new int[consumption_qs];
+    final double[][] public_transport_emissions = Constants.public_trans_emissions;
+    final double[][][] recycling_reduction = Constants.recycling_reduction;
+    int[] transport_ans = new int[num_transport_qs];  //7 qs in transportation category
+    int[] food_ans = new int [num_food_qs];
+    int[] housing_ans = new int[num_housing_qs];
+    int[] consumption_ans = new int[num_consumption_qs];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,13 +67,12 @@ public class Init_Survey extends AppCompatActivity {
         //method to iterate through questions on button click
         iterator_btn.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                //if no answer selected, should return immediately and prompt user to answer
+                //if no answer selected, should not proceed. Should prompt user to answer
                 if (!saveAnswer(options, current_cat, current_q)) {  //saves user's answer to prev question
                     please_answer1.setVisibility(View.VISIBLE); please_answer2.setVisibility(View.VISIBLE);
                     return;
                 }
                 please_answer1.setVisibility(View.INVISIBLE); please_answer2.setVisibility(View.INVISIBLE);
-                //pass saved user answer to computation
 
                 current_q++;  //iterates to next q
                 if (questions[current_q][0].equals("-")) {  //iter'n to next category if necessary
@@ -79,15 +80,14 @@ public class Init_Survey extends AppCompatActivity {
                     current_q++; current_cat++;
                     category.setText(categories[current_cat]);
                 }
-                question.setText(questions[current_q][0]);  //displays q
+                question.setText(questions[current_q][0]);  //displays next q
 
                 options.removeAllViews(); options.clearCheck();  //remove previous answer options
-                for (int i = 1; i < questions[current_q].length; i++) { //loading answer options for the current q
+                for (int i = 1; i < questions[current_q].length; i++) { //loading answer options for the new q
                     RadioButton btn = new RadioButton(Init_Survey.this);
-                    //configure button settings here
-                    btn.setId(i);
+                    btn.setId(i);  //standard btn configurations
                     btn.setText(questions[current_q][i]);
-                    options.addView(btn);
+                    options.addView(btn);  //adds btn to the RadioGroup (btn container)
                 }
             }
         });
@@ -95,9 +95,9 @@ public class Init_Survey extends AppCompatActivity {
 
 
     /**
-     * Updates the global one-hot vectors containing user answers for each category
-     * @param options
-     * @param cat
+     * Updates the global arrays containing user answers for each category
+     * @param options ; button container for answer option buttons
+     * @param cat ; the current category of questions being asked in the survey
      * @return true if answer selected, false if no answer selected
      */
     protected boolean saveAnswer(RadioGroup options, int cat, int q) {
@@ -110,13 +110,13 @@ public class Init_Survey extends AppCompatActivity {
                 break;
             case 1:
                 //index subtractions rely on construction of questions array
-                food_ans[q - transport_qs - 1] = btnId;
+                food_ans[q - num_transport_qs - 1] = btnId;
                 break;
             case 2:
-                housing_ans[q - transport_qs - food_qs - 2] = btnId;
+                housing_ans[q - num_transport_qs - num_food_qs - 2] = btnId;
                 break;
             default:
-                consumption_ans[q - transport_qs - food_qs - housing_qs - 3] = btnId;
+                consumption_ans[q - num_transport_qs - num_food_qs - num_housing_qs - 3] = btnId;
                 break;
         }
         return true;
@@ -143,12 +143,52 @@ public class Init_Survey extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Computes user's total annual carbon emissions (in kg) based on initialization survey answers
+     * @return double representing total annual transport emissions (in kg)
+     */
     protected double transportEmissions() {
-        return 0.0;
+        double totalkg = 0.0;
+        double r = 0.0;
+        if (transport_ans[0] != 1) {  //true corresponds to user saying "yes" to "do u use car?"
+            switch(transport_ans[1]) {  //which car they drive
+                case 0: r = 0.24; break;  //gas emissions rate
+                case 1: r = 0.27; break;  //diesel, etc.
+                case 2: r = 0.16; break;  //hybrid
+                default: r = 0.05; break;  //electric
+            }
+            switch(transport_ans[2]) {  //how much they drive
+                case 0: totalkg += r * 5000; break;  //constants are distances driven
+                case 1: totalkg += r * 10000; break;
+                case 2: totalkg += r * 15000; break;
+                case 3: totalkg += r * 20000; break;
+                case 4: totalkg += r * 25000; break;
+                default: totalkg += r * 35000; break;
+            }
+        }
+
+        totalkg += public_transport_emissions[3][4];  //see Constants.java
+
+        switch(transport_ans[5]) {  //short haul flight emissions
+            case 0: totalkg += 225; break;
+            case 1: totalkg += 600; break;
+            case 2: totalkg += 1200; break;
+            default: totalkg += 1800; break;
+        }
+        switch(transport_ans[6]) {  //long haul flight emissions
+            case 0: totalkg += 825; break;
+            case 1: totalkg += 2200; break;
+            case 2: totalkg += 4400; break;
+            default: totalkg += 6600; break;
+        }
+
+        return totalkg;
     }
-    //sample method that computes total co2 emissions from food.
-    //should be called by button iterator once user answers all food emissions questions.
+
+    /**
+     * Computes total annual user emissions from food consumption based on survey input
+     * @return double representing total annual user emissions from food consumption
+     */
     protected double foodEmissions() {
         double totalkg = 0.0;
         boolean meat = false;
@@ -194,12 +234,55 @@ public class Init_Survey extends AppCompatActivity {
         return totalkg;
     }
 
+    /**
+     * Computes total annual emissions from housing related energy use based on survey input
+     * @return double representing total emissions (in kg) from housing
+     */
     protected double housingEmissions() {
-        return 0.0;
+        double totalkg = 0.0;
+        int[] i = housing_ans;
+        if (i[3] != i[5]) totalkg += 233;
+
+        totalkg += housing_emissions[i[0]][i[1]][i[2]][i[4]][i[3]];  //home heating (i[3]; fourth question of category)
+        totalkg += housing_emissions[i[0]][i[1]][i[2]][i[4]][i[5]];  //water heating (i[5]; sixth question of category)
+        switch(i[6]) {  //7th question of housing category; re: renewable energy use
+            case 0:
+                totalkg -= 6000; break;  //primarily use renewable energy
+            case 1:
+                totalkg -= 4000; break;  //partially use " ... "
+            default: break;  //no use of renewable energy
+        }
+        return totalkg;
     }
 
+    /**
+     * Computes total annual user carbon emissions related to consumption based on init survey results
+     * @return double representing total annual user consumption-related emissions
+     */
     protected double consumptionEmissions() {
-        return 0.0;
+        double totalkg = 0.0;
+        int[] i = consumption_ans;  //for convenience
+        switch(i[0]) {  //how often they buy clothes
+            case 0: totalkg += 360; break;
+            case 1: totalkg += 120; break;
+            case 2: totalkg += 100; break;
+            default: totalkg += 5; break;
+        }
+        switch(i[1]) {  //how often they recycle
+            case 0: totalkg *= 0.5; break;
+            case 1: totalkg *= 0.7; break;
+            default: break;
+        }
+        switch(i[2]) {  //how many electronic devices they buy
+            case 0: break;
+            case 1: totalkg += 300; break;
+            case 2: totalkg += 600; break;
+            case 3: totalkg += 900; break;
+            default: totalkg += 1200; break;
+        }
+        totalkg -= recycling_reduction[i[2]][i[0]][i[3]];  //how often they recycle (see Constants.java)
+
+        return totalkg;
     }
 
 }
