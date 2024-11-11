@@ -14,7 +14,6 @@ lifecycleLivedataKtx = "2.6.1"
 lifecycleViewmodelKtx = "2.6.1"
 firebaseAuth = "23.1.0"
 
-
 [libraries]
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -25,9 +24,13 @@ material = { group = "com.google.android.material", name = "material", version.r
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
+<<<<<<< HEAD
 annotation = { group = "androidx.annotation", name = "annotation", version.ref = "annotation" }
 lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
+=======
+firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+>>>>>>> main
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
