@@ -66,7 +66,9 @@
                 android:textColor="@color/palette_light_blue"
                 android:textSize="20sp" />
 
-            <!-- Login Button -->
+            <!-- Form Inputs -->
+
+            <!-- Email Input -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -92,6 +94,7 @@
                     android:textColorHint="@color/palette_light_blue" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Password Input -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"

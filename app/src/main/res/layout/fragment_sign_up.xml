@@ -67,6 +67,8 @@
                 android:textSize="20sp" />
 
             <!-- Form Inputs -->
+
+            <!-- Full Name Input -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -92,6 +94,7 @@
                     android:textColorHint="@color/palette_light_blue" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Email Input -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -117,6 +120,7 @@
                     android:textColorHint="@color/palette_light_blue" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Password Input -->
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
@@ -136,6 +140,32 @@
                     android:autofillHints="password"
                     android:inputType="textPassword"
                     android:hint="@string/password"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:textColor="@color/palette_stormy_gray"
+                    android:textColorHint="@color/palette_light_blue" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Confirm Password Input -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_margin="15dp"
+                app:boxStrokeColor="@color/palette_turquoise"
+                app:startIconDrawable="@drawable/ic_lock"
+                app:startIconTint="@drawable/custom_info_input_icon"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/confirmPasswordInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:autofillHints="password"
+                    android:inputType="textPassword"
+                    android:hint="@string/confirm_password"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
                     android:textColor="@color/palette_stormy_gray"
