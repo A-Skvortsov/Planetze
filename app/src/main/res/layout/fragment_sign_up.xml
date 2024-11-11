@@ -10,7 +10,7 @@
         android:id="@+id/signup_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="60dp"
         android:text="@string/title_signup"
         android:textColor="@color/palette_black"
         android:textSize="28sp"
@@ -22,11 +22,11 @@
         android:id="@+id/email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="170dp"
+        android:layout_marginTop="165dp"
         android:layout_marginEnd="290dp"
         android:text="@string/email"
-        android:textSize="18sp"
         android:textColor="@color/palette_stormy_gray"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -36,7 +36,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="35dp"
-        android:layout_marginTop="55dp"
+        android:layout_marginTop="75dp"
         android:layout_marginEnd="35dp"
         android:backgroundTint="@color/palette_light_gray"
         android:hint="@string/prompt_email"
@@ -49,11 +49,11 @@
         android:id="@+id/password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="255dp"
+        android:layout_marginTop="250dp"
         android:layout_marginEnd="255dp"
         android:text="@string/password"
-        android:textSize="18sp"
         android:textColor="@color/palette_stormy_gray"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -76,7 +76,7 @@
         android:id="@+id/confirmpassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="340dp"
+        android:layout_marginTop="335dp"
         android:layout_marginEnd="188dp"
         android:text="@string/confirmpassword"
         android:textColor="@color/palette_stormy_gray"
@@ -99,11 +99,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_password" />
 
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="415dp"
+        android:layout_marginEnd="188dp"
+        android:text="name"
+        android:textColor="@color/palette_stormy_gray"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edit_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="35dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="35dp"
+        android:backgroundTint="@color/palette_light_gray"
+        android:hint="type your first and last name"
+        android:textColorHint="@color/palette_light_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_confirmpassword" />
+
     <Button
         android:id="@+id/createaccount_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="170dp"
         android:backgroundTint="@color/palette_turquoise"
         android:text="@string/create_account"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -127,7 +154,7 @@
         android:id="@+id/haveaccount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="130dp"
         android:layout_marginEnd="100dp"
         android:text="@string/have_account"
         android:textColor="@color/palette_stormy_gray"
@@ -139,7 +166,7 @@
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="146dp"
+        android:layout_marginTop="116dp"
         android:layout_marginEnd="40dp"
         android:backgroundTint="#FBFBFB"
         android:text="@string/login"
@@ -157,6 +184,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/haveaccount" />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

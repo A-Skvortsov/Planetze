@@ -19,6 +19,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,7 +30,7 @@ import com.google.firebase.auth.FirebaseAuth;
 public class SignUpFragment extends Fragment {
 
     private FirebaseAuth auth;
-    private EditText signupEmail, signupPassword,signupConfirmPassword;
+    private EditText signupEmail, signupPassword,signupConfirmPassword, fullName;
     private Button signupButton;
     private TextView loginRedirectText;
     private static final String ARG_PARAM1 = "param1";
@@ -63,6 +65,7 @@ public class SignUpFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
 
         auth = FirebaseAuth.getInstance();
@@ -71,6 +74,7 @@ public class SignUpFragment extends Fragment {
         signupConfirmPassword = view.findViewById(R.id.edit_confirmpassword);
         signupButton = view.findViewById(R.id.createaccount_button);
         loginRedirectText = view.findViewById(R.id.loginRedirectText);
+        fullName = view.findViewById(R.id.edit_name);
 
         Activity activity = getActivity();
 
@@ -79,27 +83,50 @@ public class SignUpFragment extends Fragment {
             public void onClick(View view) {
                 String email = signupEmail.getText().toString().trim();
                 String pass = signupPassword.getText().toString().trim();
-
+                String confirm_pass = signupConfirmPassword.getText().toString().trim();
+                String name = fullName.getText().toString().trim();
                 // Set up Validation Logic
                 if (email.isEmpty()) {
                     signupEmail.setError("Email cannot be empty");
                 } else if (pass.isEmpty()) {
                     signupPassword.setError("Password cannot be empty");
+
+                } else if (!pass.equals(confirm_pass)) {
+                    signupConfirmPassword.setError("Confirm password does not match with password");
                 } else {
                     auth.createUserWithEmailAndPassword(email, pass)
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
+
+
                                     if (task.isSuccessful()) {
+                                        FirebaseUser user = task.getResult().getUser();
+
+
+                                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                                                .setDisplayName(name)
+                                                .build();
+                                        user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if(task.isSuccessful()){
+                                                    Toast.makeText(activity,"Name update ",Toast.LENGTH_LONG).show();
+                                                }else
+                                                    Toast.makeText(activity,"Name update Failed, try again",Toast.LENGTH_LONG).show();
+                                            }
+                                        });
+
+
+
+
                                         auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
 
                                                 if (task.isSuccessful()) {
-                                                    Toast.makeText(activity, "Signup Successful, please check email for verification.", Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(activity, "Signup Successful, check email for verification.", Toast.LENGTH_LONG).show();
                                                     startActivity(new Intent(activity, MainActivity.class));
-                                                    // Toast.makeText(this, "please check email for verification.", Toast.LENGTH_SHORT).show();
-                                                    //loadingBar.dismiss();
                                                 }else{
                                                     Toast.makeText(activity, task.getException().getMessage() , Toast.LENGTH_LONG).show();
                                                 }
@@ -122,9 +149,8 @@ public class SignUpFragment extends Fragment {
             }
         });
 
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sign_up, container, false);
-
+        return view;
 
     }
+
 }
