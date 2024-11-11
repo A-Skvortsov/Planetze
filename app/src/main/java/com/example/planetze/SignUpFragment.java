@@ -69,12 +69,11 @@ public class SignUpFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
 
         auth = FirebaseAuth.getInstance();
-        signupEmail = view.findViewById(R.id.edit_email);
-        signupPassword = view.findViewById(R.id.edit_password);
-        signupConfirmPassword = view.findViewById(R.id.edit_confirmpassword);
-        signupButton = view.findViewById(R.id.createaccount_button);
-        loginRedirectText = view.findViewById(R.id.loginRedirectText);
-        fullName = view.findViewById(R.id.edit_name);
+        signupEmail = view.findViewById(R.id.emailInput);
+        signupPassword = view.findViewById(R.id.passwordInput);
+        //signupConfirmPassword = view.findViewById(R.id.edit_confirmpassword);
+        signupButton = view.findViewById(R.id.registerButton);
+        fullName = view.findViewById(R.id.nameInput);
 
         Activity activity = getActivity();
 
@@ -83,16 +82,19 @@ public class SignUpFragment extends Fragment {
             public void onClick(View view) {
                 String email = signupEmail.getText().toString().trim();
                 String pass = signupPassword.getText().toString().trim();
-                String confirm_pass = signupConfirmPassword.getText().toString().trim();
+                //String confirm_pass = signupConfirmPassword.getText().toString().trim();
                 String name = fullName.getText().toString().trim();
                 // Set up Validation Logic
                 if (email.isEmpty()) {
                     signupEmail.setError("Email cannot be empty");
                 } else if (pass.isEmpty()) {
                     signupPassword.setError("Password cannot be empty");
+                    /*
 
                 } else if (!pass.equals(confirm_pass)) {
                     signupConfirmPassword.setError("Confirm password does not match with password");
+
+                     */
                 } else {
                     auth.createUserWithEmailAndPassword(email, pass)
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -142,12 +144,7 @@ public class SignUpFragment extends Fragment {
             }
         });
 
-        loginRedirectText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(activity, MainActivity.class));
-            }
-        });
+
 
         return view;
 
