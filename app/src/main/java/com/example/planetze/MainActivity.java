@@ -34,8 +34,8 @@ public class MainActivity extends AppCompatActivity {
 
 
         //opens app to SurveyResults
-        /*Intent intent = new Intent(this, SurveyResults.class);
-        startActivity(intent);*/
+        //Intent intent = new Intent(this, SurveyResults.class);
+        //startActivity(intent);
 
         //opens app to Init_survey
         Intent intent = new Intent(this, Init_Survey.class);
