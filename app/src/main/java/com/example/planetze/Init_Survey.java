@@ -56,12 +56,13 @@ public class Init_Survey extends AppCompatActivity {
         //final vars correspond to UI components
         final TextView please_answer1 = findViewById(R.id.please_answer1);
         final TextView please_answer2 = findViewById(R.id.please_answer2);
-        final Button iterator_btn = findViewById(R.id.iteratorButton);
+        final Button next_btn = findViewById(R.id.next_btn);
+        Button back_btn = findViewById(R.id.back_btn);
         final TextView category = findViewById(R.id.category);
         final TextView question = findViewById(R.id.question);
         final RadioGroup options = findViewById(R.id.options);
-        final TextView result = findViewById(R.id.result_test);
             //nested code initializes survey at first question
+            back_btn.setVisibility(View.INVISIBLE);
             category.setText(categories[current_cat]);
             question.setText(questions[current_q][0]);
             for (int i = 1; i < questions[current_q].length; i++) {
@@ -71,7 +72,7 @@ public class Init_Survey extends AppCompatActivity {
                 options.addView(btn);
             }
 
-        iterator_btn.setOnClickListener(new View.OnClickListener() {
+        next_btn.setOnClickListener(new View.OnClickListener() {
             /**
              * Updates survey info (model of MVP) and UI (view) after each click of "next" by user
              * @param v The view that was clicked.
@@ -81,16 +82,13 @@ public class Init_Survey extends AppCompatActivity {
                 if (!saveAnswer(options, current_cat, current_q)) {  //saves user's answer to prev question
                     please_answer1.setVisibility(View.VISIBLE); please_answer2.setVisibility(View.VISIBLE);
                     return;
-                }
+                } else back_btn.setVisibility(View.VISIBLE);  // this is here to avoid back being visible on first question
                 please_answer1.setVisibility(View.INVISIBLE); please_answer2.setVisibility(View.INVISIBLE);
 
                 current_q++;  //iterates to next q
                 if (current_q >= num_qs) {  //true if survey is finished
                     computeCatEmissions(current_cat);
-                    category.setVisibility(View.INVISIBLE);
-                    question.setVisibility(View.INVISIBLE);
-                    options.setVisibility(View.INVISIBLE);
-                    result.setText(String.valueOf(sum(co2PerCategory)));
+                    //code below stats next activity (show survey results)
                     Intent intent = new Intent(Init_Survey.this, SurveyResults.class);
                     intent.putExtra("co2PerCategory", co2PerCategory);
                     startActivity(intent);
@@ -99,19 +97,53 @@ public class Init_Survey extends AppCompatActivity {
                 if (questions[current_q][0].equals("-")) {  //iter'n to next category if necessary
                     computeCatEmissions(current_cat);  //computes emissions for the finished category
                     current_q++; current_cat++;
-                    category.setText(categories[current_cat]);
                 }
-                question.setText(questions[current_q][0]);  //displays next q
-
-                options.removeAllViews(); options.clearCheck();  //remove previous answer options
-                for (int i = 1; i < questions[current_q].length; i++) { //loading answer options for the new q
-                    RadioButton btn = new RadioButton(Init_Survey.this);
-                    btn.setId(i - 1);  //standard btn configurations
-                    btn.setText(questions[current_q][i]);
-                    options.addView(btn);  //adds btn to the RadioGroup (btn container)
-                }
+                updateSurvey(options, question, category, current_q, current_cat);  //updates UI
             }
         });
+
+        back_btn.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Goes back to previous question when back button clicked
+             * @param v The view that was clicked.
+             */
+            public void onClick(View v) {
+                if (current_q == 3 && transport_ans[0] == 1) current_q -= 2;  //skips follow-ups if user says no to car
+                if (current_q == 5 && transport_ans[3] == 0) current_q -= 1;  //same but for public transport
+                if (current_q == 13 && food_ans[0] != 3) current_q -= 4;  //skips follow-ups if user says no to meat
+
+                current_q--;
+                if (current_q == 0) back_btn.setVisibility(View.INVISIBLE);
+                if (questions[current_q][0].equals("-")) {
+                    current_q--;
+                    current_cat--;
+                }
+                updateSurvey(options, question, category, current_q, current_cat);
+            }
+        });
+    }
+
+
+    /**
+     * Updates survey UI to reflect current question being asked
+     * @param options answer options component (RadioGroup)
+     * @param question question text component (TextView)
+     * @param category category text component (TextView)
+     * @param q current question
+     * @param c current category
+     */
+    private void updateSurvey(RadioGroup options, TextView question, TextView category,
+                              int q, int c) {
+        category.setText(categories[c]);
+        question.setText(questions[q][0]);  //displays next q
+
+        options.removeAllViews(); options.clearCheck();  //remove previous answer options
+        for (int i = 1; i < questions[q].length; i++) { //loading answer options for the new q
+            RadioButton btn = new RadioButton(Init_Survey.this);
+            btn.setId(i - 1);  //standard btn configurations
+            btn.setText(questions[q][i]);
+            options.addView(btn);  //adds btn to the RadioGroup (btn container)
+        }
     }
 
 
