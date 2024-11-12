@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -40,6 +41,11 @@ public class SurveyResults extends AppCompatActivity {
                     findViewById(R.id.food),
                     findViewById(R.id.housing),
                     findViewById(R.id.consumption)};
+        TextView[] extra = {
+                    findViewById(R.id.t_negligible),
+                    findViewById(R.id.f_negligible),
+                    findViewById(R.id.h_negligible),
+                    findViewById(R.id.c_negligible)};
         double max_result = max(results);
 
         //preprocessing
@@ -49,18 +55,19 @@ public class SurveyResults extends AppCompatActivity {
         int container_width = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 230, getResources().getDisplayMetrics());
         DisplayMetrics display_metrics = getResources().getDisplayMetrics();
         // Convert dp to pixels. 35dp chosen based on UI
-        int min_p = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, display_metrics);
+        int min_p = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 25, display_metrics);
 
         for (int i = 0; i < bars.length; i++) {
             //computes pixel width for current bar
             int p = Math.max(min_p, (int) (container_width * (results[i] / max_result)));
+            if (p == min_p) extra[i].setVisibility(View.VISIBLE);
 
             ViewGroup.LayoutParams layoutParams = bars[i].getLayoutParams();
             layoutParams.width = p;  //sets width of bar
             bars[i].setLayoutParams(layoutParams);
             bars[i].requestLayout();  //updates UI
 
-            String txt = String.valueOf(results[i]);
+            String txt = String.valueOf(round(results[i]));
             bars[i].setText(txt);
         }
     }
@@ -92,6 +99,12 @@ public class SurveyResults extends AppCompatActivity {
             if (m < arr[i]) m = arr[i];
         }
         return m;
+    }
+
+    private double round(double x) {
+        x = x * 10;
+        int y = (int) x;
+        return y / 10.0;
     }
 
 }

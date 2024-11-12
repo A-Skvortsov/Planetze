@@ -10,6 +10,12 @@
     android:background="@color/palette_stormy_gray">
 
     <TextView
+        android:id="@+id/textView12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="findViewById(R.id.f_negligible)" />
+
+    <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -169,16 +175,58 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/housing" />
 
+        <TextView
+            android:id="@+id/t_negligible"
+            android:layout_width="96dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:visibility="invisible"
+
+            android:text="negligible - Good Job!"
+            android:textSize="10dp"
+            app:layout_constraintStart_toEndOf="@+id/transport"
+            app:layout_constraintTop_toBottomOf="@+id/bycategory" />
+
+        <TextView
+            android:id="@+id/f_negligible"
+            android:layout_width="96dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:visibility="invisible"
+
+            android:text="negligible - Good Job!"
+            android:textSize="10dp"
+            app:layout_constraintStart_toEndOf="@+id/food"
+            app:layout_constraintTop_toBottomOf="@+id/t_negligible" />
+
+        <TextView
+            android:id="@+id/h_negligible"
+            android:layout_width="96dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:visibility="invisible"
+
+            android:text="negligible - Good Job!"
+            android:textSize="10dp"
+            app:layout_constraintStart_toEndOf="@+id/housing"
+            app:layout_constraintTop_toBottomOf="@+id/f_negligible" />
+
+        <TextView
+            android:id="@+id/c_negligible"
+            android:layout_width="96dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:visibility="invisible"
+
+            android:text="negligible - Good Job!"
+            android:textSize="10dp"
+            app:layout_constraintStart_toEndOf="@+id/consumption"
+            app:layout_constraintTop_toBottomOf="@+id/h_negligible" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-
-    <!--
-    <com.jjoe64.graphview.GraphView
-        android:id="@+id/graph"
-        android:layout_width="336dp"
-        android:layout_height="197dp"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="80dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/title" />-->
-
 </androidx.constraintlayout.widget.ConstraintLayout>
