@@ -39,6 +39,14 @@ public class Constants {
             {"How many electronic devices have you purchased in the past year?", "None", "1", "2", "3", "4 or more"},
             {"How often do you recycle?", "Never", "Occasionally", "Frequently", "Always"}};
 
+    public static final String[] countries = {
+            "Afghanistan"
+    };
+
+    public static final double[] country_emissions = {
+            0.0
+    };
+
     public static final double[][] public_trans_emissions = {
             {  //never use public transport
                 0,  //under 1 hour

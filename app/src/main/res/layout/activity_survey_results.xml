@@ -10,12 +10,6 @@
     android:background="@color/palette_stormy_gray">
 
     <TextView
-        android:id="@+id/textView12"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="findViewById(R.id.f_negligible)" />
-
-    <TextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,12 +26,13 @@
         android:textSize="26dp"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/graph_constraint"
+        android:id="@+id/graph1_constraint"
         android:layout_width="358dp"
         android:layout_height="222dp"
-        android:layout_marginTop="72dp"
+        android:layout_marginTop="56dp"
         android:background="@color/palette_light_gray"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title">
 
@@ -181,10 +176,10 @@
             android:layout_height="20dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
-            android:visibility="invisible"
-
             android:text="negligible - Good Job!"
+
             android:textSize="10dp"
+            android:visibility="invisible"
             app:layout_constraintStart_toEndOf="@+id/transport"
             app:layout_constraintTop_toBottomOf="@+id/bycategory" />
 
@@ -194,10 +189,10 @@
             android:layout_height="20dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
-            android:visibility="invisible"
-
             android:text="negligible - Good Job!"
+
             android:textSize="10dp"
+            android:visibility="invisible"
             app:layout_constraintStart_toEndOf="@+id/food"
             app:layout_constraintTop_toBottomOf="@+id/t_negligible" />
 
@@ -207,10 +202,10 @@
             android:layout_height="20dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
-            android:visibility="invisible"
-
             android:text="negligible - Good Job!"
+
             android:textSize="10dp"
+            android:visibility="invisible"
             app:layout_constraintStart_toEndOf="@+id/housing"
             app:layout_constraintTop_toBottomOf="@+id/f_negligible" />
 
@@ -220,13 +215,159 @@
             android:layout_height="20dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="24dp"
-            android:visibility="invisible"
-
             android:text="negligible - Good Job!"
+
             android:textSize="10dp"
+            android:visibility="invisible"
             app:layout_constraintStart_toEndOf="@+id/consumption"
             app:layout_constraintTop_toBottomOf="@+id/h_negligible" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!-- Second graph -->
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/graph2constraint"
+        android:layout_width="354dp"
+        android:layout_height="172dp"
+        android:layout_marginTop="52dp"
+        android:background="@color/palette_turquoise"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintHorizontal_bias="0.508"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/graph1_constraint">
+
+        <TextView
+            android:id="@+id/user_bar"
+            android:layout_width="26dp"
+            android:layout_height="102dp"
+            android:layout_marginStart="92dp"
+            android:background="@color/palette_light_gray"
+            android:text=""
+
+            app:layout_constraintBottom_toTopOf="@+id/line"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/you"
+            android:layout_width="26dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="92dp"
+            android:text="You"
+            android:textColor="@color/palette_light_gray"
+            app:layout_constraintBottom_toTopOf="@+id/user_bar"
+
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/country_bar"
+            android:layout_width="26dp"
+            android:layout_height="82dp"
+            android:layout_marginEnd="92dp"
+            android:background="@color/palette_light_gray"
+            android:text=""
+
+            app:layout_constraintBottom_toTopOf="@+id/line"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/country"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginEnd="52dp"
+            android:text="National Average"
+            android:textColor="@color/palette_light_gray"
+            app:layout_constraintBottom_toTopOf="@+id/country_bar"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="250dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="52dp"
+            android:layout_marginBottom="16dp"
+            android:background="@android:color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/youremissions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="502.0   "
+            android:textColor="@color/black"
+
+            android:textSize="10dp"
+            app:layout_constraintEnd_toStartOf="@+id/user_bar"
+            app:layout_constraintTop_toTopOf="@+id/user_bar" />
+
+        <TextView
+            android:id="@+id/countryemissions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="502.0   "
+
+            android:textColor="@color/black"
+            android:textSize="10dp"
+            app:layout_constraintEnd_toStartOf="@+id/country_bar"
+            app:layout_constraintTop_toTopOf="@+id/country_bar" />
+
+        <TextView
+            android:id="@+id/tons"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="88dp"
+
+            android:rotation="270"
+            android:text="Emitted CO2/year (tons)"
+            android:textColor="@color/black"
+            android:textSize="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/user_bar" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/yaxis"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+
+        android:textSize="15dp"
+        android:text="Comparison by Country"
+        android:textColor="@color/white"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/graph2constraint"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="243dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="24dp"
+
+        android:layout_marginBottom="64dp"
+        android:background="@color/palette_light_gray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/select_country" />
+
+    <TextView
+        android:id="@+id/select_country"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginBottom="72dp"
+
+        android:text="Compare with:"
+        android:textColor="@color/palette_light_gray"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
