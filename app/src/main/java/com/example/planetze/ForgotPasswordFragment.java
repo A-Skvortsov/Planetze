@@ -4,24 +4,22 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-public class LogInActivity extends Fragment  {
+public class ForgotPasswordFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_forgot_password, container, false);
 
-        TextView signUpLink = view.findViewById(R.id.signUpLink);
-        TextView forgotPasswordLink = view.findViewById(R.id.forgotPasswordLink);
+        Button returnButton = view.findViewById(R.id.returnButton);
 
-        signUpLink.setOnClickListener(v -> loadFragment(new SignUpActivity()));
-        forgotPasswordLink.setOnClickListener(v -> loadFragment(new ForgotPasswordFragment()));
+        returnButton.setOnClickListener(v -> loadFragment(new LogInActivity()));
 
         return view;
     }
