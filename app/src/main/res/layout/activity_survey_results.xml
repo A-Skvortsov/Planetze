@@ -244,7 +244,7 @@
         <TextView
             android:id="@+id/user_bar"
             android:layout_width="26dp"
-            android:layout_height="102dp"
+            android:layout_height="65dp"
             android:layout_marginStart="92dp"
             android:background="@color/palette_light_gray"
             android:text=""
@@ -296,7 +296,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/youremissions"
+            android:id="@+id/your_emissions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="502.0   "
@@ -307,7 +307,7 @@
             app:layout_constraintTop_toTopOf="@+id/user_bar" />
 
         <TextView
-            android:id="@+id/countryemissions"
+            android:id="@+id/country_emissions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="502.0   "
@@ -318,7 +318,7 @@
             app:layout_constraintTop_toTopOf="@+id/country_bar" />
 
         <TextView
-            android:id="@+id/tons"
+            android:id="@+id/yaxis"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
@@ -334,7 +334,7 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
-        android:id="@+id/yaxis"
+        android:id="@+id/title2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
