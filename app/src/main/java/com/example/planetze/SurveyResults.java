@@ -121,6 +121,8 @@ public class SurveyResults extends AppCompatActivity {
         Spinner s = findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                  android.R.layout.simple_spinner_item, country);
+        //for scroll function, need R.layout.spinner_dropdown_item (see spinner_dropdown_item.xml
+        //file in res/layout). But this doesn't work yet. Having issues
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         s.setAdapter(adapter);
         int init = adapter.getPosition(c);
