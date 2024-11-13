@@ -210,7 +210,7 @@ public class Init_Survey extends AppCompatActivity {
             switch(transport_ans[1]) {  //which car they drive
                 case 0: r = 0.24; break;  //gas emissions rate
                 case 1: r = 0.27; break;  //diesel, etc.
-                case 3: r = 0.05; break;  //electric
+                case 2: r = 0.05; break;  //electric
                 default: r = 0.16; break;  //hybrid or "i don't know" (default to hybrid)
             }
             switch(transport_ans[2]) {  //how much they drive
@@ -223,7 +223,7 @@ public class Init_Survey extends AppCompatActivity {
             }
         }
 
-        totalkg += public_transport_emissions[3][4];  //see Constants.java
+        totalkg += public_transport_emissions[transport_ans[3]][transport_ans[4]];  //see Constants.java
 
         switch(transport_ans[5]) {  //short haul flight emissions
             case 0: break;
