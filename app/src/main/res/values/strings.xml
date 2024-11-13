@@ -38,4 +38,7 @@
     <string name="sign_in"><u>Sign in</u></string>
     <string name="sign_up"><u>Sign up</u></string>
     <string name="confirm_password">Confirm Password</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="enter_your_email">Enter your Email</string>
+    <string name="close">Close</string>
 </resources>
