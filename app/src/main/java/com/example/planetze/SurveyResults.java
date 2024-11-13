@@ -43,15 +43,18 @@ public class SurveyResults extends AppCompatActivity {
         double[] results = intent.getDoubleArrayExtra("co2PerCategory");
         results = kgToTons(results);
         user_e = sum(results);  //saves user result immediately
+
+        //initializes some basics
         final TextView your_emissions = findViewById(R.id.your_emissions);
             String sum = round(user_e) + "   ";
             your_emissions.setText(sum);
         final TextView total_bar = findViewById(R.id.total_bar);
             String msg = sum + " tons of CO2 emitted annually";
             total_bar.setText(msg);
-        setCategoryGraph(results);
+        setCategoryGraph(results);  //sets category graph
 
-        initComparisonGraph(default_country);
+        initComparisonGraph(default_country);  //initializes comparison graph
+        setUserDataComparisonGraph(user_e);
 
         //spinner change listener
         Spinner s = findViewById(R.id.spinner);
@@ -152,9 +155,9 @@ public class SurveyResults extends AppCompatActivity {
                 13, display_metrics);
         int max_p = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 125, display_metrics);
-        //next line is main formula
+        //next line is main formula. Math.abs() used in the case that user emissions are < 0
         int height_in_p =
-                (int) Math.min(max_p, Math.max(min_p, (country_e/user_e) * height_user_in_p));
+                (int) Math.min(max_p, Math.max(min_p, Math.abs((country_e/user_e) * height_user_in_p)));
 
         //sets bar height of compared country
         TextView bar = findViewById(R.id.country_bar);
@@ -167,6 +170,30 @@ public class SurveyResults extends AppCompatActivity {
         TextView bar_height = findViewById(R.id.country_emissions);
         String x = String.valueOf(round(country_e)) + "   ";
         bar_height.setText(x);
+    }
+
+
+    /**
+     * Sets the bar representing user emissions in the comparison graph.
+     * Reason we need this is to adjust user emissions bar to be very low if needed.
+     * Otherwise default setting of user bar is about half the size of the container
+     * @param e user emissions
+     */
+    private void setUserDataComparisonGraph(double e) {
+        TextView user_bar = findViewById(R.id.user_bar);
+        ViewGroup.LayoutParams params = user_bar.getLayoutParams();
+        DisplayMetrics display_metrics = getResources().getDisplayMetrics();
+        int height_in_p = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                65, display_metrics);  //default user bar height
+        if (e < 0) {
+            height_in_p = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    13, display_metrics);
+        } else if (e < 1) {
+            height_in_p = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
+                    16, display_metrics);
+        }
+        params.height = height_in_p;
+        user_bar.setLayoutParams(params);
     }
 
 
