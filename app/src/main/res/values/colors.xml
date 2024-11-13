@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Default colors -->
+    <!-- Default colours -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <!-- Palette colors -->
+    <!-- Palette colours -->
     <color name="palette_light_gray">#d8dbe2</color>
     <color name="palette_light_blue">#a9bcd0</color>
     <color name="palette_turquoise">#009999</color>
