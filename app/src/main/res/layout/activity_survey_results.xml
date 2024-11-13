@@ -14,56 +14,46 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="64dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-
         android:gravity="center_horizontal"
         android:text="My Annual Carbon Footprint"
         android:textColor="@color/palette_light_gray"
+        android:textSize="26dp"
+
         android:textStyle="bold|italic"
-        android:textSize="26dp"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <!-- Second graph -->
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/graph1_constraint"
         android:layout_width="358dp"
-        android:layout_height="222dp"
-        android:layout_marginTop="56dp"
+        android:layout_height="186dp"
+        android:layout_marginTop="112dp"
         android:background="@color/palette_light_gray"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.509"
+        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title">
 
         <!-- labels -->
 
         <TextView
-            android:id="@+id/bycategory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="0dp"
-
-            android:text="Breakdown by Category (tons):"
-            android:textColor="@color/black"
-            android:textSize="15dp"
-            android:textStyle="italic"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
             android:id="@+id/transport_label"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
 
+            android:layout_marginTop="16dp"
             android:text="Transportation"
             android:textSize="10dp"
+            android:gravity="center_vertical"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bycategory" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/food_label"
@@ -75,7 +65,8 @@
             android:text="Food"
             android:textSize="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/transport_label" />
+            app:layout_constraintTop_toBottomOf="@+id/transport_label"
+            android:gravity="center_vertical"/>
 
         <TextView
             android:id="@+id/housing_label"
@@ -87,7 +78,8 @@
             android:text="Housing"
             android:textSize="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/food_label" />
+            app:layout_constraintTop_toBottomOf="@+id/food_label"
+            android:gravity="center_vertical"/>
 
         <TextView
             android:id="@+id/cons_label"
@@ -99,7 +91,8 @@
             android:text="Consumption"
             android:textSize="10dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/housing_label" />
+            app:layout_constraintTop_toBottomOf="@+id/housing_label"
+            android:gravity="center_vertical"/>
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline2"
@@ -109,21 +102,6 @@
             app:layout_constraintGuide_begin="90dp" />
 
         <!-- Bars -->
-
-        <TextView
-            android:id="@+id/transport"
-            android:layout_width="10dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="104dp"
-            android:layout_marginTop="24dp"
-            android:background="@color/palette_turquoise"
-            android:gravity="center"
-            android:text="0"
-            android:textColor="@color/palette_light_gray"
-            android:textSize="10dp"
-
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bycategory" />
 
         <TextView
             android:id="@+id/food"
@@ -156,6 +134,21 @@
             app:layout_constraintTop_toBottomOf="@+id/food" />
 
         <TextView
+            android:id="@+id/transport"
+            android:layout_width="10dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="104dp"
+            android:layout_marginTop="16dp"
+            android:background="@color/palette_turquoise"
+            android:gravity="center"
+            android:text="0"
+            android:textColor="@color/palette_light_gray"
+
+            android:textSize="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
             android:id="@+id/consumption"
             android:layout_width="10dp"
             android:layout_height="20dp"
@@ -170,18 +163,21 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/housing" />
 
+        <!-- encouragement text ("low carbon emissions - good job!")-->
+
         <TextView
             android:id="@+id/t_negligible"
             android:layout_width="96dp"
             android:layout_height="20dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="24dp"
-            android:text="negligible - Good Job!"
+            android:layout_marginTop="16dp"
 
+            android:text="negligible - Good Job!"
             android:textSize="10dp"
             android:visibility="invisible"
             app:layout_constraintStart_toEndOf="@+id/transport"
-            app:layout_constraintTop_toBottomOf="@+id/bycategory" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:gravity="center_vertical"/>
 
         <TextView
             android:id="@+id/f_negligible"
@@ -194,7 +190,8 @@
             android:textSize="10dp"
             android:visibility="invisible"
             app:layout_constraintStart_toEndOf="@+id/food"
-            app:layout_constraintTop_toBottomOf="@+id/t_negligible" />
+            app:layout_constraintTop_toBottomOf="@+id/t_negligible"
+            android:gravity="center_vertical"/>
 
         <TextView
             android:id="@+id/h_negligible"
@@ -207,7 +204,8 @@
             android:textSize="10dp"
             android:visibility="invisible"
             app:layout_constraintStart_toEndOf="@+id/housing"
-            app:layout_constraintTop_toBottomOf="@+id/f_negligible" />
+            app:layout_constraintTop_toBottomOf="@+id/f_negligible"
+            android:gravity="center_vertical"/>
 
         <TextView
             android:id="@+id/c_negligible"
@@ -220,24 +218,33 @@
             android:textSize="10dp"
             android:visibility="invisible"
             app:layout_constraintStart_toEndOf="@+id/consumption"
-            app:layout_constraintTop_toBottomOf="@+id/h_negligible" />
+            app:layout_constraintTop_toBottomOf="@+id/h_negligible"
+            android:gravity="center_vertical"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/bycategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
 
-    <!-- Second graph -->
-
+        android:text="Breakdown by Category (tons):"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        android:textStyle="italic"
+        app:layout_constraintBottom_toTopOf="@+id/graph1_constraint"
+        app:layout_constraintStart_toStartOf="@+id/graph1_constraint" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/graph2constraint"
         android:layout_width="354dp"
         android:layout_height="172dp"
-        android:layout_marginTop="52dp"
+        android:layout_marginTop="128dp"
         android:background="@color/palette_turquoise"
         app:layout_constraintEnd_toEndOf="parent"
 
-        app:layout_constraintHorizontal_bias="0.508"
+        app:layout_constraintHorizontal_bias="0.491"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/graph1_constraint">
 
@@ -333,41 +340,69 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="227dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+
+        android:layout_marginBottom="18dp"
+        android:background="@color/palette_light_gray"
+        app:layout_constraintBottom_toTopOf="@+id/graph2constraint"
+        app:layout_constraintStart_toEndOf="@+id/select_country" />
+
     <TextView
         android:id="@+id/title2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
 
-        android:textSize="15dp"
+        android:layout_marginStart="84dp"
+        android:layout_marginBottom="16dp"
         android:text="Comparison by Country"
         android:textColor="@color/white"
+        android:textSize="18dp"
         android:textStyle="italic"
-        app:layout_constraintBottom_toTopOf="@+id/graph2constraint"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="243dp"
-        android:layout_height="37dp"
-        android:layout_marginStart="24dp"
-
-        android:layout_marginBottom="64dp"
-        android:background="@color/palette_light_gray"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/select_country" />
+        app:layout_constraintBottom_toTopOf="@+id/spinner"
+        app:layout_constraintStart_toStartOf="@+id/select_country" />
 
     <TextView
         android:id="@+id/select_country"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="28dp"
-        android:layout_marginBottom="72dp"
 
-        android:text="Compare with:"
-        android:textColor="@color/palette_light_gray"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="20dp"
+        android:text="Comparing with:"
+        android:textColor="@color/white"
         android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintBottom_toTopOf="@+id/graph2constraint"
+        app:layout_constraintStart_toStartOf="@+id/graph2constraint" />
+
+    <TextView
+        android:id="@+id/total_bar"
+        android:layout_width="254dp"
+        android:layout_height="27dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="48dp"
+        android:background="@color/palette_turquoise"
+        android:gravity="center"
+        android:text="502.2 tons of CO2 emitted annually"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toEndOf="@+id/total"
+
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <TextView
+        android:id="@+id/total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+
+        android:layout_marginTop="48dp"
+        android:text="Total:"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="@+id/graph1_constraint"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

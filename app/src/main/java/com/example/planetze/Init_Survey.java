@@ -226,15 +226,17 @@ public class Init_Survey extends AppCompatActivity {
         totalkg += public_transport_emissions[3][4];  //see Constants.java
 
         switch(transport_ans[5]) {  //short haul flight emissions
-            case 0: totalkg += 225; break;
-            case 1: totalkg += 600; break;
-            case 2: totalkg += 1200; break;
+            case 0: break;
+            case 1: totalkg += 225; break;
+            case 2: totalkg += 600; break;
+            case 3: totalkg += 1200; break;
             default: totalkg += 1800; break;
         }
         switch(transport_ans[6]) {  //long haul flight emissions
-            case 0: totalkg += 825; break;
-            case 1: totalkg += 2200; break;
-            case 2: totalkg += 4400; break;
+            case 0: break;
+            case 1: totalkg += 825; break;
+            case 2: totalkg += 2200; break;
+            case 3: totalkg += 4400; break;
             default: totalkg += 6600; break;
         }
 

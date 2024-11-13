@@ -42,9 +42,15 @@ public class SurveyResults extends AppCompatActivity {
         Intent intent = getIntent();
         double[] results = intent.getDoubleArrayExtra("co2PerCategory");
         results = kgToTons(results);
+        user_e = sum(results);  //saves user result immediately
+        final TextView your_emissions = findViewById(R.id.your_emissions);
+            String sum = round(user_e) + "   ";
+            your_emissions.setText(sum);
+        final TextView total_bar = findViewById(R.id.total_bar);
+            String msg = sum + " tons of CO2 emitted annually";
+            total_bar.setText(msg);
         setCategoryGraph(results);
 
-        user_e = sum(results);
         initComparisonGraph(default_country);
 
         //spinner change listener
@@ -120,13 +126,13 @@ public class SurveyResults extends AppCompatActivity {
         //initialize spinner to country c
         Spinner s = findViewById(R.id.spinner);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-                 android.R.layout.simple_spinner_item, country);
+                 android.R.layout.simple_spinner_item, country);  //used to load spinner
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        s.setAdapter(adapter);
-        int init = adapter.getPosition(c);
-        s.setSelection(init);
+        s.setAdapter(adapter);  //loads spinner
+        int init = adapter.getPosition(c);  //initializes spinner to default country
+        s.setSelection(init);  //^^
 
-        setComparisonGraph(c);
+        setComparisonGraph(c);  //set UI
     }
 
 
@@ -140,10 +146,10 @@ public class SurveyResults extends AppCompatActivity {
 
         //computes desired bar height of compared country
         double height_user_in_p = findViewById(R.id.user_bar).getHeight();
-        // Convert dp to pixels. 25dp and 125dp chosen based on UI
+        // Convert dp to pixels. 13dp and 125dp chosen based on UI
         DisplayMetrics display_metrics = getResources().getDisplayMetrics();
         int min_p = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                25, display_metrics);
+                13, display_metrics);
         int max_p = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                 125, display_metrics);
         //next line is main formula
@@ -152,10 +158,13 @@ public class SurveyResults extends AppCompatActivity {
 
         //sets bar height of compared country
         TextView bar = findViewById(R.id.country_bar);
-        bar.setHeight(height_in_p);
-        TextView bar_height = findViewById(R.id.country_emissions);
+        ViewGroup.LayoutParams params = bar.getLayoutParams();
+        params.height = height_in_p;
+        bar.setLayoutParams(params);
+        //bar.requestLayout();  //possibly necessary. For now no issues without this
 
         //sets text of bar height textbox
+        TextView bar_height = findViewById(R.id.country_emissions);
         String x = String.valueOf(round(country_e)) + "   ";
         bar_height.setText(x);
     }
