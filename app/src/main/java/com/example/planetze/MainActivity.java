@@ -2,17 +2,9 @@ package com.example.planetze;
 
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-
-import android.widget.Button;
-import android.view.View;
-import android.content.Intent;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -32,18 +24,9 @@ public class MainActivity extends AppCompatActivity {
 //        myRef.setValue("B07 Demo!");
         myRef.child("movies").setValue("B07 Demo!");
 
-
-        //opens app to SurveyResults
-        //Intent intent = new Intent(this, SurveyResults.class);
-        //startActivity(intent);
-
-        //opens app to Init_survey
-        Intent intent = new Intent(this, Init_Survey.class);
-        startActivity(intent);
-          //this is default starter settings. Opens app to HomeFragment
-        /*if (savedInstanceState == null) {
-            loadFragment(new HomeFragment());
-        }*/
+        if (savedInstanceState == null) {
+            loadFragment(new SignUpActivity());
+        }
     }
 
     private void loadFragment(Fragment fragment) {

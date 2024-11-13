@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">Planetze</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="delete_item">Delete Item</string>
     <string name="add_item">Add Item</string>
     <string name="back">Back</string>
@@ -9,11 +7,38 @@
     <string name="scroller">Scroller</string>
     <string name="spinner">Spinner</string>
     <string name="manage_items">Manage Items</string>
-
     <string-array name="categories_array">
         <item>Books</item>
         <item>Movies</item>
     </string-array>
 
+    <string name="welcome">Welcome!</string>
+    <string name="welcome_back">Welcome Back!</string>
 
+    <string name="full_name">Full Name</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+
+    <string name="register_your_account">Register your account</string>
+    <string name="login_to_your_account">Login to your account</string>
+
+    <string name="forgot_password"><u>Forgot password?</u></string>
+
+    <string name="or">or</string>
+
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="do_not_have_an_account">Don\'t have an account?"</string>
+
+    <string name="sign_in_with_google">Sign in with Google</string>
+    <string name="sign_up_with_google">Sign up with Google</string>
+
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+
+    <string name="sign_in"><u>Sign in</u></string>
+    <string name="sign_up"><u>Sign up</u></string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="enter_your_email">Enter your Email</string>
+    <string name="close">Close</string>
 </resources>
