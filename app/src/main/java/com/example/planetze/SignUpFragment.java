@@ -8,9 +8,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -26,20 +28,23 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link SignUpFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SignUpFragment extends Fragment {
+public class SignUpFragment extends Fragment{
 
     private FirebaseAuth auth;
     private EditText signupEmail, signupPassword,signupConfirmPassword, fullName;
     private Button signupButton;
-    private TextView loginRedirectText, signinLink;
+    private TextView loginRedirectText, inputError, signinLink;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    private String errorMsg;
 
     private String mParam1;
     private String mParam2;
@@ -66,11 +71,13 @@ public class SignUpFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
 
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
 
@@ -81,37 +88,35 @@ public class SignUpFragment extends Fragment {
         signupButton = view.findViewById(R.id.registerButton);
         fullName = view.findViewById(R.id.nameInput);
 
+        inputError = view.findViewById(R.id.error);
+
         signinLink = view.findViewById(R.id.signInLink);
 
+
         Activity activity = getActivity();
+
+
+        signinLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadFragment(new LogInFragment());
+            }
+        });
+
 
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("minki jiang hello");
+
                 String email = signupEmail.getText().toString().trim();
                 String pass = signupPassword.getText().toString().trim();
                 String confirm_pass = signupConfirmPassword.getText().toString().trim();
                 String name = fullName.getText().toString().trim();
-                // Set up Validation Logic
 
-                /*
+                boolean valid = validprofile(name, email, pass, confirm_pass);
+                inputError.setText(errorMsg);
 
-                if (email.isEmpty()) {
-                    signupEmail.setError("Email cannot be empty");
-                } else if (pass.isEmpty()) {
-                    signupPassword.setError("Password cannot be empty");
-                } else if (!pass.equals(confirm_pass)) {
-                    signupConfirmPassword.setError("Confirm password does not match with password");
-                }
-                else {
-
-                }
-
-                 */
-
-
-                if (validprofile(email, pass, confirm_pass)) {
+                if (valid) {
                     auth.createUserWithEmailAndPassword(email, pass)
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -140,7 +145,7 @@ public class SignUpFragment extends Fragment {
                                                 if (task.isSuccessful()) {
                                                     Toast.makeText(activity, "Signup Successful, check email for verification.", Toast.LENGTH_LONG).show();
                                                     //startActivity(new Intent(activity, MainActivity.class));
-                                                    loadFragment(new SignUpFragment());
+                                                    loadFragment(new LogInActivity());
                                                 }else{
                                                     Toast.makeText(activity, task.getException().getMessage() , Toast.LENGTH_LONG).show();
                                                 }
@@ -153,8 +158,13 @@ public class SignUpFragment extends Fragment {
                                 }
                             });
                 }
+
+
             }
+
         });
+
+
 
         return view;
 
@@ -175,24 +185,41 @@ public class SignUpFragment extends Fragment {
         return cond1 && cond2;
     }
 
-    private boolean validprofile(String email, String pass, String conf_pass) {
 
-        boolean cond1 = email.length() != 0;
-        boolean cond2 = pass.length() >= 7;
-        boolean cond3 = conf_pass.equals(pass);
+
+    private boolean validprofile(String name, String email, String pass, String conf_pass) {
+
+        boolean cond1 = name.length() != 0;
+        boolean cond2 = email.length() != 0;
+        boolean cond3 = pass.length() >= 7;
+        boolean cond4 = conf_pass.equals(pass);
+        boolean cond5 = true;
 
         if (!cond1) {
-            signupEmail.setError("Email cannot be empty");
+            errorMsg = "Name cannot be empty";
             return false;
         }
         else if (!cond2) {
-            signupPassword.setError("Password has to be at least 7 character long");
+            //signupEmail.setError("Email cannot be empty");
+            errorMsg = "Email cannot be empty";
             return false;
         }
         else if (!cond3) {
-            signupConfirmPassword.setError("Confirm Password has to match with password");
+            //signupPassword.setError("Password has to be at least 7 character long");
+            errorMsg = "Password has to be at least 7 character long";
             return false;
         }
+        else if (!cond4) {
+            //signupConfirmPassword.setError("Confirm Password has to match with password");
+            errorMsg = "Confirm Password has to match with password";
+            return false;
+        }
+        else if (!cond5) {
+            //signupEmail.setError("Not a valid Email");
+            errorMsg = "Not a valid Email";
+            return false;
+        }
+        errorMsg = " ";
         return true;
     }
 

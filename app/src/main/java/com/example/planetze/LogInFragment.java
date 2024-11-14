@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-public class LogInActivity extends Fragment  {
+public class LogInFragment extends Fragment  {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -21,8 +21,12 @@ public class LogInActivity extends Fragment  {
 
         signUpLink.setOnClickListener(v -> loadFragment(new SignUpFragment()));
 
+
+
         return view;
     }
+
+
 
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
