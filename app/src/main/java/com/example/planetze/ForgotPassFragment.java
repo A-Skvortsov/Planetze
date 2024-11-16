@@ -94,7 +94,7 @@ public class ForgotPassFragment extends Fragment {
 
                 //String link = FirebaseAuth.getInstance().generatePasswordResetLink(email);
                 //email = emailInput.getText().toString().trim();
-                //auth.sendPasswordResetEmail(email);
+                auth.sendPasswordResetEmail(email);
                 //sendCustomEmail(email, displayName, link);
 
             }
