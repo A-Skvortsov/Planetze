@@ -26,9 +26,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,6 +51,10 @@ public class SignUpFragment extends Fragment{
     private static final String ARG_PARAM2 = "param2";
 
     private String errorMsg;
+
+    private ArrayList<String> emailArray;
+    private DatabaseReference userRef;
+    private FirebaseDatabase db;
 
     private String mParam1;
     private String mParam2;
@@ -95,6 +105,9 @@ public class SignUpFragment extends Fragment{
 
         Activity activity = getActivity();
 
+        emailArray = new ArrayList<String>();
+
+
 
         signinLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +115,32 @@ public class SignUpFragment extends Fragment{
                 loadFragment(new LogInFragment());
             }
         });
+
+        db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        userRef = db.getReference("user data");
+
+        /*
+        ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot user:dataSnapshot.getChildren()) {
+                    if (user.hasChild("email")) {
+                        String email = user.child("email").getValue(String.class).toString().trim();
+                        emailArray.add(email);
+                    }
+
+                }
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("warning", "Unable to fetch user info", databaseError.toException());
+            }
+        };
+
+        userRef.addValueEventListener(listener);
+
+         */
 
 
         signupButton.setOnClickListener(new View.OnClickListener() {
@@ -117,12 +156,14 @@ public class SignUpFragment extends Fragment{
                 inputError.setText(errorMsg);
 
                 if (valid) {
+
                     auth.createUserWithEmailAndPassword(email, pass)
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
 
                                     if (task.isSuccessful()) {
+                                        /*
                                         FirebaseUser user = task.getResult().getUser();
 
                                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
@@ -132,11 +173,19 @@ public class SignUpFragment extends Fragment{
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
                                                 if(task.isSuccessful()){
-                                                    Toast.makeText(activity,"Name update ",Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(activity," ",Toast.LENGTH_LONG).show();
+                                                    //Toast.makeText(activity,"Name update ",Toast.LENGTH_LONG).show();
                                                 }else
                                                     Toast.makeText(activity,"Name update Failed, try again",Toast.LENGTH_LONG).show();
                                             }
                                         });
+
+                                         */
+
+                                        String id = auth.getCurrentUser().getUid();
+                                        userRef.child(id+"/name").setValue(name);
+                                        userRef.child(id+"/email").setValue(email);
+                                        userRef.child(id+"/password").setValue(pass);
 
                                         auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
@@ -144,16 +193,17 @@ public class SignUpFragment extends Fragment{
 
                                                 if (task.isSuccessful()) {
                                                     Toast.makeText(activity, "Signup Successful, check email for verification.", Toast.LENGTH_LONG).show();
-                                                    //startActivity(new Intent(activity, MainActivity.class));
-                                                    loadFragment(new LogInActivity());
+                                                    loadFragment(new LogInFragment());
                                                 }else{
-                                                    Toast.makeText(activity, task.getException().getMessage() , Toast.LENGTH_LONG).show();
+                                                    //Toast.makeText(activity, task.getException().getMessage() , Toast.LENGTH_LONG).show();
+                                                    Toast.makeText(activity, "there was an error in sending verification email", Toast.LENGTH_LONG).show();
                                                 }
                                             }
                                         });
 
                                     } else {
-                                        Toast.makeText(activity, "Signup Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(activity, "Signup Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(activity, "Signup Failed ", Toast.LENGTH_SHORT).show();
                                     }
                                 }
                             });
@@ -191,9 +241,11 @@ public class SignUpFragment extends Fragment{
 
         boolean cond1 = name.length() != 0;
         boolean cond2 = email.length() != 0;
-        boolean cond3 = pass.length() >= 7;
-        boolean cond4 = conf_pass.equals(pass);
-        boolean cond5 = true;
+        boolean cond3 = accountNotExists(email);
+        boolean cond4 = pass.length() >= 7;
+        boolean cond5 = conf_pass.equals(pass);
+        boolean cond6 = true;
+
 
         if (!cond1) {
             errorMsg = "Name cannot be empty";
@@ -205,22 +257,56 @@ public class SignUpFragment extends Fragment{
             return false;
         }
         else if (!cond3) {
+            errorMsg = "Email already accociated with an account";
+            return false;
+        }
+        else if (!cond4) {
             //signupPassword.setError("Password has to be at least 7 character long");
             errorMsg = "Password has to be at least 7 character long";
             return false;
         }
-        else if (!cond4) {
+        else if (!cond5) {
             //signupConfirmPassword.setError("Confirm Password has to match with password");
             errorMsg = "Confirm Password has to match with password";
             return false;
         }
-        else if (!cond5) {
+        else if (!cond6) {
             //signupEmail.setError("Not a valid Email");
             errorMsg = "Not a valid Email";
             return false;
         }
         errorMsg = " ";
         return true;
+    }
+
+    private boolean accountNotExists(String email) {
+        getEmails();
+        if (emailArray == null || emailArray.size() == 0) {
+            return true;
+        }
+        int index = emailArray.indexOf(email);
+        if (index == -1) {
+            return true;
+        }
+        return false;
+    }
+
+    private void getEmails() {
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                DataSnapshot users = task.getResult();
+                emailArray = new ArrayList<String>();
+                for(DataSnapshot user:users.getChildren()) {
+                    if (user.hasChild("email")) {
+                        String email = user.child("email").getValue(String.class).toString().trim();
+                        emailArray.add(email);
+                    }
+
+                }
+
+            }
+        });
     }
 
 }
