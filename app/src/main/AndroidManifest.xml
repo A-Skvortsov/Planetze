@@ -13,9 +13,26 @@
         android:theme="@style/Theme.Planetze"
         tools:targetApi="31">
         <activity
+            android:name=".EcoGauge"
+            android:exported="false"
+            android:theme="@style/Theme.Planetze" />
+        <activity
+            android:name=".EcoBalance"
+            android:exported="false"
+            android:theme="@style/Theme.Planetze" />
+        <activity
+            android:name=".BottomBar"
+            android:exported="true"
+            android:theme="@style/Theme.Planetze" />
+        <activity
+            android:name=".SurveyResults"
+            android:exported="false" />
+        <activity
+            android:name=".Init_Survey"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

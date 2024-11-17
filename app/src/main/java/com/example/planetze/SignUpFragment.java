@@ -1,7 +1,7 @@
 package com.example.planetze;
 
-import static java.lang.Character.isLetter;
 
+import static java.lang.Character.isLetter;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,6 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.URLUtil;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -43,11 +47,13 @@ import java.util.ArrayList;
  * Use the {@link SignUpFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SignUpFragment extends Fragment{
+
+public class SignUpFragment extends Fragment {
 
     private FirebaseAuth auth;
     private EditText signupEmail, signupPassword,signupConfirmPassword, fullName;
     private Button signupButton;
+
     private TextView loginRedirectText, inputError, signinLink;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -63,7 +69,6 @@ public class SignUpFragment extends Fragment{
 
     public SignUpFragment() {
         // Required empty public constructor
-
     }
 
     public static SignUpFragment newInstance(String param1, String param2) {
@@ -83,14 +88,11 @@ public class SignUpFragment extends Fragment{
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
 
         auth = FirebaseAuth.getInstance();
@@ -143,8 +145,6 @@ public class SignUpFragment extends Fragment{
         userRef.addValueEventListener(listener);
 
          */
-
-
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -158,7 +158,6 @@ public class SignUpFragment extends Fragment{
                 inputError.setText(errorMsg);
 
                 if (valid) {
-
                     auth.createUserWithEmailAndPassword(email, pass)
                             .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                 @Override
@@ -166,6 +165,7 @@ public class SignUpFragment extends Fragment{
 
                                     if (task.isSuccessful()) {
                                         /*
+
                                         FirebaseUser user = task.getResult().getUser();
 
                                         UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
@@ -211,9 +211,7 @@ public class SignUpFragment extends Fragment{
                             });
                 }
 
-
             }
-
         });
 
 
@@ -231,10 +229,24 @@ public class SignUpFragment extends Fragment{
 
     private boolean validPassword(String password) {
         boolean cond1 = password.length() >= 7;
-        String result = password.replaceAll("\\d", "");
-        boolean cond2 = result.length() != password.length();
+        boolean cond2 = hasNumber(password);
+        boolean cond3 = hasSpace(password);
 
-        return cond1 && cond2;
+        if (!cond1) {
+            errorMsg = "Password has to be at least 7 character long";
+            return false;
+        }
+        else if (!cond2) {
+            //signupEmail.setError("Email cannot be empty");
+            errorMsg = "Password has to contains numbers";
+            return false;
+        }
+        else if (!cond3) {
+            errorMsg = "Password cannot contain a space";
+            return false;
+        }
+
+        return true;
     }
 
     private boolean hasNumber(String string) {
@@ -258,6 +270,7 @@ public class SignUpFragment extends Fragment{
         return false;
     }
 
+    /*
     private boolean hasSpecialCharcter(String string) {
         for (int i = 0; i < string.length(); i++) {
             if (isLetter(string.charAt(i))) {
@@ -267,16 +280,14 @@ public class SignUpFragment extends Fragment{
         return false;
     }
 
-
+     */
 
     private boolean validprofile(String name, String email, String pass, String conf_pass) {
 
         boolean cond1 = name.length() != 0;
         boolean cond2 = email.length() != 0;
         boolean cond3 = accountNotExists(email);
-        boolean cond4 = pass.length() >= 7;
-        boolean cond5 = conf_pass.equals(pass);
-        boolean cond6 = true;
+        boolean cond4 = conf_pass.equals(pass);
 
 
         if (!cond1) {
@@ -292,21 +303,23 @@ public class SignUpFragment extends Fragment{
             errorMsg = "Email already accociated with an account";
             return false;
         }
-        else if (!cond4) {
+        else if (!validPassword(pass)) {
             //signupPassword.setError("Password has to be at least 7 character long");
-            errorMsg = "Password has to be at least 7 character long";
             return false;
         }
-        else if (!cond5) {
+        else if (!cond4) {
             //signupConfirmPassword.setError("Confirm Password has to match with password");
             errorMsg = "Confirm Password has to match with password";
             return false;
         }
+        /*
         else if (!cond6) {
             //signupEmail.setError("Not a valid Email");
             errorMsg = "Not a valid Email";
             return false;
         }
+
+         */
         errorMsg = " ";
         return true;
     }

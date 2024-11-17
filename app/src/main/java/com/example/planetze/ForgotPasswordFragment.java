@@ -10,16 +10,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ForgotPassFragment#newInstance} factory method to
+ * Use the {@link ForgotPasswordFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ForgotPassFragment extends Fragment {
+public class ForgotPasswordFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -34,9 +35,12 @@ public class ForgotPassFragment extends Fragment {
     private EditText emailInput;
     private String email;
 
+    private String messagetext;
+    private TextView message;
+
     private Button login, sendlink;
 
-    public ForgotPassFragment() {
+    public ForgotPasswordFragment() {
         // Required empty public constructor
     }
 
@@ -49,8 +53,8 @@ public class ForgotPassFragment extends Fragment {
      * @return A new instance of fragment ForgotPassFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ForgotPassFragment newInstance(String param1, String param2) {
-        ForgotPassFragment fragment = new ForgotPassFragment();
+    public static ForgotPasswordFragment newInstance(String param1, String param2) {
+        ForgotPasswordFragment fragment = new ForgotPasswordFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -78,6 +82,9 @@ public class ForgotPassFragment extends Fragment {
         login = view.findViewById(R.id.returnButton);
         sendlink = view.findViewById(R.id.resetPasswordButton);
         emailInput = view.findViewById(R.id.emailInput);
+        message = view.findViewById(R.id.msg);
+
+        messagetext = " ";
 
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +102,9 @@ public class ForgotPassFragment extends Fragment {
                 //String link = FirebaseAuth.getInstance().generatePasswordResetLink(email);
                 //email = emailInput.getText().toString().trim();
                 auth.sendPasswordResetEmail(email);
+                messagetext = "Password reset link sent! Please check your email";
+                message.setText(messagetext);
+
                 //sendCustomEmail(email, displayName, link);
 
             }

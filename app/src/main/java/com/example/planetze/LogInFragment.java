@@ -63,7 +63,7 @@ public class LogInFragment extends Fragment  {
         loginPass = view.findViewById(R.id.passwordInput);
         login = view.findViewById(R.id.logInButton);
         inputError = view.findViewById(R.id.error);
-        forgotpass = view.findViewById(R.id.forgotpassword);
+        forgotpass = view.findViewById(R.id.forgotPasswordLink);
 
 
 
@@ -156,7 +156,7 @@ public class LogInFragment extends Fragment  {
                                         loadFragment(new HomeFragment());
                                     }
                                     else {
-                                        errorMsg = "invalid email or password";
+                                        errorMsg = "Account needs to be verified";
                                         inputError.setText(errorMsg);
                                     }
 
@@ -177,7 +177,7 @@ public class LogInFragment extends Fragment  {
             @Override
             public void onClick(View view) {
                 //auth.sendPasswordResetEmail(email);
-                loadFragment(new ForgotPassFragment());
+                loadFragment(new ForgotPasswordFragment());
             }
         });
 
