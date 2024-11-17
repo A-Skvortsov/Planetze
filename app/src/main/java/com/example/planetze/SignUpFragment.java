@@ -1,5 +1,7 @@
 package com.example.planetze;
 
+import static java.lang.Character.isLetter;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -184,8 +186,8 @@ public class SignUpFragment extends Fragment{
 
                                         String id = auth.getCurrentUser().getUid();
                                         userRef.child(id+"/name").setValue(name);
-                                        userRef.child(id+"/email").setValue(email);
-                                        userRef.child(id+"/password").setValue(pass);
+                                        //userRef.child(id+"/email").setValue(email);
+                                        //userRef.child(id+"/password").setValue(pass);
 
                                         auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
@@ -228,11 +230,41 @@ public class SignUpFragment extends Fragment{
     }
 
     private boolean validPassword(String password) {
-        boolean cond1 = password.length() >= 8;
+        boolean cond1 = password.length() >= 7;
         String result = password.replaceAll("\\d", "");
         boolean cond2 = result.length() != password.length();
 
         return cond1 && cond2;
+    }
+
+    private boolean hasNumber(String string) {
+        ArrayList<Character> digits = new ArrayList<Character>();
+        digits.add('0');digits.add('1');digits.add('2');digits.add('3');digits.add('4');
+        digits.add('5');digits.add('6');digits.add('7');digits.add('8');digits.add('9');
+        for (int i = 0; i < string.length(); i++) {
+            if (digits.contains(string.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasSpace(String string) {
+        for (int i = 0; i < string.length(); i++) {
+            if (string.charAt(i) == ' ') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean hasSpecialCharcter(String string) {
+        for (int i = 0; i < string.length(); i++) {
+            if (isLetter(string.charAt(i))) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
