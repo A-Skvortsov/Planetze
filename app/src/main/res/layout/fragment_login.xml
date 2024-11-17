@@ -105,7 +105,8 @@
                 app:boxCornerRadiusTopStart="12dp"
                 app:boxStrokeColor="@color/palette_turquoise"
                 app:startIconDrawable="@drawable/ic_lock"
-                app:startIconTint="@drawable/custom_info_input_icon">
+                app:startIconTint="@drawable/custom_info_input_icon"
+                app:passwordToggleEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/passwordInput"
@@ -119,6 +120,18 @@
                     android:textColor="@color/palette_stormy_gray"
                     android:textColorHint="@color/palette_light_blue" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="15dp"
+                android:layout_marginEnd="15dp"
+                android:text=" "
+                android:textColor="#FF0000"
+                android:textSize="14sp" />
 
             <!-- Forgot Password -->
             <RelativeLayout

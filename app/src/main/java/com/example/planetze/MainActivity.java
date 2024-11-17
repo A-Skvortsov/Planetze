@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         myRef.child("movies").setValue("B07 Demo!");
 
         if (savedInstanceState == null) {
-            loadFragment(new SignUpActivity());
+            loadFragment(new SignUpFragment());
         }
     }
 
@@ -44,4 +44,6 @@ public class MainActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
+
+
 }
