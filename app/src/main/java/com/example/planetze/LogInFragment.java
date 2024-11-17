@@ -230,6 +230,7 @@ public class LogInFragment extends Fragment  {
         return false;
     }
 
+    /*
     private void getUsers() {
 
         userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
@@ -240,6 +241,8 @@ public class LogInFragment extends Fragment  {
         });
     }
 
+     */
+
 
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
@@ -248,6 +251,7 @@ public class LogInFragment extends Fragment  {
         transaction.commit();
     }
 
+    /*
     private void getUserList(Task<DataSnapshot> task) {
         DataSnapshot users = task.getResult();
         ArrayList<String[]> userArray = new ArrayList<String[]>();
@@ -265,6 +269,8 @@ public class LogInFragment extends Fragment  {
         }
         //System.out.println("size of users: " + UserData.size());
     }
+
+     */
 
 
 }

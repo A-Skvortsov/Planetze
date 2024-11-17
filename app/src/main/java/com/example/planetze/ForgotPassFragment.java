@@ -71,13 +71,13 @@ public class ForgotPassFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_forgot_pass, container, false);
+        View view = inflater.inflate(R.layout.fragment_forgot_password, container, false);
 
         auth = FirebaseAuth.getInstance();
 
-        login = view.findViewById(R.id.button);
-        sendlink = view.findViewById(R.id.button2);
-        emailInput = view.findViewById(R.id.input_email);
+        login = view.findViewById(R.id.returnButton);
+        sendlink = view.findViewById(R.id.resetPasswordButton);
+        emailInput = view.findViewById(R.id.emailInput);
 
 
         login.setOnClickListener(new View.OnClickListener() {
@@ -101,9 +101,6 @@ public class ForgotPassFragment extends Fragment {
         });
 
         return view;
-
-
-
 
 
     }
