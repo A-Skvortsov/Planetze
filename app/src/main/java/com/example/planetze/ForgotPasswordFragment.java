@@ -106,7 +106,6 @@ public class ForgotPasswordFragment extends Fragment {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 loadFragment(new LogInFragment());
             }
         });
@@ -114,27 +113,22 @@ public class ForgotPasswordFragment extends Fragment {
         sendlink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //String link = FirebaseAuth.getInstance().generatePasswordResetLink(email);
                 email = emailInput.getText().toString().trim();
-                if (!accountNotExists(email)) {
-                    auth.sendPasswordResetEmail(email);
-                    messagetext = "Password reset link sent! Please check your email";
-                }
-                else {
-                    messagetext = "There isn't an account accociated with that email";
-                    message.setText(messagetext);
-                }
-
-
-                //sendCustomEmail(email, displayName, link);
+                sendPassReset(email);
 
             }
         });
 
+
         return view;
 
 
+    }
+
+    private void sendPassResetEmail(String email) {
+        auth.sendPasswordResetEmail(email);
+        messagetext = "Password reset link sent! Please check your email";
+        message.setText(messagetext);
     }
 
     private void loadFragment(Fragment fragment) {
@@ -144,32 +138,32 @@ public class ForgotPasswordFragment extends Fragment {
         transaction.commit();
     }
 
-    private boolean accountNotExists(String email) {
-        getEmails();
-        if (emailArray == null || emailArray.size() == 0) {
-            return true;
-        }
-        int index = emailArray.indexOf(email);
-        if (index == -1) {
-            return true;
-        }
-        return false;
-    }
 
-
-    private void getEmails() {
+    private void sendPassReset(String email) {
         userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 DataSnapshot users = task.getResult();
-                emailArray = new ArrayList<String>();
+                //emailArray = new ArrayList<String>();
+                boolean equalsEmail = false;
                 for(DataSnapshot user:users.getChildren()) {
+                    String currentemail = " ";
                     if (user.hasChild("email")) {
-                        String email = user.child("email").getValue(String.class).toString().trim();
-                        emailArray.add(email);
+                        currentemail = user.child("email").getValue(String.class).toString().trim();
+                    }
+                    if (currentemail.equals(email)) {
+                        equalsEmail = true;
                     }
 
                 }
+                if (equalsEmail) {
+                    sendPassResetEmail(email);
+                }
+                else {
+                    messagetext = "There isn't an account accociated with that email";
+                    message.setText(messagetext);
+                }
+
 
             }
         });
