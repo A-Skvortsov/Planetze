@@ -1,5 +1,6 @@
 package com.example.planetze;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,9 +25,12 @@ public class MainActivity extends AppCompatActivity {
 //        myRef.setValue("B07 Demo!");
         myRef.child("movies").setValue("B07 Demo!");
 
+        Intent intent = new Intent(MainActivity.this, EcoTrackerActivity.class);
+        startActivity(intent);
+        /*
         if (savedInstanceState == null) {
             loadFragment(new SignUpFragment());
-        }
+        }*/
     }
 
     private void loadFragment(Fragment fragment) {
