@@ -7,10 +7,9 @@
     android:layout_height="match_parent"
     tools:context=".EcoTrackerActivity">
 
-    <!-- Calendar contained in this view -->
 
     <TextView
-        android:id="@+id/total3"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
@@ -23,7 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/total_bar4"
+        android:id="@+id/dailyTotal"
         android:layout_width="263dp"
         android:layout_height="40dp"
         android:background="@color/palette_turquoise"
@@ -31,9 +30,53 @@
         android:text="502.2 kg of CO2 Emitted"
 
         android:textColor="@color/white"
-        app:layout_constraintEnd_toEndOf="@+id/total3"
-        app:layout_constraintStart_toStartOf="@+id/total3"
-        app:layout_constraintTop_toBottomOf="@+id/total3" />
+        app:layout_constraintEnd_toEndOf="@+id/title"
+        app:layout_constraintStart_toStartOf="@+id/title"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+
+    <!-- mini calendar image displaying selected date-->
+    <ImageView
+        android:id="@+id/date"
+        android:layout_width="107dp"
+        android:layout_height="101dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dailyTotal"
+        app:srcCompat="@drawable/calendarday" />
+    <TextView
+        android:id="@+id/dateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="11 Nov"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/date"
+        app:layout_constraintHorizontal_bias="0.488"
+
+        app:layout_constraintStart_toStartOf="@+id/date"
+        app:layout_constraintTop_toTopOf="@+id/date" />
+    <TextView
+        android:id="@+id/yearText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2024"
+        app:layout_constraintEnd_toEndOf="@+id/dateText"
+        app:layout_constraintStart_toStartOf="@+id/dateText"
+        app:layout_constraintTop_toBottomOf="@+id/dateText" />
+
+    <!-- calendar stuff below -->
+    <Button
+        android:id="@+id/calendarToggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="View Calendar"
+        app:layout_constraintEnd_toEndOf="@+id/date"
+        app:layout_constraintHorizontal_bias="0.515"
+        app:layout_constraintStart_toStartOf="@+id/date"
+        app:layout_constraintTop_toBottomOf="@+id/date" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/calendarView"
@@ -62,18 +105,8 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <LinearLayout
-        android:id="@+id/list"
-        android:layout_width="344dp"
-        android:layout_height="170dp"
-        android:layout_marginTop="444dp"
-        android:background="@color/palette_light_blue"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
 
+    <!-- activities and habits stuff below -->
     <Button
         android:id="@+id/activities"
         android:layout_width="wrap_content"
@@ -89,6 +122,18 @@
         android:text="Habits"
         app:layout_constraintBottom_toTopOf="@+id/list"
         app:layout_constraintEnd_toEndOf="@+id/list" />
+
+    <LinearLayout
+        android:id="@+id/list"
+        android:layout_width="344dp"
+        android:layout_height="170dp"
+        android:layout_marginTop="444dp"
+        android:background="@color/palette_light_blue"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.492"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
 
     <Button
         android:id="@+id/addBtn"
@@ -116,47 +161,5 @@
         app:layout_constraintEnd_toEndOf="@+id/list"
         app:layout_constraintTop_toBottomOf="@+id/list" />
 
-    <Button
-        android:id="@+id/calendarToggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="View Calendar"
-        app:layout_constraintEnd_toEndOf="@+id/date"
-        app:layout_constraintHorizontal_bias="0.515"
-        app:layout_constraintStart_toStartOf="@+id/date"
-        app:layout_constraintTop_toBottomOf="@+id/date" />
-
-    <ImageView
-        android:id="@+id/date"
-        android:layout_width="107dp"
-        android:layout_height="101dp"
-        android:layout_marginTop="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/total_bar4"
-        app:srcCompat="@drawable/calendarday" />
-
-    <TextView
-        android:id="@+id/dateText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:text="11 Nov"
-        android:textSize="20dp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/date"
-        app:layout_constraintHorizontal_bias="0.488"
-
-        app:layout_constraintStart_toStartOf="@+id/date"
-        app:layout_constraintTop_toTopOf="@+id/date" />
-
-    <TextView
-        android:id="@+id/yearText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="2024"
-        app:layout_constraintEnd_toEndOf="@+id/dateText"
-        app:layout_constraintStart_toStartOf="@+id/dateText"
-        app:layout_constraintTop_toBottomOf="@+id/dateText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

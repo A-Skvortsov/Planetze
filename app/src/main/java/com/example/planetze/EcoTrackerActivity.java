@@ -16,6 +16,8 @@ import com.prolificinteractive.materialcalendarview.CalendarDay;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
 
+import java.util.Calendar;
+
 import utilities.Constants;
 
 public class EcoTrackerActivity extends AppCompatActivity {
@@ -41,6 +43,14 @@ public class EcoTrackerActivity extends AppCompatActivity {
 
         final Button activities = findViewById(R.id.activities);
         final Button habits = findViewById(R.id.habits);
+
+        //initializing to current date
+        Calendar today = Calendar.getInstance();
+        String t = String.valueOf(today.get(Calendar.DAY_OF_MONTH)) + " " +
+                String.valueOf(months[today.get(Calendar.MONTH)]);
+        dateText.setText(t);
+        yearText.setText(String.valueOf(today.get(Calendar.YEAR)));
+
 
         //Toggles calendar view
         calendarToggle.setOnClickListener(new View.OnClickListener() {
