@@ -186,9 +186,8 @@ public class SignUpFragment extends Fragment {
 
                                         String id = auth.getCurrentUser().getUid();
                                         userRef.child(id+"/name").setValue(name);
-                                        //userRef.child(id+"/email").setValue(email);
+                                        userRef.child(id+"/email").setValue(email);
                                         //userRef.child(id+"/password").setValue(pass);
-
                                         auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
@@ -213,8 +212,6 @@ public class SignUpFragment extends Fragment {
 
             }
         });
-
-
 
         return view;
 
@@ -241,7 +238,7 @@ public class SignUpFragment extends Fragment {
             errorMsg = "Password has to contains numbers";
             return false;
         }
-        else if (!cond3) {
+        else if (cond3) {
             errorMsg = "Password cannot contain a space";
             return false;
         }
@@ -335,6 +332,8 @@ public class SignUpFragment extends Fragment {
         }
         return false;
     }
+
+    //check if account already exists
 
     private void getEmails() {
         userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {

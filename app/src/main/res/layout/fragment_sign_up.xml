@@ -16,7 +16,7 @@
         app:srcCompat="@drawable/banner"
         android:contentDescription="@string/welcome"
         app:layout_constraintTop_toTopOf="parent"
-        />
+    />
 
     <!-- Banner Text -->
     <TextView
@@ -259,7 +259,7 @@
                     android:backgroundTint="@color/white"
                     android:paddingStart="12dp"
                     android:paddingEnd="12dp"
-                    />
+                />
 
                 <!-- Already have an account -->
                 <LinearLayout
