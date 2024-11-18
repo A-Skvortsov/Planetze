@@ -2,6 +2,9 @@ package utilities;
 
 public class Constants {
 
+    public static final String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "June",
+                                            "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
+
     //all survey question categories
     public static final String[] categories = {"Transportation", "Food", "Housing", "Consumption"};
 
