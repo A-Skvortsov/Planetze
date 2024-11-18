@@ -51,4 +51,5 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(libs.firebase.auth)
+    implementation("com.github.prolificinteractive:material-calendarview:2.0.1")
 }
