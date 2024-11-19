@@ -42,6 +42,69 @@ public class Constants {
             {"How many electronic devices have you purchased in the past year?", "None", "1", "2", "3", "4 or more"},
             {"How often do you recycle?", "Never", "Occasionally", "Frequently", "Always"}};
 
+
+    public static final String[][][][] activities = {
+            {  //transport category
+                    {  //drive personal vehicle
+                            {"Drive personal vehicle"},
+                            {},  //distance driven
+                            {}  //vehicle type (if not default)
+                    },
+                    {  //Take Public Transportation
+                            {"Take public transportation"},
+                            {},  //type of public transport
+                            {}  //time spent in hours
+                    },
+                    {  //Cycling or Walking
+                            {"Cycling/Walking"},
+                            {}  //distance cycled/walked
+                    },
+                    {  //Flight
+                            {"Flight"},
+                            {},  //num flights
+                            {}  //short or long haul
+                    }
+            },
+            {  //food category
+                    {
+                            {"Meal"},
+                            {},  //type of meal
+                            {}  //number of servings
+                    }
+            },
+            {  //consumption category
+                    {
+                            {"Buy new clothes"},
+                            {}  //number of clothing items purchased
+                    },
+                    {
+                            {"Buy electronics"},
+                            {},  //type of electronic device (smartphone, laptop, TV)
+                            {}  //number of devices purchased
+                    },
+                    {
+                            {"Other purchases"},
+                            {},  //type of purchase (i.e. furniture, appliance)
+                            {}  //number of purchases
+                    }
+            },
+            {  //energy bills
+                    {
+                            {"Electricity"},
+                            {}  //bill amount
+                    },
+                    {
+                            {"Gas"},
+                            {}  //bill amount
+                    },
+                    {
+                            {"Water"},
+                            {}  //bill amount
+                    }
+            }
+    };
+
+
     public static final String[] country = {
             "Afghanistan",
             "Africa",
