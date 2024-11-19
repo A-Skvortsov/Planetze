@@ -108,58 +108,69 @@
 
     <!-- activities and habits stuff below -->
     <Button
-        android:id="@+id/activities"
+        android:id="@+id/activitiesBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Activities"
-        app:layout_constraintBottom_toTopOf="@+id/list"
-        app:layout_constraintStart_toStartOf="@+id/list" />
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+        app:layout_constraintStart_toStartOf="@+id/scrollView2" />
 
     <Button
-        android:id="@+id/habits"
+        android:id="@+id/habitsBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Habits"
-        app:layout_constraintBottom_toTopOf="@+id/list"
-        app:layout_constraintEnd_toEndOf="@+id/list" />
-
-    <LinearLayout
-        android:id="@+id/list"
-        android:layout_width="344dp"
-        android:layout_height="170dp"
-        android:layout_marginTop="444dp"
-        android:background="@color/palette_light_blue"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
+        app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+        app:layout_constraintEnd_toEndOf="@+id/scrollView2" />
 
     <Button
         android:id="@+id/addBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Add"
-        app:layout_constraintStart_toStartOf="@+id/list"
-        app:layout_constraintTop_toBottomOf="@+id/list" />
+        app:layout_constraintStart_toStartOf="@+id/scrollView2"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
 
     <Button
         android:id="@+id/editBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Edit"
-        app:layout_constraintEnd_toEndOf="@+id/list"
-        app:layout_constraintHorizontal_bias="0.505"
-        app:layout_constraintStart_toStartOf="@+id/list"
-        app:layout_constraintTop_toBottomOf="@+id/list" />
+        app:layout_constraintEnd_toEndOf="@+id/scrollView2"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="@+id/scrollView2"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
 
     <Button
         android:id="@+id/delBtn"
         android:layout_width="98dp"
         android:layout_height="52dp"
         android:text="Delete"
-        app:layout_constraintEnd_toEndOf="@+id/list"
-        app:layout_constraintTop_toBottomOf="@+id/list" />
+        app:layout_constraintEnd_toEndOf="@+id/scrollView2"
+        app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+
+    <ScrollView
+        android:id="@+id/scrollView2"
+        android:layout_width="344dp"
+        android:layout_height="171dp"
+        android:layout_marginTop="108dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.507"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/calendarToggle">
+
+        <RadioGroup
+            android:id="@+id/activitiesGroup"
+            android:layout_width="341dp"
+            android:layout_height="170dp"
+            app:layout_constraintBottom_toTopOf="@+id/editBtn"
+            app:layout_constraintEnd_toEndOf="@+id/scrollView2"
+            app:layout_constraintStart_toStartOf="@+id/scrollView2"
+            app:layout_constraintTop_toTopOf="@+id/scrollView2" />
+
+    </ScrollView>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
