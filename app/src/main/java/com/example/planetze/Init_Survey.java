@@ -301,8 +301,11 @@ public class Init_Survey extends AppCompatActivity {
         int[] i = housing_ans;
         if (i[3] != i[5]) totalkg += 233;
 
-        System.out.println(i[0] + " " + i[1] + " " + i[2] + " " + i[4] + " " + i[3]);
         if (i[0] == 4) i[0] = 2;  //sets "other" answer option to "townhouse" (as instructed in formula spreadsheet)
+        if (i[3] == 5) i[3] = 1;  //sets "other" answer option to "electricity" (by assumption)
+        if (i[5] == 5) i[5] = 1;  //^^ Piazza post SHOULD but has not yet clarified if this is what we are to do.
+                                //profs have not yet specified what to do in this scenario so we will assume
+                                //that it is reasonable to default "other" to electricity
         totalkg += housing_emissions[i[0]][i[1]][i[2]][i[4]][i[3]];  //home heating (i[3]; fourth question of category)
         totalkg += housing_emissions[i[0]][i[1]][i[2]][i[4]][i[5]];  //water heating (i[5]; sixth question of category)
         switch(i[6]) {  //7th question of housing category; re: renewable energy use

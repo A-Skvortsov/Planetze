@@ -13,6 +13,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -62,6 +64,7 @@ public class EcoTrackerActivity extends AppCompatActivity {
         final Button activitiesBtn = findViewById(R.id.activitiesBtn);
         final RadioGroup activities = findViewById(R.id.activitiesGroup);
         final Button habitsBtn = findViewById(R.id.habitsBtn);
+        final Button addBtn = findViewById(R.id.addBtn);
 
         //initializing to current date
         Calendar today = Calendar.getInstance();
@@ -118,6 +121,13 @@ public class EcoTrackerActivity extends AppCompatActivity {
             }
         });
 
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loadFragment(new AddActivity());
+            }
+        });
+
     }
 
     final private String[] testArr = {"activity 1", "activity 2", "activity 3"};
@@ -130,6 +140,13 @@ public class EcoTrackerActivity extends AppCompatActivity {
             btn.setText(testArr[i]);
             activities.addView(btn);
         }
+    }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
 }
