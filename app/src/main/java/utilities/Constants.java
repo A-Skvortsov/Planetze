@@ -532,10 +532,10 @@ public class Constants {
                             108,
                             180},
                     {  //quarterly clothes, etc.
-                            0,
-                            15,
-                            30,
-                            50},
+                            0,  //calculated as monthly divided by 3
+                            18,
+                            36,
+                            60},
                     {  //note that annually and quarterly are kept same since quarterly data omitted from given excel file
                             0,
                             15,
@@ -549,25 +549,25 @@ public class Constants {
             },
             {  //1 electronic device, etc.
                     {0, 54 + 45, 108 + 60, 180 + 90},
-                    {0, 15 + 45, 30 + 60, 50 + 90},
+                    {0, 18 + 45, 36 + 60, 60 + 90},
                     {0, 15 + 45, 30 + 60, 50 + 90},
                     {0, 0.75 + 45, 1.5 + 60, 2.5 + 90}
             },
             {
                     {0, 54 + 60, 108 + 120, 180 + 180},
-                    {0, 15 + 60, 30 + 120, 50 + 180},
+                    {0, 18 + 60, 36 + 120, 60 + 180},
                     {0, 15 + 60, 30 + 120, 50 + 180},
                     {0, 0.75 + 60, 1.5 + 120, 2.5 + 180}
             },
             {
                     {0, 54 + 90, 108 + 180, 180 + 270},
-                    {0, 15 + 90, 30 + 180, 50 + 270},
+                    {0, 18 + 90, 36 + 180, 60 + 270},
                     {0, 15 + 90, 30 + 180, 50 + 270},
                     {0, 0.75 + 90, 1.5 + 180, 2.5 + 270}
             },
             {
                     {0, 54 + 120, 108 + 240, 180 + 360},
-                    {0, 15 + 120, 30 + 240, 50 + 360},
+                    {0, 18 + 120, 36 + 240, 60 + 360},
                     {0, 15 + 120, 30 + 240, 50 + 360},
                     {0, 0.75 + 120, 1.5 + 240, 2.5 + 360}
             }
@@ -668,21 +668,21 @@ public class Constants {
                                             3200,  //natural gas
                                             1800,  //electricity
                                             14000,  //oil
-                                            0,  //propane; this is missing from given database. Ask instructors
+                                            5800,  //propane
                                             4510  //wood
                                     },
                                     {  //$150-200/month
                                             3400,  //natural gas
                                             2700,  //electricity
                                             17500,  //oil
-                                            0,  //propane; missing from given data
+                                            5852,  //propane
                                             4680  //wood
                                     },
                                     {  //>$200/month
                                             3600,  //natural gas
                                             3600,  //electricity
                                             21000,  //oil
-                                            0,  //propane; missing
+                                            6100,  //propane
                                             5000  //wood
                                     }}},
                     {  //2 people
@@ -777,21 +777,21 @@ public class Constants {
                                             3400,
                                             2100,
                                             15500,
-                                            0,  //missing propane
+                                            6410,
                                             5010
                                     },
                                     {  //$150-200/month
                                             3600,
                                             3100,
                                             18100,
-                                            0,
+                                            6560,
                                             5180
                                     },
                                     {  //>$200/month
                                             3800,
                                             3800,
                                             22000,
-                                            0,
+                                            6840,
                                             5500
                                     }}},
                     {  //3-4 people
@@ -847,13 +847,13 @@ public class Constants {
                                             3500,	1500,	12500,	7240,	5640
                                     },
                                     {  //$100-150/month
-                                            3700,	2300,	16250, 0,	5710  //missing propane
+                                            3700,	2300,	16250, 7300,	5710  //missing propane
                                     },
                                     {  //$150-200/month
-                                            4100,	3400,	20000, 0,		5980  //missing propane
+                                            4100,	3400,	20000, 7600,	5980  //missing propane
                                     },
                                     {  //>$200/month
-                                            4100,	4000,	23500, 0,		6250  //missing propane
+                                            4100,	4000,	23500, 7890,	6250  //missing propane
                                     }}},
                     {  //5 people
                             {  //<1000 sqft
@@ -896,13 +896,13 @@ public class Constants {
                                             3800,	1800,	14000,	8140,	6340
                                     },
                                     {  //$100-150/month
-                                            4000,	2700,	17500, 0,		6510  //missing propane
+                                            4000,	2700,	17500, 8230,	6510  //missing propane
                                     },
                                     {  //$150-200/month
-                                            4400,	3600,	21000, 0,		6680  //missing propane
+                                            4400,	3600,	21000, 8300,	6680  //missing propane
                                     },
                                     {  //>$200/month
-                                            4400,	4200,	25000, 0,		7000  //missing propane
+                                            4400,	4200,	25000, 8710,	7000  //missing propane
                                     }}}},
             {  //semi
                     {  //1 person
