@@ -1,6 +1,8 @@
 package com.example.planetze;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,6 +67,8 @@ public class SurveyFragment extends Fragment {
             RadioButton btn = new RadioButton(getContext());
             btn.setId(i - 1);
             btn.setText(questions[current_q][i]);
+            btn.setTextColor(Color.BLACK);
+            btn.setTextSize(16);
             options.addView(btn);
         }
 
@@ -143,6 +147,8 @@ public class SurveyFragment extends Fragment {
             RadioButton btn = new RadioButton(getContext());
             btn.setId(i - 1);  //standard btn configurations
             btn.setText(questions[q][i]);
+            btn.setTextColor(Color.BLACK);
+            btn.setTextSize(16);
             options.addView(btn);  //adds btn to the RadioGroup (btn container)
         }
     }
