@@ -154,6 +154,8 @@ public class LogInFragment extends Fragment  {
                                     FirebaseUser user = auth.getCurrentUser();
                                     if (user.isEmailVerified()) {
                                         loadFragment(new HomeFragment());
+                                        //eco guage
+                                        // survey if just registered
                                     }
                                     else {
                                         errorMsg = "Account needs to be verified";
@@ -172,6 +174,8 @@ public class LogInFragment extends Fragment  {
 
             }
         });
+
+        //dosent work with school email
 
         forgotpass.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -274,4 +278,3 @@ public class LogInFragment extends Fragment  {
 
 
 }
-

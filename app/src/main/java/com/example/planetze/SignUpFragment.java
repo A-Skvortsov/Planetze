@@ -123,98 +123,13 @@ public class SignUpFragment extends Fragment {
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         userRef = db.getReference("user data");
 
-        /*
-        ValueEventListener listener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for(DataSnapshot user:dataSnapshot.getChildren()) {
-                    if (user.hasChild("email")) {
-                        String email = user.child("email").getValue(String.class).toString().trim();
-                        emailArray.add(email);
-                    }
-
-                }
-
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("warning", "Unable to fetch user info", databaseError.toException());
-            }
-        };
-
-        userRef.addValueEventListener(listener);
-
-         */
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                String email = signupEmail.getText().toString().trim();
-                String pass = signupPassword.getText().toString().trim();
-                String confirm_pass = signupConfirmPassword.getText().toString().trim();
-                String name = fullName.getText().toString().trim();
-
-                boolean valid = validprofile(name, email, pass, confirm_pass);
-                inputError.setText(errorMsg);
-
-                if (valid) {
-                    auth.createUserWithEmailAndPassword(email, pass)
-                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                @Override
-                                public void onComplete(@NonNull Task<AuthResult> task) {
-
-                                    if (task.isSuccessful()) {
-                                        /*
-
-                                        FirebaseUser user = task.getResult().getUser();
-
-                                        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                                                .setDisplayName(name)
-                                                .build();
-                                        user.updateProfile(profileUpdates).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                if(task.isSuccessful()){
-                                                    Toast.makeText(activity," ",Toast.LENGTH_LONG).show();
-                                                    //Toast.makeText(activity,"Name update ",Toast.LENGTH_LONG).show();
-                                                }else
-                                                    Toast.makeText(activity,"Name update Failed, try again",Toast.LENGTH_LONG).show();
-                                            }
-                                        });
-
-                                         */
-
-                                        String id = auth.getCurrentUser().getUid();
-                                        userRef.child(id+"/name").setValue(name);
-                                        //userRef.child(id+"/email").setValue(email);
-                                        //userRef.child(id+"/password").setValue(pass);
-
-                                        auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-
-                                                if (task.isSuccessful()) {
-                                                    Toast.makeText(activity, "Signup Successful, check email for verification.", Toast.LENGTH_LONG).show();
-                                                    loadFragment(new LogInFragment());
-                                                }else{
-                                                    //Toast.makeText(activity, task.getException().getMessage() , Toast.LENGTH_LONG).show();
-                                                    Toast.makeText(activity, "there was an error in sending verification email", Toast.LENGTH_LONG).show();
-                                                }
-                                            }
-                                        });
-
-                                    } else {
-                                        //Toast.makeText(activity, "Signup Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                        Toast.makeText(activity, "Signup Failed ", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-                }
+                createAccount();
 
             }
         });
-
-
 
         return view;
 
@@ -237,11 +152,10 @@ public class SignUpFragment extends Fragment {
             return false;
         }
         else if (!cond2) {
-            //signupEmail.setError("Email cannot be empty");
             errorMsg = "Password has to contains numbers";
             return false;
         }
-        else if (!cond3) {
+        else if (cond3) {
             errorMsg = "Password cannot contain a space";
             return false;
         }
@@ -282,36 +196,71 @@ public class SignUpFragment extends Fragment {
 
      */
 
-    private boolean validprofile(String name, String email, String pass, String conf_pass) {
 
+
+    private boolean valid1(String email, String name) {
         boolean cond1 = name.length() != 0;
         boolean cond2 = email.length() != 0;
-        boolean cond3 = accountNotExists(email);
-        boolean cond4 = conf_pass.equals(pass);
-
-
         if (!cond1) {
             errorMsg = "Name cannot be empty";
             return false;
         }
         else if (!cond2) {
-            //signupEmail.setError("Email cannot be empty");
             errorMsg = "Email cannot be empty";
             return false;
         }
-        else if (!cond3) {
-            errorMsg = "Email already accociated with an account";
-            return false;
-        }
-        else if (!validPassword(pass)) {
-            //signupPassword.setError("Password has to be at least 7 character long");
+        return true;
+    }
+
+    private boolean valid2(String pass, String conf_pass, String name) {
+        boolean cond4 = conf_pass.equals(pass);
+        if (!validPassword(pass)) {
             return false;
         }
         else if (!cond4) {
-            //signupConfirmPassword.setError("Confirm Password has to match with password");
             errorMsg = "Confirm Password has to match with password";
             return false;
         }
+        return true;
+    }
+
+    private void createAccount() {
+
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                String email = signupEmail.getText().toString().trim();
+                String pass = signupPassword.getText().toString().trim();
+                String confirm_pass = signupConfirmPassword.getText().toString().trim();
+                String name = fullName.getText().toString().trim();
+
+                boolean equalsEmail = false;
+
+                if(valid1(email, name)) {
+                    DataSnapshot users = task.getResult();
+                    for(DataSnapshot user:users.getChildren()) {
+                        String currentemail = " ";
+                        if (user.hasChild("email")) {
+                            currentemail = user.child("email").getValue(String.class).toString().trim();
+                        }
+                        if (currentemail.equals(email)) {
+                            equalsEmail = true;
+                        }
+
+                    }
+                }
+                if (equalsEmail && valid1(email, name)) {
+                    errorMsg = "Email already accociated with an account";
+                }
+                else if (valid2(pass,confirm_pass, name)){
+                    createAccountOnFirebase(email, pass, name);
+                }
+                inputError.setText(errorMsg);
+
+
+            }
+        });
+
         /*
         else if (!cond6) {
             //signupEmail.setError("Not a valid Email");
@@ -320,38 +269,41 @@ public class SignUpFragment extends Fragment {
         }
 
          */
+
+    }
+
+    private void createAccountOnFirebase(String email, String pass, String name) {
+        Activity activity = getActivity();
         errorMsg = " ";
-        return true;
-    }
+        auth.createUserWithEmailAndPassword(email, pass)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
 
-    private boolean accountNotExists(String email) {
-        getEmails();
-        if (emailArray == null || emailArray.size() == 0) {
-            return true;
-        }
-        int index = emailArray.indexOf(email);
-        if (index == -1) {
-            return true;
-        }
-        return false;
-    }
+                        if (task.isSuccessful()) {
 
-    private void getEmails() {
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                DataSnapshot users = task.getResult();
-                emailArray = new ArrayList<String>();
-                for(DataSnapshot user:users.getChildren()) {
-                    if (user.hasChild("email")) {
-                        String email = user.child("email").getValue(String.class).toString().trim();
-                        emailArray.add(email);
+                            String id = auth.getCurrentUser().getUid();
+                            userRef.child(id+"/name").setValue(name);
+                            userRef.child(id+"/email").setValue(email);
+                            //userRef.child(id+"/password").setValue(pass);
+                            auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(activity, "Signup Successful, check email for verification.", Toast.LENGTH_LONG).show();
+                                        loadFragment(new LogInFragment());
+                                    }else{
+                                        Toast.makeText(activity, "there was an error in sending verification email", Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            });
+
+                        } else {
+                            Toast.makeText(activity, "Signup Failed please try again", Toast.LENGTH_SHORT).show();
+                        }
                     }
-
-                }
-
-            }
-        });
+                });
     }
 
 }

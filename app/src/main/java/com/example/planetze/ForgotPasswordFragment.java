@@ -2,6 +2,7 @@ package com.example.planetze;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -12,8 +13,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +35,9 @@ public class ForgotPasswordFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private FirebaseAuth auth;
+    private DatabaseReference userRef;
+    private ArrayList<String> emailArray;
+    private FirebaseDatabase db;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -86,11 +97,15 @@ public class ForgotPasswordFragment extends Fragment {
 
         messagetext = " ";
 
+        emailArray = new ArrayList<String>();
+
+        db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        userRef = db.getReference("user data");
+
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 loadFragment(new LogInFragment());
             }
         });
@@ -98,21 +113,22 @@ public class ForgotPasswordFragment extends Fragment {
         sendlink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //String link = FirebaseAuth.getInstance().generatePasswordResetLink(email);
-                //email = emailInput.getText().toString().trim();
-                auth.sendPasswordResetEmail(email);
-                messagetext = "Password reset link sent! Please check your email";
-                message.setText(messagetext);
-
-                //sendCustomEmail(email, displayName, link);
+                email = emailInput.getText().toString().trim();
+                sendPassReset(email);
 
             }
         });
 
+
         return view;
 
 
+    }
+
+    private void sendPassResetEmail(String email) {
+        auth.sendPasswordResetEmail(email);
+        messagetext = "Password reset link sent! Please check your email";
+        message.setText(messagetext);
     }
 
     private void loadFragment(Fragment fragment) {
@@ -120,5 +136,36 @@ public class ForgotPasswordFragment extends Fragment {
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+
+    private void sendPassReset(String email) {
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                DataSnapshot users = task.getResult();
+                //emailArray = new ArrayList<String>();
+                boolean equalsEmail = false;
+                for(DataSnapshot user:users.getChildren()) {
+                    String currentemail = " ";
+                    if (user.hasChild("email")) {
+                        currentemail = user.child("email").getValue(String.class).toString().trim();
+                    }
+                    if (currentemail.equals(email)) {
+                        equalsEmail = true;
+                    }
+
+                }
+                if (equalsEmail) {
+                    sendPassResetEmail(email);
+                }
+                else {
+                    messagetext = "There isn't an account accociated with that email";
+                    message.setText(messagetext);
+                }
+
+
+            }
+        });
     }
 }
