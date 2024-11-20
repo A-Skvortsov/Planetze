@@ -81,7 +81,7 @@ public class signupView extends Fragment {
 
         presenter = new signupPresenter(this, new signupModel());
 
-        setMessage(" ");
+        presenter.setMessage(" ");
 
         signinLink.setOnClickListener(new View.OnClickListener() {
             @Override
