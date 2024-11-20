@@ -25,12 +25,12 @@ public class MainActivity extends AppCompatActivity {
 //        myRef.setValue("B07 Demo!");
         myRef.child("movies").setValue("B07 Demo!");
 
-        Intent intent = new Intent(MainActivity.this, EcoTrackerActivity.class);
-        startActivity(intent);
-        /*
+        //Intent intent = new Intent(MainActivity.this, Init_Survey.class);
+        //startActivity(intent);
+
         if (savedInstanceState == null) {
-            loadFragment(new SignUpFragment());
-        }*/
+            loadFragment(new EcoTrackerFragment());
+        }
     }
 
     private void loadFragment(Fragment fragment) {

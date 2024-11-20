@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EcoTrackerActivity">
+    tools:context=".EcoTrackerFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        >
+
+
+        <!-- mini calendar image displaying selected date-->
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:layout_marginTop="88dp"
+            android:layout_marginTop="64dp"
             android:text="Today's Total:"
             android:textColor="@color/black"
             android:textSize="20dp"
@@ -31,75 +30,79 @@
 
         <TextView
             android:id="@+id/dailyTotal"
+            app:layout_constraintEnd_toEndOf="@+id/title"
+            app:layout_constraintStart_toStartOf="@+id/title"
+            app:layout_constraintTop_toBottomOf="@+id/title"
             android:layout_width="263dp"
             android:layout_height="40dp"
+
             android:background="@color/palette_turquoise"
             android:gravity="center"
             android:text="502.2 kg of CO2 Emitted"
-
             android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="@+id/title"
-            app:layout_constraintStart_toStartOf="@+id/title"
-            app:layout_constraintTop_toBottomOf="@+id/title" />
+            tools:layout_editor_absoluteX="64dp"
+            tools:layout_editor_absoluteY="87dp" />
 
-
-        <!-- mini calendar image displaying selected date-->
         <ImageView
             android:id="@+id/date"
             android:layout_width="107dp"
             android:layout_height="101dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="28dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.503"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dailyTotal"
             app:srcCompat="@drawable/calendarday" />
 
         <TextView
-            android:id="@+id/dateText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="44dp"
-            android:text="11 Nov"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@+id/date"
-            app:layout_constraintHorizontal_bias="0.488"
+        android:id="@+id/dateText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp"
+        android:text="11 Nov"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/date"
+        app:layout_constraintHorizontal_bias="0.488"
 
-            app:layout_constraintStart_toStartOf="@+id/date"
-            app:layout_constraintTop_toTopOf="@+id/date" />
-        <TextView
-            android:id="@+id/yearText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2024"
-            app:layout_constraintEnd_toEndOf="@+id/dateText"
-            app:layout_constraintStart_toStartOf="@+id/dateText"
-            app:layout_constraintTop_toBottomOf="@+id/dateText" />
+        app:layout_constraintStart_toStartOf="@+id/date"
+        app:layout_constraintTop_toTopOf="@+id/date" />
+    <TextView
+        android:id="@+id/yearText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2024"
+        app:layout_constraintEnd_toEndOf="@+id/dateText"
+        app:layout_constraintStart_toStartOf="@+id/dateText"
+        app:layout_constraintTop_toBottomOf="@+id/dateText" />
 
-        <!-- calendar stuff below -->
+    <!-- calendar stuff below -->
+
         <Button
             android:id="@+id/calendarToggle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="View Calendar"
             app:layout_constraintEnd_toEndOf="@+id/date"
             app:layout_constraintHorizontal_bias="0.515"
             app:layout_constraintStart_toStartOf="@+id/date"
-            app:layout_constraintTop_toBottomOf="@+id/date" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/calendarView"
+            app:layout_constraintTop_toBottomOf="@+id/date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@color/palette_light_gray"
-            android:elevation="2dp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:text="View Calendar"
+            tools:layout_editor_absoluteX="123dp"
+            tools:layout_editor_absoluteY="259dp" />
 
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/calendarToggle"
-            app:layout_constraintVertical_bias="0.499">
+        <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/calendarView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/palette_light_gray"
+        android:elevation="2dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/calendarToggle"
+        app:layout_constraintVertical_bias="0.499">
 
             <com.prolificinteractive.materialcalendarview.MaterialCalendarView
                 android:id="@+id/calendar"
@@ -107,64 +110,72 @@
                 android:layout_height="wrap_content"
                 app:mcv_selectionColor="@color/palette_turquoise"
                 app:mcv_showOtherDates="all"
-                app:mcv_tileSize="40dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                app:mcv_tileSize="60dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <!-- activities and habits stuff below -->
+    <!-- activities and habits stuff below -->
+
         <Button
             android:id="@+id/activitiesBtn"
+            app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+            app:layout_constraintStart_toStartOf="@+id/scrollView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Activities"
-            app:layout_constraintBottom_toTopOf="@+id/scrollView2"
-            app:layout_constraintStart_toStartOf="@+id/scrollView2" />
+            tools:layout_editor_absoluteX="45dp"
+            tools:layout_editor_absoluteY="356dp" />
 
         <Button
             android:id="@+id/habitsBtn"
+            app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+            app:layout_constraintEnd_toEndOf="@+id/scrollView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Habits"
-            app:layout_constraintBottom_toTopOf="@+id/scrollView2"
-            app:layout_constraintEnd_toEndOf="@+id/scrollView2" />
+            tools:layout_editor_absoluteX="305dp"
+            tools:layout_editor_absoluteY="345dp" />
 
         <Button
             android:id="@+id/addBtn"
+            app:layout_constraintStart_toStartOf="@+id/scrollView2"
+            app:layout_constraintTop_toBottomOf="@+id/scrollView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add"
-            app:layout_constraintStart_toStartOf="@+id/scrollView2"
-            app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+            tools:layout_editor_absoluteX="64dp"
+            tools:layout_editor_absoluteY="632dp" />
 
         <Button
             android:id="@+id/editBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Edit"
             app:layout_constraintEnd_toEndOf="@+id/scrollView2"
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="@+id/scrollView2"
-            app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+            app:layout_constraintTop_toBottomOf="@+id/scrollView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Edit"
+            tools:layout_editor_absoluteX="170dp"
+            tools:layout_editor_absoluteY="616dp" />
 
         <Button
             android:id="@+id/delBtn"
+            app:layout_constraintEnd_toEndOf="@+id/scrollView2"
+            app:layout_constraintTop_toBottomOf="@+id/scrollView2"
             android:layout_width="98dp"
             android:layout_height="52dp"
             android:text="Delete"
-            app:layout_constraintEnd_toEndOf="@+id/scrollView2"
-            app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
+            tools:layout_editor_absoluteX="279dp"
+            tools:layout_editor_absoluteY="616dp" />
 
         <ScrollView
             android:id="@+id/scrollView2"
             android:layout_width="344dp"
             android:layout_height="171dp"
-            android:layout_marginTop="108dp"
+            android:layout_marginTop="104dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.507"
+            app:layout_constraintHorizontal_bias="0.492"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/calendarToggle">
 
@@ -181,5 +192,6 @@
 
 
 
+
     </androidx.constraintlayout.widget.ConstraintLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
