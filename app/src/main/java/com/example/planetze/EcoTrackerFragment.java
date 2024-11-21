@@ -136,6 +136,8 @@ public class EcoTrackerFragment extends Fragment {
                 months[today.get(Calendar.MONTH)];
         dateText.setText(t);
         yearText.setText(String.valueOf(today.get(Calendar.YEAR)));
+        date = today.get(Calendar.YEAR) +"-"+(today.get(Calendar.MONTH)+1)+"-"
+                +today.get(Calendar.DAY_OF_MONTH);
 
 
         //Toggles calendar view
@@ -219,13 +221,8 @@ public class EcoTrackerFragment extends Fragment {
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //next 4 lines used to pass date argument to addactivity fragment
-                //Bundle bundle = new Bundle();
-                //bundle.putString("date", date);
-                AddActivity frag = new AddActivity(date);
-                //frag.setArguments(bundle);
-
-                loadFragment(frag);
+                //passes date parameter so activity is added to current date
+                loadFragment(new AddActivity(date));
             }
         });
         //edit activities

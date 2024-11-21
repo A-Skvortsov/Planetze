@@ -2,6 +2,7 @@ package com.example.planetze;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -16,8 +17,14 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
+import com.google.firebase.database.MutableData;
+import com.google.firebase.database.Transaction;
+import com.google.firebase.database.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -109,7 +116,6 @@ public class AddActivity extends Fragment {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println(date);
                 String cat = (String) selectCat.getSelectedItem();
                 String act = (String) selectActivity.getSelectedItem();
                 int input1 = box1.getCheckedRadioButtonId();
@@ -130,6 +136,7 @@ public class AddActivity extends Fragment {
                 List<String> activity = saveActivity(cat, act, input1, input2);
                 writeToFirebase(date, activity);  //write list to firebase
                 //update on eco tracker should happen automatically in eco tracker
+                getParentFragmentManager().popBackStack();  //returns to eco tracker
             }
         });
 
@@ -327,16 +334,45 @@ public class AddActivity extends Fragment {
         String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
         DatabaseReference calendarRef = db.getReference("user data")
                 .child(userId).child("calendar");
+        
+        /*code in this nest only writes and overrides whatever you're writing to. Does not account
+        for existing data (i.e. does not "update" the database, just overrides it with new data;
+        not what we want)*//*
         Map<String, Object> map = new HashMap<>();
         map.put(date, activity);
-
         calendarRef.updateChildren(map)
                 .addOnSuccessListener(aVoid -> {
                     Log.d("Firebase", "Data written successfully!");
                 })
                 .addOnFailureListener(e -> {
                     Log.e("Firebase", "Failed to write data: " + e.getMessage());
-                });
+                });*/
+
+        calendarRef.child(date).runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                // Step 1: Look at the data in Firebase for this date
+                List<Object> a = currentData.getValue(new GenericTypeIndicator<List<Object>>() {});
+                if (a == null)  //true if the current date does not already exist in the database
+                    a = new ArrayList<>();  //creates new arraylist for the date
+                //otherwise, a is nonnull (date exists), so we just add the new activity
+                a.add(activity);
+
+                currentData.setValue(a);  //writes to firebase
+                return Transaction.success(currentData);  //required for Transactions
+            }
+
+            @Override  //gives logcat message for success/failure
+            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot dataSnapshot) {
+                if (error != null) {
+                    Log.e("Firebase", "Error updating data: " + error.getMessage());
+                } else {
+                    Log.d("Firebase", "Data updated successfully!");
+                }
+            }
+        });
+
     }
 
 
