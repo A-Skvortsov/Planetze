@@ -131,6 +131,8 @@ public class SignUpFragment extends Fragment {
             }
         });
 
+
+
         return view;
 
     }

@@ -1,15 +1,39 @@
 package com.example.planetze.Signup;
 
+import static android.app.Activity.RESULT_OK;
+import static android.provider.Settings.System.getString;
+import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
+import static androidx.core.app.ActivityCompat.startActivityForResult;
+
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 
 import com.example.planetze.LogInFragment;
+import com.example.planetze.R;
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApi;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -22,6 +46,14 @@ public class signupModel {
     private DatabaseReference userRef;
     private FirebaseDatabase db;
 
+    private GoogleSignInClient client;
+
+    private ActivityResultLauncher<Intent> launcher;
+
+    private final String WEB_CLIENT_ID = "928488830433-camll1e451a5i4a0vrart4aia0rq707i.apps.googleusercontent.com";
+    private GoogleSignInClient signInClient;
+    private static final int RC_SIGN_IN = 9001;
+
     private String message;
 
     public signupModel() {
@@ -29,6 +61,11 @@ public class signupModel {
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         userRef = db.getReference("user data");
         auth = FirebaseAuth.getInstance();
+
+    }
+
+    private void setMessage(String message) {
+        this.message = message;
     }
 
     private boolean validPassword(String password) {
@@ -112,14 +149,13 @@ public class signupModel {
     }
 
     public void createAccount(String email, String password, String confirmPassword, String name, signupPresenter presenter) {
+        if (checkEmpty(email, name)) {
+            userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DataSnapshot> task) {
 
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                    boolean equalsEmail = false;
 
-                boolean equalsEmail = false;
-
-                if (checkEmpty(email, name)) {
                     DataSnapshot users = task.getResult();
                     for (DataSnapshot user : users.getChildren()) {
                         String currentemail = " ";
@@ -131,16 +167,16 @@ public class signupModel {
                         }
 
                     }
-                }
-                if (equalsEmail && checkEmpty(email, name)) {
-                    setMessage("Email already accociated with an account");
-                } else if (checkPassword(password, confirmPassword, name)) {
-                    createAccountOnFirebase(email, password, name, presenter);
-                }
+                    if (equalsEmail) {
+                        setMessage("Email already accociated with an account");
+                    } else if (checkPassword(password, confirmPassword, name)) {
+                        createAccountOnFirebase(email, password, name, presenter);
+                    }
 
+                }
+            });
 
-            }
-        });
+        }
 
         presenter.setMessage(message);
     }
@@ -164,7 +200,7 @@ public class signupModel {
 
                                     if (task.isSuccessful()) {
                                         Toast.makeText(activity, "Signup Successful, check email for verification.", Toast.LENGTH_LONG).show();
-                                        setMessage("Login Successful");
+                                        setMessage("Signup Successful");
                                         presenter.takeToLogin();
                                     }else{
                                         Toast.makeText(activity, "there was an error in sending verification email", Toast.LENGTH_LONG).show();
@@ -177,11 +213,45 @@ public class signupModel {
                         }
                     }
                 });
+
+
     }
 
-    private void setMessage(String message) {
-        this.message = message;
+    /*
+    public void signUpWithGoogle(signupPresenter presenter) {
+
+
     }
+
+     */
+
+    public void onSignUpResult(ActivityResult result, signupPresenter presenter) {
+        if (result.getResultCode() == RESULT_OK) {
+            Task<GoogleSignInAccount> accountTask = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+            try {
+                GoogleSignInAccount signInAccount = accountTask.getResult(ApiException.class);
+                AuthCredential authCredential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(), null);
+                auth.signInWithCredential(authCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            presenter.takeToLogin();
+                        }
+                        else {
+
+                        }
+                    }
+                });
+
+            } catch (ApiException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+
+
 
 
 

@@ -1,6 +1,7 @@
 package com.example.planetze.Login;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,15 +12,24 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.planetze.ForgetPassword.forgetPasswordView;
 import com.example.planetze.ForgotPasswordFragment;
 import com.example.planetze.HomeFragment;
 import com.example.planetze.R;
 import com.example.planetze.SignUpFragment;
+import com.example.planetze.Signup.signupView;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -32,6 +42,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+
+
 import java.util.ArrayList;
 
 public class LoginView extends Fragment  {
@@ -43,8 +55,11 @@ public class LoginView extends Fragment  {
     private FirebaseDatabase db;
 
     private TextView inputError, forgotpass;
+    private Button googleSignUp;
 
     private LoginPresenter presenter;
+
+    ActivityResultLauncher<Intent> launcher;
 
 
     @Nullable
@@ -55,13 +70,15 @@ public class LoginView extends Fragment  {
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
 
         TextView signUpLink = view.findViewById(R.id.signUpLink);
-        signUpLink.setOnClickListener(v -> loadFragment(new SignUpFragment()));
+        signUpLink.setOnClickListener(v -> loadFragment(new signupView()));
 
         loginEmail = view.findViewById(R.id.emailInput);
         loginPass = view.findViewById(R.id.passwordInput);
         login = view.findViewById(R.id.logInButton);
         inputError = view.findViewById(R.id.error);
         forgotpass = view.findViewById(R.id.forgotPasswordLink);
+
+        googleSignUp = view.findViewById(R.id.signInWithGoogleButton);
 
         presenter = new LoginPresenter(new LoginModel(), this);
 
@@ -79,13 +96,28 @@ public class LoginView extends Fragment  {
             }
         });
 
+        googleSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(getString(R.string.default_web_client_id))
+                        .requestEmail()
+                        .build();
+
+                GoogleSignInClient client = GoogleSignIn.getClient(getViewActivity(), options);
+
+                Intent intent = client.getSignInIntent();
+                launcher.launch(intent);
+            }
+        });
+
         //dosent work with school email
 
         forgotpass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //auth.sendPasswordResetEmail(email);
-                loadFragment(new ForgotPasswordFragment());
+                loadFragment(new forgetPasswordView());
             }
         });
 
@@ -108,6 +140,20 @@ public class LoginView extends Fragment  {
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    public Activity getViewActivity() {
+        return getActivity();
+    }
+
+    public void setSignUpLauncher() {
+        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        presenter.onSignInResult(result);
+                    }
+                });;
     }
 
 

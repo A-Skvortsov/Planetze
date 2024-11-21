@@ -3,9 +3,14 @@ package com.example.planetze.Signup;
 
 import static java.lang.Character.isLetter;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -25,15 +30,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.planetze.LogInFragment;
+import com.example.planetze.Login.LoginView;
+import com.example.planetze.MainActivity;
 import com.example.planetze.R;
 import com.example.planetze.SignUpFragment;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -53,15 +67,15 @@ import java.util.ArrayList;
 
 public class signupView extends Fragment {
 
-    private FirebaseAuth auth;
     private EditText signupEmail, signupPassword,signupConfirmPassword, fullName;
     private Button signupButton;
 
     private TextView inputError, signinLink;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private Button googleSignUp;
 
     private signupPresenter presenter;
+
+    ActivityResultLauncher<Intent> launcher;
 
 
     @Override
@@ -75,6 +89,8 @@ public class signupView extends Fragment {
         signupButton = view.findViewById(R.id.registerButton);
         fullName = view.findViewById(R.id.nameInput);
 
+        googleSignUp = view.findViewById(R.id.signUpWithGoogleButton);
+
         inputError = view.findViewById(R.id.error);
 
         signinLink = view.findViewById(R.id.signInLink);
@@ -82,11 +98,12 @@ public class signupView extends Fragment {
         presenter = new signupPresenter(this, new signupModel());
 
         presenter.setMessage(" ");
+        presenter.setSignUpLauncher();
 
         signinLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadFragment(new LogInFragment());
+                loadFragment(new LoginView());
             }
         });
 
@@ -104,9 +121,35 @@ public class signupView extends Fragment {
             }
         });
 
+        googleSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(getString(R.string.default_web_client_id))
+                        .requestEmail()
+                        .build();
+
+                GoogleSignInClient client = GoogleSignIn.getClient(getViewActivity(), options);
+
+                Intent intent = client.getSignInIntent();
+                launcher.launch(intent);
+            }
+        });
+
         return view;
 
     }
+
+    public void setSignUpLauncher() {
+        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        presenter.onSignUpResult(result);
+                    }
+        });;
+    }
+
 
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
@@ -121,7 +164,7 @@ public class signupView extends Fragment {
     }
 
     public void takeToLogin() {
-        loadFragment(new LogInFragment());
+        loadFragment(new LoginView());
     }
 
     public Activity getViewActivity() {

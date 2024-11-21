@@ -2,6 +2,10 @@ package com.example.planetze.Signup;
 
 
 import android.app.Activity;
+import android.content.Context;
+import android.view.View;
+
+import androidx.activity.result.ActivityResult;
 
 public class signupPresenter {
     private signupView view;
@@ -25,6 +29,14 @@ public class signupPresenter {
 
     public void takeToLogin() {
         view.takeToLogin();
+    }
+
+    public void setSignUpLauncher() {
+        view.setSignUpLauncher();
+    }
+
+    public void onSignUpResult(ActivityResult result) {
+        model.onSignUpResult(result, this);
     }
 
     public Activity getViewActivity() {

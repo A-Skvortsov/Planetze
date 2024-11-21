@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.planetze.ForgotPasswordFragment;
 import com.example.planetze.LogInFragment;
+import com.example.planetze.Login.LoginView;
 import com.example.planetze.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -71,7 +72,7 @@ public class forgetPasswordView extends Fragment {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadFragment(new LogInFragment());
+                loadFragment(new LoginView());
             }
         });
 
