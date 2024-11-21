@@ -334,7 +334,7 @@ public class AddActivity extends Fragment {
         String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
         DatabaseReference calendarRef = db.getReference("user data")
                 .child(userId).child("calendar");
-        
+
         /*code in this nest only writes and overrides whatever you're writing to. Does not account
         for existing data (i.e. does not "update" the database, just overrides it with new data;
         not what we want)*//*
@@ -374,6 +374,5 @@ public class AddActivity extends Fragment {
         });
 
     }
-
 
 }//end of class

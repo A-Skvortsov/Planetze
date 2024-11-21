@@ -7,6 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,6 @@ import utilities.Constants;
 public class EcoTrackerFragment extends Fragment {
 
     final String[] months = Constants.months;
-    private FirebaseAuth auth;
     private FirebaseDatabase db;
     private DatabaseReference calendarRef;
 
@@ -107,13 +107,10 @@ public class EcoTrackerFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_eco_tracker, container, false);
 
-        auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
         calendarRef = db.getReference("user data")
                 .child(userId).child("calendar");
-
-
 
 
         final Button calendarToggle = view.findViewById(R.id.calendarToggle);  //button to toggle calendar
@@ -130,15 +127,26 @@ public class EcoTrackerFragment extends Fragment {
         final Button editBtn = view.findViewById(R.id.editBtn);
         final Button delBtn = view.findViewById(R.id.delBtn);
 
-        //initializing to current date
-        Calendar today = Calendar.getInstance();
-        String t = today.get(Calendar.DAY_OF_MONTH) + " " +
-                months[today.get(Calendar.MONTH)];
-        dateText.setText(t);
-        yearText.setText(String.valueOf(today.get(Calendar.YEAR)));
-        date = today.get(Calendar.YEAR) +"-"+(today.get(Calendar.MONTH)+1)+"-"
-                +today.get(Calendar.DAY_OF_MONTH);
+        ValueEventListener listener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Check if the array exists
+                if (dataSnapshot.exists()) {
+                    // Convert the snapshot into a List
+                    days = (HashMap<String, Object>) dataSnapshot.getValue();
+                    updateDisplay(activities, noActivities);
+                } else {
+                    Log.d("Firebase", "Array does not exist for this user.");
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("FirebaseData" + "Error: " + databaseError.getMessage());
+            }
+        };
 
+        //initializes everything
+        initUI(listener, dateText, yearText, activities, noActivities);
 
         //Toggles calendar view
         calendarToggle.setOnClickListener(new View.OnClickListener() {
@@ -156,12 +164,6 @@ public class EcoTrackerFragment extends Fragment {
         });
 
 
-
-
-
-
-
-
         //updates information when new date selected
         calendar.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
@@ -171,25 +173,7 @@ public class EcoTrackerFragment extends Fragment {
                 dateText.setText(date1);
                 yearText.setText(String.valueOf(y));
                 date = y + "-" + m + "-" + d;
-
-                /*calendarRef.addListenerForSingleValueEvent( new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        // Check if the array exists
-                        if (dataSnapshot.exists()) {
-                            // Convert the snapshot into a List
-                            days = (HashMap<String, Object>) dataSnapshot.getValue();
-                            updateDisplay(activities, date2, noActivities);
-                        } else {
-                            System.out.println("FirebaseData: Array does not exist for this user.");
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        System.out.println("FirebaseData" + "Error: " + databaseError.getMessage());
-                    }
-                }); //calendarRef.addListenerForSingleValueEvent(listener);
-                //fetchSnapshot(calendarRef, listener);*/
+                fetchSnapshot(listener);
             }
         });
 
@@ -245,14 +229,37 @@ public class EcoTrackerFragment extends Fragment {
 
     /**
      * Used to perform a one-time ping to the firebase to retrieve most up-to-date data
-     * @param ref
      * @param listener
      */
-    public void fetchSnapshot(DatabaseReference ref, ValueEventListener listener) {
+    public void fetchSnapshot(ValueEventListener listener) {
         calendarRef.addListenerForSingleValueEvent(listener);
     }
 
-    public void updateDisplay(RadioGroup activities, String date, TextView emptyMsg) {
+    /**
+     * Initializes eco tracker UI
+     * @param listener
+     * @param d
+     * @param y
+     * @param activities
+     * @param noActivities
+     */
+    public void initUI(ValueEventListener listener, TextView d, TextView y,
+                       RadioGroup activities, TextView noActivities) {
+        //pings Firebase to show activities of current date
+        fetchSnapshot(listener);
+        updateDisplay(activities, noActivities);
+
+        //displays current date
+        Calendar today = Calendar.getInstance();
+        String t = today.get(Calendar.DAY_OF_MONTH) + " " +
+                months[today.get(Calendar.MONTH)];
+        d.setText(t);
+        y.setText(String.valueOf(today.get(Calendar.YEAR)));
+        date = today.get(Calendar.YEAR) +"-"+(today.get(Calendar.MONTH)+1)+"-"
+                +today.get(Calendar.DAY_OF_MONTH);
+    }
+
+    public void updateDisplay(RadioGroup activities, TextView emptyMsg) {
         activities.clearCheck(); activities.removeAllViews();
         emptyMsg.setVisibility(View.INVISIBLE);
         RadioButton btn;
