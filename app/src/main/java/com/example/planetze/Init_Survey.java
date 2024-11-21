@@ -120,6 +120,9 @@ public class Init_Survey extends AppCompatActivity {
                 }
                 updateSurvey(options, question, category, current_q, current_cat);
             }
+
+
+
         });
     }
 
