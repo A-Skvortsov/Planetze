@@ -52,8 +52,12 @@
     <string name="EcoGuage">Eco Gauge</string>
     <string name="EcoBalance">Eco Balance</string>
     <string name="EcoHub">Eco Hub</string>
-    <string name="thx">Thankyou for your patience.. we will need to add other fragments/actvities for each of the bottons</string>
+    <string name="thx">Thank you for your patience.. we will need to add other fragments/actvities for each of the bottons</string>
     <string name="transportation">Transportation</string>
     <string name="please_select_an_answer">Please select an answer</string>
     <string name="asterisk">*</string>
+    <string name="daily">Daily</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
+    <string name="overall">Overall</string>
 </resources>

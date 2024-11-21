@@ -1,13 +1,148 @@
-<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FirstFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="I'm fragment one!" />
+        android:layout_height="match_parent">
+
+        <!-- Header Text -->
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="You've emitted 72 kg CO2e this month."
+            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Pie Chart -->
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pie_chart"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="25dp"
+            app:layout_constraintBottom_toTopOf="@+id/time_period_toggle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/textView2" />
+
+<!--        <com.google.android.material.chip.ChipGroup-->
+<!--            android:id="@+id/chipGroup"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginBottom="90dp"-->
+<!--            android:backgroundTint="@color/white"-->
+<!--            android:gravity="center"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@id/pie_chart"-->
+<!--            app:selectionRequired="true"-->
+<!--            app:singleSelection="true">-->
+
+<!--            <com.google.android.material.chip.Chip-->
+<!--                android:id="@+id/chip_daily"-->
+<!--                style="@style/Widget.MaterialComponents.Chip.Choice"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/daily"-->
+<!--                app:chipSurfaceColor="@color/white" />-->
+
+<!--            <com.google.android.material.chip.Chip-->
+<!--                android:id="@+id/chip_monthly"-->
+<!--                style="@style/Widget.MaterialComponents.Chip.Choice"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/monthly"-->
+<!--                app:chipSurfaceColor="@color/white" />-->
+
+<!--            <com.google.android.material.chip.Chip-->
+<!--                android:id="@+id/chip_yearly"-->
+<!--                style="@style/Widget.MaterialComponents.Chip.Choice"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/yearly"-->
+<!--                app:chipSurfaceColor="@color/white" />-->
+
+<!--            <com.google.android.material.chip.Chip-->
+<!--                android:id="@+id/chip_overall"-->
+<!--                style="@style/Widget.MaterialComponents.Chip.Choice"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="@string/overall"-->
+<!--                app:chipSurfaceColor="@color/white" />-->
+
+<!--        </com.google.android.material.chip.ChipGroup>-->
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/time_period_toggle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="90dp"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2"
+            app:singleSelection="true">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_daily"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/daily"
+                app:iconTint="@color/palette_turquoise"
+                android:textColor="@color/palette_light_gray"
+                app:strokeColor="@color/palette_turquoise"
+                app:backgroundTint="@color/custom_button_group_background"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_weekly"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/weekly"
+                app:iconTint="@color/palette_turquoise"
+                android:textColor="@color/palette_light_gray"
+                app:strokeColor="@color/palette_turquoise"
+                app:backgroundTint="@color/custom_button_group_background"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_monthly"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/monthly"
+                app:iconTint="@color/palette_turquoise"
+                android:textColor="@color/palette_light_gray"
+                app:strokeColor="@color/palette_turquoise"
+                app:backgroundTint="@color/custom_button_group_background" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_overall"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/overall"
+                app:iconTint="@color/palette_turquoise"
+                android:textColor="@color/palette_light_gray"
+                app:strokeColor="@color/palette_turquoise"
+                app:backgroundTint="@color/custom_button_group_background" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

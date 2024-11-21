@@ -4,6 +4,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <!-- Default Light Mode Background -->
+    <color name="default_background_white">#FAFAFA</color>
+
     <!-- Palette colours -->
     <color name="palette_light_gray">#d8dbe2</color>
     <color name="palette_light_blue">#a9bcd0</color>

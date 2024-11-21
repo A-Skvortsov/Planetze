@@ -13,6 +13,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.PieChart;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_home);
 
 //        db = FirebaseDatabase.getInstance("https://b07-demo-summer-2024-default-rtdb.firebaseio.com/");
 //        DatabaseReference myRef = db.getReference("testDemo");
@@ -34,17 +36,19 @@ public class MainActivity extends AppCompatActivity {
 
         // TODO: Please DON'T delete the comments below
 
-//        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-//
-//        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-//                .findFragmentById(R.id.fragment);
-//
-//        NavController navController = navHostFragment.getNavController();
-//        NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
-        if (savedInstanceState == null) {
-            loadFragment(new SignUpFragment());
-        }
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.fragment);
+
+        NavController navController = navHostFragment.getNavController();
+        NavigationUI.setupWithNavController(bottomNavigationView, navController);
+
+        //
+//        if (savedInstanceState == null) {
+//            loadFragment(new SignUpFragment());
+//        }
     }
 
     private void loadFragment(Fragment fragment) {
