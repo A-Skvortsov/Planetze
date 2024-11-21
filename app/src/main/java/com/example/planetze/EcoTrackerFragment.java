@@ -54,6 +54,7 @@ public class EcoTrackerFragment extends Fragment {
     private String mParam2;
 
     HashMap<String, Object> days = new HashMap<>();
+    String date = "";
 
     public EcoTrackerFragment() {
         // Required empty public constructor
@@ -167,7 +168,7 @@ public class EcoTrackerFragment extends Fragment {
                 String date1 = d + " " + months[m-1];
                 dateText.setText(date1);
                 yearText.setText(String.valueOf(y));
-                final String date2 = y + "-" + m + "-" + d;
+                date = y + "-" + m + "-" + d;
 
                 /*calendarRef.addListenerForSingleValueEvent( new ValueEventListener() {
                     @Override
@@ -218,14 +219,20 @@ public class EcoTrackerFragment extends Fragment {
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(new AddActivity());
+                //next 4 lines used to pass date argument to addactivity fragment
+                //Bundle bundle = new Bundle();
+                //bundle.putString("date", date);
+                AddActivity frag = new AddActivity(date);
+                //frag.setArguments(bundle);
+
+                loadFragment(frag);
             }
         });
         //edit activities
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(new AddActivity("ok"));
+                loadFragment(new AddActivity());
             }
         });
         //delete activities

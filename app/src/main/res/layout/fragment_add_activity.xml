@@ -63,7 +63,7 @@
                 android:id="@+id/inputBox1"
                 android:layout_width="228dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="52dp"
                 android:background="@color/white"
                 app:layout_constraintEnd_toEndOf="@+id/selectActivity"
                 app:layout_constraintHorizontal_bias="1.0"
@@ -74,12 +74,58 @@
                 android:id="@+id/inputBox2"
                 android:layout_width="228dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="28dp"
+                android:layout_marginTop="52dp"
                 android:background="@color/white"
                 app:layout_constraintEnd_toEndOf="@+id/inputBox1"
-                app:layout_constraintHorizontal_bias="0.487"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/inputBox1"
                 app:layout_constraintTop_toBottomOf="@+id/inputBox1" />
+
+            <TextView
+                android:id="@+id/input1Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textStyle="bold|italic"
+                android:textSize="15dp"
+                app:layout_constraintBottom_toTopOf="@+id/inputBox1"
+                app:layout_constraintStart_toStartOf="@+id/inputBox1" />
+
+            <TextView
+                android:id="@+id/input2Text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textStyle="bold|italic"
+                android:textSize="15dp"
+                app:layout_constraintBottom_toTopOf="@+id/inputBox2"
+                app:layout_constraintStart_toStartOf="@+id/inputBox2" />
+
+            <TextView
+                android:id="@+id/issuePrompt1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="*"
+                android:visibility="invisible"
+                android:textColor="@android:color/holo_red_light"
+                app:layout_constraintBottom_toTopOf="@+id/backBtn"
+                app:layout_constraintEnd_toStartOf="@+id/issuePrompt2" />
+
+            <TextView
+                android:id="@+id/issuePrompt2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Please select an answer"
+                android:textSize="15dp"
+                android:textStyle="bold|italic"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toTopOf="@+id/saveBtn"
+                app:layout_constraintEnd_toEndOf="@+id/saveBtn"
+                app:layout_constraintStart_toStartOf="@+id/backBtn"
+                android:textColor="@color/white"/>
+
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,15 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TextView;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import utilities.Constants;
 
@@ -33,22 +43,24 @@ public class AddActivity extends Fragment {
     private String mParam2;
     private final String msg1 = "Select a Category";
     private final String msg2 = "Select an Activity";
+    private final String catactPrompt = "Please select a category and activity";
+    private final String inputPrompt = "Please select an option for input";
     public final String[] activityCats = Constants.activityCats;
     public final String[][] activities = Constants.activities;
+    public String date = "test string";
 
     public AddActivity() {
         // Required empty public constructor
     }
-
-    public AddActivity(String cat) {
-        //initializeSpinners() first then set spinner to given arguments
+    public AddActivity(String d) {
+        date = d;
     }
 
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
+     * @param param1 eco tracker's currently selected calendar date in the form yyy
      * @param param2 Parameter 2.
      * @return A new instance of fragment AddActivity.
      */
@@ -82,6 +94,10 @@ public class AddActivity extends Fragment {
         final Button saveBtn = view.findViewById(R.id.saveBtn);
         final RadioGroup box1 = view.findViewById(R.id.inputBox1);
         final RadioGroup box2 = view.findViewById(R.id.inputBox2);
+        final TextView txt1 = view.findViewById(R.id.input1Text);
+        final TextView txt2 = view.findViewById(R.id.input2Text);
+        final TextView issuePrompt1 = view.findViewById(R.id.issuePrompt1);
+        final TextView issuePrompt2 = view.findViewById(R.id.issuePrompt2);
 
         //"back" & "save" button implementations
         backBtn.setOnClickListener(new View.OnClickListener() {
@@ -93,16 +109,27 @@ public class AddActivity extends Fragment {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                System.out.println(date);
                 String cat = (String) selectCat.getSelectedItem();
                 String act = (String) selectActivity.getSelectedItem();
+                int input1 = box1.getCheckedRadioButtonId();
+                int input2 = box2.getCheckedRadioButtonId();
                 if (cat.equals(msg1) || act.equals(msg2)) {
-                    //true if user has not selected category/activity
-                    //return & display msg prompting user to select
+                    issuePrompt2.setText(catactPrompt);
+                    issuePrompt1.setVisibility(View.VISIBLE);
+                    issuePrompt2.setVisibility(View.VISIBLE);
+                    return;
+                } else if (input1 == -1 || (input2 == -1 && box2.getVisibility() == View.VISIBLE)) {
+                    issuePrompt2.setText(inputPrompt);
+                    issuePrompt1.setVisibility(View.VISIBLE);
+                    issuePrompt2.setVisibility(View.VISIBLE);
+                    return;
                 }
-                //if (appropriate input not given)
-                //return & display msg prompting user to give required input
 
-                //save activity to firebase
+                //compute values and save in a list
+                List<String> activity = saveActivity(cat, act, input1, input2);
+                writeToFirebase(date, activity);  //write list to firebase
+                //update on eco tracker should happen automatically in eco tracker
             }
         });
 
@@ -153,7 +180,7 @@ public class AddActivity extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 String selectedActivity = (String) parent.getItemAtPosition(position);
-                displayInputs(box1, box2, selectedActivity);
+                displayInputs(box1, box2, txt1, txt2, selectedActivity);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -172,47 +199,59 @@ public class AddActivity extends Fragment {
      * @param box2 the radiogroup for second input (if necessary)
      * @param act the selected activity
      */
-    public void displayInputs(RadioGroup box1, RadioGroup box2, String act) {
+    public void displayInputs(RadioGroup box1, RadioGroup box2,
+                              TextView txt1, TextView txt2, String act) {
         box1.removeAllViews(); box2.removeAllViews();
         box1.setVisibility(View.INVISIBLE); box2.setVisibility(View.INVISIBLE);
+        txt1.setVisibility(View.INVISIBLE); txt2.setVisibility(View.INVISIBLE);
         if (act.equals(msg2)) return;  //if user selected the default "Select an Activity"
 
         String[] inpt1 = {}; String[] inpt2 = {};
+        String text1 = ""; String text2 = "";
         if (act.equals("Drive personal vehicle")) {
             inpt1 = new String[]{"< 15km", "15-40km", "40-80km", "80-200km", "> 200km"};  //distance driven
             inpt2 = new String[]{"Gasoline", "Diesel", "Hybrid", "Electric"};  //optionally: change vehicle type
-
+            text1 = "Distance driven"; text2 = "Vehicle type (default: "+ "[default]" + ")";
         } else if (act.equals("Take public transportation")) {
             inpt1 = new String[]{"Bus", "Train", "Subway"};  //type of public transport
             inpt2 = new String[]{"< 0.5 hours", "0.5-1 hours", "1-2 hours", "> 2 hours"};  //time spent on public transport
-
+            text1 = "Type of public transport"; text2 = "Time spent on public transport";
         } else if (act.equals("Cycling/Walking")) {
             inpt1 = new String[]{"< 2km", "2-4km", "4-8km", "> 8km"};  //distance cycled/walked
-
+            text1 = "Distance cycled/walked";
         } else if (act.equals("Flight (< 1,500km)") || act.equals("Flight (> 1,500km)")) {
             inpt1 = new String[]{"1", "2", "3-4", "> 5"};  //number of flights taken
+            text1 = "Number of flights taken";
         }else if (act.equals("Meal")) {
             inpt1 = new String[]{"Beef", "Pork", "Chicken", "Fish", "Plant-based"};  //type of meal (beef pork chicken fish plant based)
             inpt2 = new String[]{"1", "2", "3-4", "> 5"};  //number of servings
-
+            text1 = "Type of meal"; text2 = "Number of servings";
         }else if (act.equals("Buy new clothes")) {
             inpt1 = new String[]{"1", "2", "3-4", "> 5"};  //number of clothing items purchased
-
+            text1 = "Number of clothing items purchased";
         }else if (act.equals("Buy electronics")) {
             inpt1 = new String[]{"Smartphone", "Laptop/Computer", "T/V"};  //type of electronic device
             inpt2 = new String[]{"1", "2", "3-4", "> 5"};  //number of devices purchased
-
+            text1 = "Type of electronic device"; text2 = "Number of devices purchased";
         }else if (act.equals("Other purchases")) {
             inpt1 = new String[]{"Furniture", "Appliances"};  //type of purchase
             inpt2 = new String[]{"1", "2", "3-4", "> 5"};  //# of purchases
-
+            text1 = "Type of purchase"; text2 = "Number of purchases";
         }else if (act.equals("Electricity") || act.equals("Gas") || act.equals("Water")) {
             inpt1 = new String[]{"Under $50", "$50-$100", "$100-$150", "$150-$200", "Over $200"};  //bill amount $
+            text1 = "Bill amount";
         }
-        box1.setVisibility(View.VISIBLE);
-        if (inpt2.length != 0) box2.setVisibility(View.VISIBLE);
 
+        box1.setVisibility(View.VISIBLE);  //set input option boxes visible
+        txt1.setVisibility(View.VISIBLE);
+        txt1.setText(text1);
+        if (inpt2.length != 0) {
+            box2.setVisibility(View.VISIBLE);
+            txt2.setVisibility(View.VISIBLE);
+            txt2.setText(text2);
+        }
 
+        //load input option boxes with appropriate answer options
         RadioButton btn;
         for (int i = 0; i < inpt1.length; i++) {
             btn = new RadioButton(getContext());
@@ -229,6 +268,76 @@ public class AddActivity extends Fragment {
         }
     }
 
+
+    public List<String> saveActivity(String cat, String act, int input1, int input2) {
+        List<String> activity = new ArrayList<>();
+        activity.add(cat); activity.add(act);
+        int activityEmissions = 0;
+        activity.add(String.valueOf(activityEmissions));
+        /*switch (cat) {
+            case "Transportation":
+                switch (act) {
+                    case "Drive personal vehicle":
+                        break;
+                    case "Take public transportation":
+                        break;
+                    case "Cycling/Walking":
+                        break;
+                    case "Flight (< 1,500km)":
+                        break;
+                    default: //"Flight (> 1,500km)"
+                        break;
+                }
+                break;
+            case "Food":
+                //here, act must be "meal"
+                break;
+            case "Consumption":
+                switch (act) {
+                    case "Buy new clothes":
+                        break;
+                    case "Buy electronics":
+                        break;
+                    default:  //"Other purchases"
+                        break;
+                }
+                break;
+            default:
+                switch (act) {
+                    case "Electricity":
+                        break;
+                    case "Gas":
+                        break;
+                    default:  //"Water"
+                        break;
+                }
+                break;
+        }*/
+
+
+
+
+
+        return activity;
+    }
+
+
+    public void writeToFirebase(String date, List<String> activity) {
+        FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
+        DatabaseReference calendarRef = db.getReference("user data")
+                .child(userId).child("calendar");
+        Map<String, Object> map = new HashMap<>();
+        map.put(date, activity);
+
+        calendarRef.updateChildren(map)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("Firebase", "Data written successfully!");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firebase", "Failed to write data: " + e.getMessage());
+                });
+    }
 
 
 }//end of class
