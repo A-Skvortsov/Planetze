@@ -38,7 +38,7 @@
 
             android:background="@color/palette_turquoise"
             android:gravity="center"
-            android:text="502.2 kg of CO2 Emitted"
+            android:text="0 kg of CO2 Emitted"
             android:textColor="@color/white"
             tools:layout_editor_absoluteX="64dp"
             tools:layout_editor_absoluteY="87dp" />
@@ -59,8 +59,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
-        android:text="11 Nov"
-        android:textSize="20dp"
+        android:text="@string/_11_nov"
+        android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/date"
         app:layout_constraintHorizontal_bias="0.488"
@@ -110,7 +110,7 @@
                 android:layout_height="wrap_content"
                 app:mcv_selectionColor="@color/palette_turquoise"
                 app:mcv_showOtherDates="all"
-                app:mcv_tileSize="60dp" />
+                app:mcv_tileSize="50dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -179,6 +179,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/calendarToggle">
 
+
+
             <RadioGroup
                 android:id="@+id/activitiesGroup"
                 android:layout_width="341dp"
@@ -190,7 +192,19 @@
 
         </ScrollView>
 
-
+        <TextView
+            android:id="@+id/noActivities"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="No activities today yet"
+            android:textSize="15dp"
+            android:textStyle="bold|italic"
+            app:layout_constraintBottom_toTopOf="@+id/editBtn"
+            app:layout_constraintEnd_toEndOf="@+id/scrollView2"
+            app:layout_constraintStart_toStartOf="@+id/scrollView2"
+            app:layout_constraintTop_toTopOf="@+id/scrollView2"
+            android:visibility="invisible"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

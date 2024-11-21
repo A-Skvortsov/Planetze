@@ -13,9 +13,6 @@
         android:theme="@style/Theme.Planetze"
         tools:targetApi="31">
         <activity
-            android:name=".EcoTrackerActivity"
-            android:exported="false" />
-        <activity
             android:name=".EcoGauge"
             android:exported="false"
             android:theme="@style/Theme.Planetze" />

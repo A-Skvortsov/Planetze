@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
 //        myRef.setValue("B07 Demo!");
         myRef.child("movies").setValue("B07 Demo!");
 
-        //Intent intent = new Intent(MainActivity.this, Init_Survey.class);
+        //Intent intent = new Intent(MainActivity.this, SurveyResults.class);
         //startActivity(intent);
 
         if (savedInstanceState == null) {

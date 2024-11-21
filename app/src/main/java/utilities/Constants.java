@@ -1,5 +1,8 @@
 package utilities;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Constants {
 
     public static final String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "June",
@@ -43,7 +46,15 @@ public class Constants {
             {"How often do you recycle?", "Never", "Occasionally", "Frequently", "Always"}};
 
 
-    public static final String[][][][] activities = {
+    public static final String[] activityCats = {"Select a Category",
+            "Transportation", "Food", "Consumption", "Bills"};
+    public static final String[][] activities = {
+            {"Select an Activity", "Drive personal vehicle", "Take public transportation",
+                    "Cycling/Walking", "Flight (< 1,500km)", "Flight (> 1,500km)"},
+            {"Select an Activity", "Meal"},
+            {"Select an Activity", "Buy new clothes", "Buy electronics", "Other purchases"},
+            {"Select an Activity", "Electricity", "Gas", "Water"}};
+    public static final String[][][][] activities1 = {
             {  //transport category
                     {  //drive personal vehicle
                             {"Drive personal vehicle"},

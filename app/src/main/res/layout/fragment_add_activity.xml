@@ -9,7 +9,6 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-
         >
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -25,7 +24,7 @@
                 android:id="@+id/selectCat"
                 android:layout_width="229dp"
                 android:layout_height="53dp"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="144dp"
                 android:background="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +34,7 @@
                 android:id="@+id/selectActivity"
                 android:layout_width="229dp"
                 android:layout_height="53dp"
-                android:layout_marginTop="36dp"
+                android:layout_marginTop="28dp"
                 android:background="@color/white"
                 app:layout_constraintEnd_toEndOf="@+id/selectCat"
                 app:layout_constraintHorizontal_bias="0.428"
@@ -46,7 +45,7 @@
                 android:id="@+id/saveBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="120dp"
+                android:layout_marginBottom="72dp"
                 android:text="Save"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/selectActivity" />
@@ -55,10 +54,32 @@
                 android:id="@+id/backBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="120dp"
+                android:layout_marginBottom="72dp"
                 android:text="Back"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/selectActivity" />
+
+            <RadioGroup
+                android:id="@+id/inputBox1"
+                android:layout_width="228dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:background="@color/white"
+                app:layout_constraintEnd_toEndOf="@+id/selectActivity"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/selectActivity"
+                app:layout_constraintTop_toBottomOf="@+id/selectActivity" />
+
+            <RadioGroup
+                android:id="@+id/inputBox2"
+                android:layout_width="228dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="28dp"
+                android:background="@color/white"
+                app:layout_constraintEnd_toEndOf="@+id/inputBox1"
+                app:layout_constraintHorizontal_bias="0.487"
+                app:layout_constraintStart_toStartOf="@+id/inputBox1"
+                app:layout_constraintTop_toBottomOf="@+id/inputBox1" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

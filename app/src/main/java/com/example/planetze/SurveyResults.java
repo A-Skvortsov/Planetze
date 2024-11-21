@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
@@ -19,14 +20,29 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import utilities.Constants;
 
 public class SurveyResults extends AppCompatActivity {
+    private FirebaseAuth auth;
+    private DatabaseReference userRef;
+    private FirebaseDatabase db;
 
     final String[] country = Constants.country;
     final double[] country_emissions = Constants.country_emissions;
     String default_country = Constants.default_country;
     double user_e = 0.0;  //total user emissions
+    List<String> results_string;
+    List<Double> results = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,22 +55,47 @@ public class SurveyResults extends AppCompatActivity {
             return insets;
         });
 
-        Intent intent = getIntent();
-        double[] results = intent.getDoubleArrayExtra("co2PerCategory");
-        results = kgToTons(results);
-        user_e = sum(results);  //saves user result immediately
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        userRef = db.getReference("user data");
+        String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user
+        DatabaseReference userArrayRef = userRef.child(userId).child("survey_results");
+        // Read the data
+        userArrayRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Check if the array exists
+                if (dataSnapshot.exists()) {
+                    // Convert the snapshot into a List
+                    results_string = (List<String>) dataSnapshot.getValue();
+                    for (int i = 0; i < results_string.size(); i++)   //convert results to double
+                        results.add(Double.valueOf(results_string.get(i)));
+                    results = kgToTons(results);
+                    user_e = sum(results);  //saves user result immediately
+                    System.out.println(user_e);
+                    setCategoryGraph(results);  //sets category graph
+                } else {
+                    System.out.println("FirebaseData: Array does not exist for this user.");
+                }
 
-        //initializes some basics
-        final TextView your_emissions = findViewById(R.id.your_emissions);
-            String sum = round(user_e) + "   ";
-            your_emissions.setText(sum);
-        final TextView total_bar = findViewById(R.id.total_bar);
-            String msg = sum + " tons of CO2 emitted annually";
-            total_bar.setText(msg);
-        setCategoryGraph(results);  //sets category graph
 
-        initComparisonGraph(default_country);  //initializes comparison graph
-        setUserDataComparisonGraph(user_e);
+                //initializes some basics
+                final TextView your_emissions = findViewById(R.id.your_emissions);
+                    String sum = round(user_e) + "   ";
+                    your_emissions.setText(sum);
+                final TextView total_bar = findViewById(R.id.total_bar);
+                    String msg = sum + " tons of CO2 emitted annually";
+                    total_bar.setText(msg);
+                //setCategoryGraph(results);  //sets category graph
+
+                initComparisonGraph(default_country);  //initializes comparison graph
+                setUserDataComparisonGraph(user_e);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("FirebaseData" + "Error: " + databaseError.getMessage());
+            }
+        });
 
         //spinner change listener
         Spinner s = findViewById(R.id.spinner);
@@ -79,7 +120,7 @@ public class SurveyResults extends AppCompatActivity {
      * Sets the first graph depicting breakdown of user emissions by category
      * @param results
      */
-    public void setCategoryGraph(double[] results) {
+    public void setCategoryGraph(List<Double> results) {
         TextView[] bars = {
                     findViewById(R.id.transport),
                     findViewById(R.id.food),
@@ -106,7 +147,7 @@ public class SurveyResults extends AppCompatActivity {
         //implementing bar length (updating ui)
         for (int i = 0; i < bars.length; i++) {
             //computes pixel width for current bar
-            int p = Math.max(min_p, (int) (container_width * (results[i] / max_result)));
+            int p = Math.max(min_p, (int) (container_width * (results.get(i) / max_result)));
             if (p == min_p) extra[i].setVisibility(View.VISIBLE);
 
             ViewGroup.LayoutParams layoutParams = bars[i].getLayoutParams();
@@ -114,7 +155,7 @@ public class SurveyResults extends AppCompatActivity {
             bars[i].setLayoutParams(layoutParams);
             bars[i].requestLayout();  //updates UI
 
-            String txt = String.valueOf(round(results[i]));
+            String txt = String.valueOf(round(results.get(i)));
             bars[i].setText(txt);
         }
     }
@@ -199,29 +240,26 @@ public class SurveyResults extends AppCompatActivity {
 
     /**
      * Converts array of carbon emissions in kg to tons
-     * @param arr array of carbon emissions in kg
+     * @param list array of carbon emissions in kg
      * @return array of carbon emissions in tons
      */
-    private double[] kgToTons(double[] arr) {
-        double[] a = new double[arr.length];
-        for (int i = 0; i < arr.length; i++) {
-            a[i] = arr[i] / 1000.0;
-        }
-        return a;
+    private List<Double> kgToTons(List<Double> list) {
+        list.replaceAll(value -> value / 1000.0);
+        return list;
     }
 
-    private double sum(double[] arr) {
+    private double sum(List<Double> list) {
         double total = 0.0;
-        for (int i = 0; i < arr.length; i++) {
-            total += arr[i];
+        for (int i = 0; i < list.size(); i++) {
+            total += list.get(i);
         }
         return total;
     }
 
-    private double max(double[] arr) {
+    private double max(List<Double> list) {
         double m = 0.0;
-        for (int i = 0; i < arr.length; i++) {
-            if (m < arr[i]) m = arr[i];
+        for (int i = 0; i < list.size(); i++) {
+            if (m < list.get(i)) m = list.get(i);
         }
         return m;
     }
