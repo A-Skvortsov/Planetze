@@ -27,6 +27,7 @@ import com.google.firebase.database.Transaction;
 import com.google.firebase.database.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -280,7 +281,7 @@ public class AddActivity extends Fragment {
     public List<String> saveActivity(String cat, String act, int input1, int input2) {
         List<String> activity = new ArrayList<>();
         activity.add(cat); activity.add(act);  //add category and activity names
-        double activityEmissions = computeEmissions(act, input1, input2);
+        double activityEmissions = computeEmissions(cat, act, input1, input2);
         activity.add(String.valueOf(activityEmissions));  //add total emissions for the activity
         activity.add(String.valueOf(input1));  //input1 and input2 saved for edit feature implementation
         if (input1 != -1)  //input2 only saved if the activity actually had two required answer inputs
@@ -336,7 +337,7 @@ public class AddActivity extends Fragment {
     }
 
 
-    public double computeEmissions(String act, int input1, int input2) {
+    public double computeEmissions(String cat, String act, int input1, int input2) {
         double e = 0.0;
         switch(act) {
             case "Drive personal vehicle":
@@ -427,6 +428,7 @@ public class AddActivity extends Fragment {
                     case 2: y = 4; break;
                     default: y = 6; break;
                 }
+                return x * y;
             case "Buy electronics":
                 switch (input1) {
                     //values taken from formulas file:
@@ -457,38 +459,96 @@ public class AddActivity extends Fragment {
                 }
                 return x * y;
 
-            //values for electricity are from formulas file, the others just temporarily copied:
+            //values for electricity & gas are from formulas file:
             //they are (emissions for 2 occupants, detached house under 1000sqft) / ~350 days in a year
             //these are to be added to the past 30 days, starting at the day of the added activity
             //since they are monthly bills (i.e. these emissions occur each day for a month, resulting
             //in the given bill of x dollars)
+            //water values are the mean of the corresponding electricity & gas values
             case "Electricity":
                 switch (input1) {
-                    case 0: e = 0.5; break;
-                    case 1: e = 1; break;
-                    case 2: e = 4; break;
-                    case 3: e = 4.8; break;
-                    default: e = 6.5; break;
-                }return e;
+                    case 0: e = 0.7; break;
+                    case 1: e = 1.4; break;
+                    case 2: e = 4.1; break;
+                    case 3: e = 5.4; break;
+                    default: e = 7.1; break;
+                } logPast29Days(cat, act, e, input1, input2);
+                return e;
             case "Gas":
                 switch (input1) {
-                    case 0: e = 0.5; break;
-                    case 1: e = 1; break;
-                    case 2: e = 4; break;
-                    case 3: e = 4.8; break;
-                    default: e = 6.5; break;
-                }return e;
+                    case 0: e = 7.4; break;
+                    case 1: e = 7.5; break;
+                    case 2: e = 8.0; break;
+                    case 3: e = 8.5; break;
+                    default: e = 8.9; break;
+                } logPast29Days(cat, act, e, input1, input2);
+                return e;
             default:  //case "Water"
                 switch (input1) {
-                    case 0: e = 0.5; break;
-                    case 1: e = 1; break;
-                    case 2: e = 4; break;
-                    case 3: e = 4.8; break;
-                    default: e = 6.5; break;
-                }return e;
+                    case 0: e = 4.0; break;
+                    case 1: e = 4.5; break;
+                    case 2: e = 6.1; break;
+                    case 3: e = 7.0; break;
+                    default: e = 8.0; break;
+                } logPast29Days(cat, act, e, input1, input2);
+                return e;
         }
     }
 
+
+    /**
+     * When a monthly bill is added as an activity, this logs the bill across the past month
+     * as daily energy use activities with some constant daily rate [e] of kgco2
+     * @param cat
+     * @param act
+     * @param e
+     * @param input1
+     * @param input2
+     */
+    public void logPast29Days(String cat, String act, double e, int input1, int input2) {
+        List<String> past29Days = getPast29Days();
+        List<String> activity = new ArrayList();
+        activity.add(cat);activity.add(act);
+        activity.add(String.valueOf(e));
+        activity.add(String.valueOf(input1)); activity.add(String.valueOf(input2));
+
+        for (int i = 0; i < past29Days.size(); i++) {
+            writeToFirebase(past29Days.get(i), activity);
+        }
+    }
+
+
+    /**
+     * Gets the past 29 days of the calendar.
+     * @return
+     */
+    public List<String> getPast29Days() {
+        List<String> past29Days = new ArrayList<>();
+
+        //convert date string to year, month, day integers
+        String[] ymdStrings = date.split("-");
+        int[] ymdInts = new int[3];
+        for (int i = 0; i < ymdStrings.length; i++)
+            ymdInts[i] = Integer.parseInt(ymdStrings[i]);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(ymdInts[0],
+                ymdInts[1] - 1,  //note here that months in Calendar class go from 0-11,
+                                        //but we have them set from 1-12. So subtract 1 from ours
+                        ymdInts[2]);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);  //iterates back one day since saveActivity
+        //already adds the activity for the current day
+
+        //adds past 29 days
+        for (int i = 0; i < 29; i++) {
+            String d = calendar.get(Calendar.YEAR) +"-"+(calendar.get(Calendar.MONTH)+1)+"-"
+                    +calendar.get(Calendar.DAY_OF_MONTH);
+            past29Days.add(d);
+            calendar.add(Calendar.DAY_OF_MONTH, -1);  //iterates back one day
+        }
+
+        return past29Days;
+    }
 
 
 
