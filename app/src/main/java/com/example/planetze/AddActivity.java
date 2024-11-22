@@ -25,6 +25,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -57,8 +58,11 @@ public class AddActivity extends Fragment {
     public final String[] activityCats = Constants.activityCats;
     public final String[][] activities = Constants.activities;
     public String date = "date";  //used to store the selected date
-    public int edit = 0;
-    public List<String> activityToEdit = new ArrayList<>();
+    public int edit = 0;  //for edit mode
+    public List<String> activityToEdit = new ArrayList<>();  //for edit mode
+    private boolean spinnerListeners = false;
+    private int id = 0;
+    private List<List<String>> a = new ArrayList<>();
 
     public AddActivity() {
         // Required empty public constructor
@@ -78,10 +82,11 @@ public class AddActivity extends Fragment {
      * @param d
      * @param activity
      */
-    public AddActivity(String d, List<String> activity) {
+    public AddActivity(String d, List<String> activity, int i) {
         date = d;
         edit = 1;  //used to determine if we are in edit mode or add mode (1 -> edit mode)
         activityToEdit = activity;
+        id = i;
     }
 
     /**
@@ -156,44 +161,47 @@ public class AddActivity extends Fragment {
 
                 //compute values and save in a list
                 List<String> activity = saveActivity(cat, act, input1, input2);
-                writeToFirebase(date, activity);  //write list to firebase
+                if (edit == 1) {
+                    updateFirebase(date, activity, id);  //update firebase (for edit mode)
+                } else {writeToFirebase(date, activity);}  //write list to firebase
                 EcoTrackerFragment.fetchSnapshot();  //update ecotracker info
                 getParentFragmentManager().popBackStack();  //returns to eco tracker
             }
         });
 
+        spinnerListeners = false;  //technical stuff related to edit mode. Don't read unless debugging.
+        // Summary:
+        // category is set first, then activity (both manually in initEditingProcess). Thus,
+        //category listener will be invoked first. This variable being false prevents the listener
+        //from doing anything (since, normally, category listener overrides activity listener data).
+        //Then, only after we run activity listener and everything is set up, we give permission for
+        //category listener to run for future category changes
+        selectCat.setOnItemSelectedListener(null);
+        selectActivity.setOnItemSelectedListener(null);
         initSpinners(selectCat, selectActivity, activityCats);  //inits spinners to default
         if (edit == 1) initEditingProcess(activityToEdit, selectCat, selectActivity,
                 box1, box2, txt1, txt2);  //if in editing mode, also init data of activity to edit
-
 
         //listener for category selection (sets activity spinner accordingly)
         selectCat.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                String selectedItem = (String) parent.getItemAtPosition(position);
-                for (int i = 1; i < activityCats.length; i++) {
-                    if (selectedItem.equals(activityCats[i])) {
-                        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                                android.R.layout.simple_spinner_item, activities[i-1]);
-                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                        selectActivity.setAdapter(adapter);
-                        int x = adapter.getPosition(msg2);  //inits spinner to  "Select an Activity"
-                        selectActivity.setSelection(x);
-                    }
+                if (spinnerListeners) {
+                    String selectedCat = (String) parent.getItemAtPosition(position);
+                    setActivitySpinner(selectedCat, selectActivity);
                 }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
         //listener for activity selection (sets input boxes accordingly)
         selectActivity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
+                spinnerListeners = true;
                 String selectedActivity = (String) parent.getItemAtPosition(position);
                 displayInputs(box1, box2, txt1, txt2, selectedActivity);
             }
@@ -202,9 +210,27 @@ public class AddActivity extends Fragment {
             }
         });
 
-
         // Inflate the layout for this fragment
         return view;
+    }
+
+
+    /**
+     * Sets activity spinner based on selected category (i.e. transport, food, etc.)
+     * @param selectedCat
+     * @param selectActivity
+     */
+    public void setActivitySpinner(String selectedCat, Spinner selectActivity) {
+        for (int i = 1; i < activityCats.length; i++) {
+            if (selectedCat.equals(activityCats[i])) {
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                        android.R.layout.simple_spinner_item, activities[i-1]);
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                selectActivity.setAdapter(adapter);
+                int x = adapter.getPosition(msg2);  //inits spinner to  "Select an Activity"
+                selectActivity.setSelection(x);
+            }
+        }
     }
 
 
@@ -232,25 +258,30 @@ public class AddActivity extends Fragment {
 
     /**
      * for editing. Makes it so that, upon clicking "edit" button from ecotracker,
-     *      * AddActivity initializes with the selected activity preset
+     * AddActivity initializes with the selected activity preset
      * @param activityToEdit
      * @param selectCat category spinner
      * @param selectActivity activity spinner
      * @param box1 radiogroup hosting the buttons of first input question
      * @param box2 radiogroup hosting the buttons of second input question (if necessary)
+     * @param txt1 textbox describing first input question
+     * @param txt2 "" for second question
      */
     public void initEditingProcess(List<String> activityToEdit, Spinner selectCat,
                                    Spinner selectActivity, RadioGroup box1, RadioGroup box2,
                                    TextView txt1, TextView txt2) {
+
         //sets category spinner
         ArrayAdapter<String> i = (ArrayAdapter<String>) selectCat.getAdapter();
         int j = i.getPosition(activityToEdit.get(0));
         selectCat.setSelection(j);
 
         //sets activity spinner
+        setActivitySpinner(activityToEdit.get(0), selectActivity);  //sets spinner to "Select an activity" by default
         i = (ArrayAdapter<String>) selectActivity.getAdapter();
         j = i.getPosition(activityToEdit.get(1));
-        selectActivity.setSelection(j);
+        selectActivity.setSelection(j, false);
+
 
         //sets input boxes
         //activityToEdit.get(1) corresponds to activity string of the activity
@@ -352,6 +383,36 @@ public class AddActivity extends Fragment {
     }
 
 
+    public void updateFirebase(String date, List<String> activity, int id) {
+        FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
+        DatabaseReference dateRef = db.getReference("user data")
+                .child(userId).child("calendar").child(date);
+
+        dateRef.runTransaction(new Transaction.Handler() {
+            @NonNull
+            @Override
+            public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                //find date in the firebase
+                List<Object> a = currentData.getValue(new GenericTypeIndicator<List<Object>>() {});
+                a.set(id, activity);
+                currentData.setValue(a);  //writes to firebase
+                return Transaction.success(currentData);  //required for Transactions
+            }
+
+            @Override  //gives logcat message for success/failure
+            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot dataSnapshot) {
+                if (error != null) {
+                    Log.e("Firebase", "Error updating data: " + error.getMessage());
+                } else {
+                    Log.d("Firebase", "Data updated successfully!");
+                }
+            }
+        });
+
+    }
+
+
     public void writeToFirebase(String date, List<String> activity) {
         FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
@@ -381,7 +442,6 @@ public class AddActivity extends Fragment {
                     a = new ArrayList<>();  //creates new arraylist for the date
                 //otherwise, a is nonnull (date exists), so we just add the new activity
                 a.add(activity);
-
                 currentData.setValue(a);  //writes to firebase
                 return Transaction.success(currentData);  //required for Transactions
             }
@@ -412,14 +472,13 @@ public class AddActivity extends Fragment {
                     default: x = 500; break;
                 }
                 switch (input2) {  //values taken from "formulas" document
-                    case 0: y = 0.24; break;
-                    case 1: y = 0.27; break;
-                    case 2: y = 0.16; break;
+                    case 100: y = 0.24; break;
+                    case 101: y = 0.27; break;
+                    case 102: y = 0.16; break;
                     default: y = 0.05; break;
                 }
                 return x * y;  //km driven * kg of CO2 per km
-
-            case "Take public transport":
+            case "Take public transportation":
                 x = 0.0; y = 0.0;
                 //values below hardcoded based on assumptions.
                 //They can be stored in some sort of data file if necessary later. Not a priority atm
@@ -429,11 +488,12 @@ public class AddActivity extends Fragment {
                     default: x = 0.5; break;
                 }
                 switch (input2) {
-                    case 0: y = 0.5; break;
-                    case 1: y = 1; break;
-                    case 2: y = 2; break;
+                    case 100: y = 0.5; break;
+                    case 101: y = 1; break;
+                    case 102: y = 2; break;
                     default: y = 3; break;
                 }
+                System.out.println("ok al good");
                 return x * y;
             case "Cycling/Walking":
                 switch (input1) {
@@ -446,18 +506,18 @@ public class AddActivity extends Fragment {
             case "Flight (< 1,500km)":
                 x = 225;  //kg of CO2
                 switch (input2) {
-                    case 0: y = 1; break;  //num of flights
-                    case 1: y = 2; break;
-                    case 3: y = 3; break;
+                    case 100: y = 1; break;  //num of flights
+                    case 101: y = 2; break;
+                    case 102: y = 3; break;
                     default: y = 4; break;
                 }
                 return x * y;
             case "Flight (> 1,500km)":
                 x = 550;  //kg of CO2
                 switch (input2) {
-                    case 0: y = 1; break;  //num of flights
-                    case 1: y = 2; break;
-                    case 3: y = 3; break;
+                    case 100: y = 1; break;  //num of flights
+                    case 101: y = 2; break;
+                    case 102: y = 3; break;
                     default: y = 4; break;
                 }
                 return x * y;
@@ -473,9 +533,9 @@ public class AddActivity extends Fragment {
                     default: x = 2; break;  //plant-based
                 }
                 switch (input2) {
-                    case 0: y = 1; break;  //num of servings
-                    case 1: y = 2; break;
-                    case 2: y = 4; break;
+                    case 100: y = 1; break;  //num of servings
+                    case 101: y = 2; break;
+                    case 102: y = 4; break;
                     default: y = 5; break;
                 }
                 return x * y;
@@ -484,7 +544,7 @@ public class AddActivity extends Fragment {
                 //monthly buyers of clothes get 360kgco2/year
                 //sps. 5 clothing items per month @6kgco2 per clothing item. This
                 //gets the given 360kgco2/year number. So we use 6kgco2 per clothing item
-                switch (input2) {
+                switch (input1) {
                     case 0: y = 1; break;  //num of clothing items purchased
                     case 1: y = 2; break;
                     case 2: y = 4; break;
@@ -502,9 +562,9 @@ public class AddActivity extends Fragment {
                     default: x = 900; break;  //tv
                 }
                 switch (input2) {
-                    case 0: y = 1; break;  //num of devices purchased
-                    case 1: y = 2; break;
-                    case 2: y = 4; break;
+                    case 100: y = 1; break;  //num of devices purchased
+                    case 101: y = 2; break;
+                    case 102: y = 4; break;
                     default: y = 5; break;
                 }
                 return x * y;
@@ -514,9 +574,9 @@ public class AddActivity extends Fragment {
                     default: x = 900; break;  //appliances; set to same emissions (in kg) as buying a TV
                 }
                 switch (input2) {
-                    case 0: y = 1; break;  //num of items purchased
-                    case 1: y = 2; break;
-                    case 2: y = 4; break;
+                    case 100: y = 1; break;  //num of items purchased
+                    case 101: y = 2; break;
+                    case 102: y = 4; break;
                     default: y = 5; break;
                 }
                 return x * y;

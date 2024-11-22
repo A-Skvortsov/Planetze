@@ -227,11 +227,11 @@ public class EcoTrackerFragment extends Fragment {
                 if (!activitySelected(activities, issuePrompt1, issuePrompt2)) return;
                 int id = activities.getCheckedRadioButtonId();
 
-                startEdit(id, userId);  //this gets the activity to edit and
+                startEdit(id, userId);  //this retrieves the selected activity for editing and
                 //boots up AddActivity fragment in edit mode via
                 //"loadFragment(new AddActivity(date, activityToEdit));".
-                //Note that upon clicking "save" btn in addactivity, the activity will be updated using
-                //updateChildren() method of firebase rtdb
+                //Note that upon clicking "save" btn in addactivity, the activity (as stored in firebase)
+                //will be updated using updateChildren() method of firebase rtdb
             }
         });
         //delete activities
@@ -302,7 +302,7 @@ public class EcoTrackerFragment extends Fragment {
      * Initializes eco tracker UI
      * @param listener ValueEventListener to listen for firebase updates
      * @param d TextView for displaying current date in form "11 Nov" or "21 Sep"
-     * @param y TextCiew for displaying current year in standard form
+     * @param y TextView for displaying current year in standard form
      * @param activities RadioGroup in which the radiobutton activities are displayed
      * @param noActivities  TextView with message "no activities logged yet for today"
      * @param dailyTotal TextView displaying the day's total emissions
@@ -335,11 +335,13 @@ public class EcoTrackerFragment extends Fragment {
             for (int i = 0; i < day.size(); i++) {
                 btn = new RadioButton(getContext());
                 btn.setId(i);  //this is used for delete and edit activity features
-                String t = day.get(i).get(2) + "kg CO2: " + day.get(i).get(1);
+                String t = (Math.round(Double.parseDouble((String) day.get(i).get(2)) * 10) / 10.0)
+                        + "kg CO2: " + day.get(i).get(1);  //the rounding prevents weird floating point stuff
                 btn.setText(t);
                 activities.addView(btn);
                 emissions += Double.parseDouble(String.valueOf(day.get(i).get(2)));
             }
+            emissions = Math.round(emissions * 10) / 10.0;  //round to 1 decimal
             String s = emissions + "kg of CO2 emitted";
             dailyTotal.setText(s);
         } else {
@@ -370,22 +372,23 @@ public class EcoTrackerFragment extends Fragment {
      * @param userId id of the user who's using the app currently (as in the firebase)
      * @return
      */
-    public List<String> startEdit(int id, String userId) {
-        DatabaseReference activityRef = db.getReference("user data")
+    public void startEdit(int id, String userId) {
+        DatabaseReference dateRef = db.getReference("user data")
                 .child(userId)
                 .child("calendar")
-                .child(date)
-                .child(String.valueOf(id));  //index of the activity in the list of activities for the date
+                .child(date);  //index of the activity in the list of activities for the date
         //get the activities of the date
-        activityRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        dateRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Check if the array exists
                 if (dataSnapshot.exists()) {
-                    // Convert the snapshot into a List
-                    activityToEdit = (List<String>) dataSnapshot.getValue();
-                    loadFragment(new AddActivity(date, activityToEdit));
-                    Log.d("Firebase", "data loaded successfully" + acts);
+                    //gets date snapshot (list of activity (lists of strings))
+                    //gets the list (activity) at position id (as wanted)
+                    activityToEdit = ((List<List<String>>) dataSnapshot.getValue()).get(id);
+                    //boot addActivity in edit mode, passing activityToEdit
+                    loadFragment(new AddActivity(date, activityToEdit, id));
+                    Log.d("Firebase", "data loaded successfully1" + activityToEdit);
 
                 } else {
                     Log.d("Firebase", "Array does not exist for this user.");
@@ -396,8 +399,6 @@ public class EcoTrackerFragment extends Fragment {
                 Log.e("FirebaseData", "Error: " + databaseError.getMessage());
             }
         });
-
-        return activityToEdit;
     }
 
 
