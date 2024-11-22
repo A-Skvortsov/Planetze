@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.planetze.Login.LoginView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
@@ -116,7 +117,7 @@ public class SignUpFragment extends Fragment {
         signinLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadFragment(new LogInFragment());
+                loadFragment(new LoginView());
             }
         });
 
@@ -294,7 +295,7 @@ public class SignUpFragment extends Fragment {
 
                                     if (task.isSuccessful()) {
                                         Toast.makeText(activity, "Signup Successful, check email for verification.", Toast.LENGTH_LONG).show();
-                                        loadFragment(new LogInFragment());
+                                        loadFragment(new LoginView());
                                     }else{
                                         Toast.makeText(activity, "there was an error in sending verification email", Toast.LENGTH_LONG).show();
                                     }

@@ -21,12 +21,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.planetze.ForgetPassword.forgetPasswordView;
 import com.example.planetze.ForgotPasswordFragment;
 import com.example.planetze.HomeFragment;
 import com.example.planetze.R;
 import com.example.planetze.SignUpFragment;
-import com.example.planetze.Signup.signupView;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -70,7 +68,7 @@ public class LoginView extends Fragment  {
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
 
         TextView signUpLink = view.findViewById(R.id.signUpLink);
-        signUpLink.setOnClickListener(v -> loadFragment(new signupView()));
+        signUpLink.setOnClickListener(v -> loadFragment(new SignUpFragment()));
 
         loginEmail = view.findViewById(R.id.emailInput);
         loginPass = view.findViewById(R.id.passwordInput);
@@ -117,7 +115,7 @@ public class LoginView extends Fragment  {
             @Override
             public void onClick(View view) {
                 //auth.sendPasswordResetEmail(email);
-                loadFragment(new forgetPasswordView());
+                loadFragment(new ForgotPasswordFragment());
             }
         });
 
