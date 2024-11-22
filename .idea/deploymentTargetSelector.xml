@@ -18,10 +18,10 @@
       </SelectionState>
       <SelectionState runConfigName="EcoBalanceEntry">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-11-19T02:39:41.126690300Z">
+        <DropdownSelection timestamp="2024-11-22T02:06:33.746419900Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\netha\.android\avd\Small_Phone_API_35.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\netha\.android\avd\Pixel_Fold_API_35.avd" />
             </handle>
           </Target>
         </DropdownSelection>
