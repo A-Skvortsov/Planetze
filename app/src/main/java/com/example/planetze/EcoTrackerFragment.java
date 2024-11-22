@@ -60,6 +60,7 @@ public class EcoTrackerFragment extends Fragment {
 
     HashMap<String, Object> days = new HashMap<>();  //used to store the days of a user calendar
     List<List<String>> acts = new ArrayList<>();  //used to store the activities of a day
+    List<String> activityToEdit = new ArrayList<>();  //used to store the activity selected for editing
     String date = "";
 
     public EcoTrackerFragment() {
@@ -207,6 +208,10 @@ public class EcoTrackerFragment extends Fragment {
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //puts these away in case they were brought up, no need for them
+                issuePrompt1.setVisibility(View.INVISIBLE);
+                issuePrompt2.setVisibility(View.INVISIBLE);
+
                 //passes date parameter so activity is added to current date
                 loadFragment(new AddActivity(date));
             }
@@ -215,22 +220,26 @@ public class EcoTrackerFragment extends Fragment {
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                loadFragment(new AddActivity());
+                //puts these away in case they were brought up, no need for them
+                issuePrompt1.setVisibility(View.INVISIBLE);
+                issuePrompt2.setVisibility(View.INVISIBLE);
+
+                if (!activitySelected(activities, issuePrompt1, issuePrompt2)) return;
+                int id = activities.getCheckedRadioButtonId();
+
+                startEdit(id, userId);  //this gets the activity to edit and
+                //boots up AddActivity fragment in edit mode via
+                //"loadFragment(new AddActivity(date, activityToEdit));".
+                //Note that upon clicking "save" btn in addactivity, the activity will be updated using
+                //updateChildren() method of firebase rtdb
             }
         });
         //delete activities
         delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (activities.getChildCount() == 0) return;  //if no activities, do nothing
+                if (!activitySelected(activities, issuePrompt1, issuePrompt2)) return;
                 int id = activities.getCheckedRadioButtonId();
-                if (id == -1) {
-                    issuePrompt1.setVisibility(View.VISIBLE);
-                    issuePrompt2.setVisibility(View.VISIBLE);
-                    return;
-                }
-                issuePrompt1.setVisibility(View.INVISIBLE);
-                issuePrompt2.setVisibility(View.INVISIBLE);
 
                 //code below removes associated activity in firebase rtdb
                 //get the date of the activity we want to remove
@@ -339,6 +348,58 @@ public class EcoTrackerFragment extends Fragment {
             dailyTotal.setText("0.0 kg of CO2 Emitted");
         }
     }
+
+
+    private boolean activitySelected(RadioGroup activities, TextView issuePrompt1,
+                                     TextView issuePrompt2) {
+        if (activities.getChildCount() == 0) return false;  //if no activities, do nothing
+        int id = activities.getCheckedRadioButtonId();
+        if (id == -1) {
+            issuePrompt1.setVisibility(View.VISIBLE);
+            issuePrompt2.setVisibility(View.VISIBLE);
+            return false;
+        }
+        issuePrompt1.setVisibility(View.INVISIBLE);
+        issuePrompt2.setVisibility(View.INVISIBLE);
+        return true;
+    }
+
+    /**
+     * From the firebase rtdb, retrieves the activity we want to edit
+     * @param id index of the activity as in the firebase
+     * @param userId id of the user who's using the app currently (as in the firebase)
+     * @return
+     */
+    public List<String> startEdit(int id, String userId) {
+        DatabaseReference activityRef = db.getReference("user data")
+                .child(userId)
+                .child("calendar")
+                .child(date)
+                .child(String.valueOf(id));  //index of the activity in the list of activities for the date
+        //get the activities of the date
+        activityRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // Check if the array exists
+                if (dataSnapshot.exists()) {
+                    // Convert the snapshot into a List
+                    activityToEdit = (List<String>) dataSnapshot.getValue();
+                    loadFragment(new AddActivity(date, activityToEdit));
+                    Log.d("Firebase", "data loaded successfully" + acts);
+
+                } else {
+                    Log.d("Firebase", "Array does not exist for this user.");
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("FirebaseData", "Error: " + databaseError.getMessage());
+            }
+        });
+
+        return activityToEdit;
+    }
+
 
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();

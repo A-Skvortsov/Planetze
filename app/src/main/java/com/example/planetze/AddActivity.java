@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
@@ -56,12 +57,31 @@ public class AddActivity extends Fragment {
     public final String[] activityCats = Constants.activityCats;
     public final String[][] activities = Constants.activities;
     public String date = "date";  //used to store the selected date
+    public int edit = 0;
+    public List<String> activityToEdit = new ArrayList<>();
 
     public AddActivity() {
         // Required empty public constructor
     }
+
+    /**
+     * this constructor used for adding activities
+     * @param d
+     */
     public AddActivity(String d) {
         date = d;  //d passed as an argument from eco tracker (current calendar date)
+    }
+
+    /**
+     * this constructor used for editing activities. Notice that the activity that was selected for
+     * editing is passed in the parameters so that it can be edited.
+     * @param d
+     * @param activity
+     */
+    public AddActivity(String d, List<String> activity) {
+        date = d;
+        edit = 1;  //used to determine if we are in edit mode or add mode (1 -> edit mode)
+        activityToEdit = activity;
     }
 
     /**
@@ -142,23 +162,9 @@ public class AddActivity extends Fragment {
             }
         });
 
-
-        //spinner initializations
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_item, activityCats);  //used to load spinner
-        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        selectCat.setAdapter(adapter1);  //loads spinner
-        int init = adapter1.getPosition(msg1);  //initializes spinner to default country
-        selectCat.setSelection(init);
-
-        //initialize second spinner based on first spinner selection
-        String[] x = {msg2};
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_item, x);
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        selectActivity.setAdapter(adapter2);
-        init = adapter1.getPosition(msg2);  //initializes spinner to default country
-        selectActivity.setSelection(init);
+        initSpinners(selectCat, selectActivity, activityCats);  //inits spinners to default
+        if (edit == 1) initEditingProcess(activityToEdit, selectCat, selectActivity,
+                box1, box2, txt1, txt2);  //if in editing mode, also init data of activity to edit
 
 
         //listener for category selection (sets activity spinner accordingly)
@@ -173,7 +179,7 @@ public class AddActivity extends Fragment {
                                 android.R.layout.simple_spinner_item, activities[i-1]);
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         selectActivity.setAdapter(adapter);
-                        int x = adapter1.getPosition(msg2);  //initializes spinner to default country
+                        int x = adapter.getPosition(msg2);  //inits spinner to  "Select an Activity"
                         selectActivity.setSelection(x);
                     }
                 }
@@ -201,6 +207,62 @@ public class AddActivity extends Fragment {
         return view;
     }
 
+
+    /**
+     * default; for adding activities
+     */
+    public void initSpinners(Spinner selectCat, Spinner selectActivity, String[] activityCats) {
+        //spinner initializations
+        ArrayAdapter<String> adapter1 = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_spinner_item, activityCats);  //used to load spinner
+        adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectCat.setAdapter(adapter1);  //loads spinner
+        int init = adapter1.getPosition(msg1);  //initializes spinner to default "Select a Category"
+        selectCat.setSelection(init);
+
+        //initialize second spinner based on first spinner selection
+        String[] x = {msg2};
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getContext(),
+                android.R.layout.simple_spinner_item, x);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        selectActivity.setAdapter(adapter2);
+        init = adapter1.getPosition(msg2);  //initializes spinner to default "Select an Activity"
+        selectActivity.setSelection(init);
+    }
+
+    /**
+     * for editing. Makes it so that, upon clicking "edit" button from ecotracker,
+     *      * AddActivity initializes with the selected activity preset
+     * @param activityToEdit
+     * @param selectCat category spinner
+     * @param selectActivity activity spinner
+     * @param box1 radiogroup hosting the buttons of first input question
+     * @param box2 radiogroup hosting the buttons of second input question (if necessary)
+     */
+    public void initEditingProcess(List<String> activityToEdit, Spinner selectCat,
+                                   Spinner selectActivity, RadioGroup box1, RadioGroup box2,
+                                   TextView txt1, TextView txt2) {
+        //sets category spinner
+        ArrayAdapter<String> i = (ArrayAdapter<String>) selectCat.getAdapter();
+        int j = i.getPosition(activityToEdit.get(0));
+        selectCat.setSelection(j);
+
+        //sets activity spinner
+        i = (ArrayAdapter<String>) selectActivity.getAdapter();
+        j = i.getPosition(activityToEdit.get(1));
+        selectActivity.setSelection(j);
+
+        //sets input boxes
+        //activityToEdit.get(1) corresponds to activity string of the activity
+        displayInputs(box1, box2, txt1, txt2, activityToEdit.get(1));
+
+        //sets checked button of input boxes
+        //note that index 2 of activityToEdit is the total emissions of the activity
+        //Indices 3 and 4 are what contain the input selections, which is what we set below
+        box1.check(Integer.parseInt(activityToEdit.get(3)));
+        if (box2.getChildCount() != 0)  //only init second input box if the question demands input
+            box2.check(Integer.parseInt(activityToEdit.get(4)));
+    }
 
     /**
      * Displays input options for user once activity has been selected
