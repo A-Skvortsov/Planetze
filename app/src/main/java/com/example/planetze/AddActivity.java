@@ -281,8 +281,9 @@ public class AddActivity extends Fragment {
         activity.add(cat); activity.add(act);  //add category and activity names
         double activityEmissions = computeEmissions(act, input1, input2);
         activity.add(String.valueOf(activityEmissions));  //add total emissions for the activity
-        activity.add(String.valueOf(input1));
-        activity.add(String.valueOf(input2));  //input1 and input2 saved for edit feature implementation
+        activity.add(String.valueOf(input1));  //input1 and input2 saved for edit feature implementation
+        if (input1 != -1)  //input2 only saved if the activity actually had two required answer inputs
+            activity.add(String.valueOf(input2));
         return activity;
     }
 
@@ -455,7 +456,7 @@ public class AddActivity extends Fragment {
                 }
                 return x * y;
 
-            //values for electricity, gas and water are from formulas file:
+            //values for electricity are from formulas file, the others just temporarily copied:
             //they are (emissions for 2 occupants, detached house under 1000sqft) / ~350 days in a year
             //these are to be added to the past 30 days, starting at the day of the added activity
             //since they are monthly bills (i.e. these emissions occur each day for a month, resulting

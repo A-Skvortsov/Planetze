@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 import utilities.Constants;
 
@@ -119,6 +120,7 @@ public class EcoTrackerFragment extends Fragment {
         final MaterialCalendarView calendar = view.findViewById(R.id.calendar);  //calendar itself
         final TextView dateText = view.findViewById(R.id.dateText);
         final TextView yearText = view.findViewById(R.id.yearText);
+        final TextView dailyTotal = view.findViewById(R.id.dailyTotal);
 
         final TextView noActivities = view.findViewById(R.id.noActivities);
         final Button activitiesBtn = view.findViewById(R.id.activitiesBtn);
@@ -136,7 +138,7 @@ public class EcoTrackerFragment extends Fragment {
                     // Convert the snapshot into a List
                     days = (HashMap<String, Object>) dataSnapshot.getValue();
                     Log.d("Firebase", "data loaded successfuly" + days);
-                    updateDisplay(activities, noActivities);
+                    updateDisplay(activities, noActivities, dailyTotal);
                 } else {
                     Log.d("Firebase", "Array does not exist for this user.");
                 }
@@ -148,7 +150,7 @@ public class EcoTrackerFragment extends Fragment {
         };
 
         //initializes everything
-        initUI(listener, dateText, yearText, activities, noActivities);
+        initUI(listener, dateText, yearText, activities, noActivities, dailyTotal);
 
         //Toggles calendar view
         calendarToggle.setOnClickListener(new View.OnClickListener() {
@@ -238,12 +240,13 @@ public class EcoTrackerFragment extends Fragment {
      * @param y TextCiew for displaying current year in standard form
      * @param activities RadioGroup in which the radiobutton activities are displayed
      * @param noActivities  TextView with message "no activities logged yet for today"
+     * @param dayTotal TextView displaying the day's total emissions
      */
     public void initUI(ValueEventListener listener, TextView d, TextView y,
-                       RadioGroup activities, TextView noActivities) {
+                       RadioGroup activities, TextView noActivities, TextView dailyTotal) {
         //pings Firebase to show activities of current date
         fetchSnapshot(listener);
-        updateDisplay(activities, noActivities);
+        updateDisplay(activities, noActivities, dailyTotal);
 
         //displays current date
         Calendar today = Calendar.getInstance();
@@ -255,20 +258,24 @@ public class EcoTrackerFragment extends Fragment {
                 +today.get(Calendar.DAY_OF_MONTH);
     }
 
-    public void updateDisplay(RadioGroup activities, TextView emptyMsg) {
+    public void updateDisplay(RadioGroup activities, TextView emptyMsg, TextView dailyTotal) {
         activities.clearCheck(); activities.removeAllViews();
         emptyMsg.setVisibility(View.INVISIBLE);
+
+        double emissions = 0.0;
         RadioButton btn;
-        System.out.println(days.keySet());
         if (days.containsKey(date)) {  //if true, will display logged activities for selected day
             //stores a list containing lists representing the logged activities of the day
             List<List<Object>> day = (List<List<Object>>) days.get(date);
             for (int i = 0; i < day.size(); i++) {
                 btn = new RadioButton(getContext());
-                String t = day.get(i).get(0) + ": " + day.get(i).get(1);
+                String t = day.get(i).get(2) + "kg CO2: " + day.get(i).get(1);
                 btn.setText(t);
                 activities.addView(btn);
+                emissions += Double.parseDouble(String.valueOf(day.get(i).get(2)));
             }
+            String s = emissions + "kg of CO2 emitted";
+            dailyTotal.setText(s);
         } else {
             //set default ("no activities today")
             emptyMsg.setVisibility(View.VISIBLE);
