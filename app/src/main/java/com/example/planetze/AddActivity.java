@@ -110,6 +110,7 @@ public class AddActivity extends Fragment {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                EcoTrackerFragment.fetchSnapshot();
                 getParentFragmentManager().popBackStack();
             }
         });
@@ -135,7 +136,7 @@ public class AddActivity extends Fragment {
                 //compute values and save in a list
                 List<String> activity = saveActivity(cat, act, input1, input2);
                 writeToFirebase(date, activity);  //write list to firebase
-                //update on eco tracker should happen automatically in eco tracker
+                EcoTrackerFragment.fetchSnapshot();  //update ecotracker info
                 getParentFragmentManager().popBackStack();  //returns to eco tracker
             }
         });
@@ -487,6 +488,9 @@ public class AddActivity extends Fragment {
                 }return e;
         }
     }
+
+
+
 
 
 }//end of class

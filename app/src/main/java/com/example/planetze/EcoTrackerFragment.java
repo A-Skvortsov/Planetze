@@ -7,6 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,7 +44,10 @@ public class EcoTrackerFragment extends Fragment {
 
     final String[] months = Constants.months;
     private FirebaseDatabase db;
-    private DatabaseReference calendarRef;
+    private static DatabaseReference calendarRef;  //this is static so that we can call fetchSnapshot()
+            //from addActivity fragment when returning to ecotrackerfragment in order to update
+            //ecotracker activity info upon return
+    private static ValueEventListener listener;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -133,7 +137,7 @@ public class EcoTrackerFragment extends Fragment {
         final TextView issuePrompt1 = view.findViewById(R.id.issuePrompt1);
         final TextView issuePrompt2 = view.findViewById(R.id.issuePrompt2);
 
-        ValueEventListener listener = new ValueEventListener() {
+        listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Check if the array exists
@@ -180,7 +184,7 @@ public class EcoTrackerFragment extends Fragment {
                 dateText.setText(date1);
                 yearText.setText(String.valueOf(y));
                 date = y + "-" + m + "-" + d;
-                fetchSnapshot(listener);
+                fetchSnapshot();
             }
         });
 
@@ -246,7 +250,7 @@ public class EcoTrackerFragment extends Fragment {
                             delFromFirebase(dateRef, acts, id, noActivities);  //delete the activity
                             //next line polls firebase for update and updates ui via call to updateDisplay
                             //in "listener"
-                            fetchSnapshot(listener);
+                            fetchSnapshot();
                         } else {
                             Log.d("Firebase", "Array does not exist for this user.");
                         }
@@ -280,9 +284,8 @@ public class EcoTrackerFragment extends Fragment {
 
     /**
      * Used to perform a one-time ping to the firebase to retrieve most up-to-date data
-     * @param listener
      */
-    public void fetchSnapshot(ValueEventListener listener) {
+    public static void fetchSnapshot() {
         calendarRef.addListenerForSingleValueEvent(listener);
     }
 
@@ -298,7 +301,7 @@ public class EcoTrackerFragment extends Fragment {
     public void initUI(ValueEventListener listener, TextView d, TextView y,
                        RadioGroup activities, TextView noActivities, TextView dailyTotal) {
         //pings Firebase to show activities of current date
-        fetchSnapshot(listener);
+        fetchSnapshot();
         updateDisplay(activities, noActivities, dailyTotal);
 
         //displays current date
@@ -339,7 +342,7 @@ public class EcoTrackerFragment extends Fragment {
 
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, fragment);
+        transaction.add(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
