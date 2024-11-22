@@ -35,6 +35,14 @@
     <string name="login">Login</string>
     <string name="register">Register</string>
 
+    <string name="signupSuccess">Signup Successful!</string>
+    <string name="Welcome">\nwelcome to planetze, insert name</string>
+    <string name="checkEmail"> \nPlease check your email to verify your account.</string>
+    <string name="tapResend">\nDidn\'t receive an email? Tap the button below to resend the verification email.\n
+    </string>
+    <string name="resend">Resend confirmation email</string>
+    <string name="goLogin">Go to login page</string>
+
     <string name="sign_in"><u>Sign in</u></string>
     <string name="sign_up"><u>Sign up</u></string>
     <!-- TODO: Remove or change this placeholder text -->

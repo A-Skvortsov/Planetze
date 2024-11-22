@@ -13,11 +13,11 @@ public class LoginPresenter {
     }
 
     public void loginUser(String email, String password) {
-        if (email == null || email.length() == 0) {
-            setMessage("Email Cannot be empty");
+        if (email == null || email.trim().isEmpty()) {
+            setMessage("Email cannot be empty");
         }
-        else if (password == null || password.length() == 0) {
-            setMessage("Password Cannot be empty");
+        else if (password == null || password.trim().isEmpty()) {
+            setMessage("Password cannot be empty");
         }
         else {
             model.loginUser(email, password, this);
