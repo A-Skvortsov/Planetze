@@ -54,7 +54,8 @@ public class EcoTrackerFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    HashMap<String, Object> days = new HashMap<>();
+    HashMap<String, Object> days = new HashMap<>();  //used to store the days of a user calendar
+    List<List<String>> acts = new ArrayList<>();  //used to store the activities of a day
     String date = "";
 
     public EcoTrackerFragment() {
@@ -215,6 +216,43 @@ public class EcoTrackerFragment extends Fragment {
         delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int id = activities.getCheckedRadioButtonId();
+                if (id == -1) {
+                    //show prompt to select an activity
+                    return;
+                }
+                Button btn = activities.findViewById(id);
+                activities.removeView(btn);  //removes btn from visible UI
+
+                //code to remove associated activity in firebase rtdb
+
+                //get the date of the activity we want to remove
+                DatabaseReference dateRef = db.getReference("user data")
+                        .child(userId)
+                        .child("calendar")
+                        .child(date);
+                //get the activities of the date
+                dateRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        // Check if the array exists
+                        if (dataSnapshot.exists()) {
+                            // Convert the snapshot into a List
+                            acts = (List<List<String>>) dataSnapshot.getValue();
+                            Log.d("Firebase", "data loaded successfully" + acts);
+                            delFromFirebase(dateRef, acts, id, noActivities);  //delete the activity
+                            //next line polls firebase for update and updates ui via call to updateDisplay
+                            //in "listener"
+                            fetchSnapshot(listener);
+                        } else {
+                            Log.d("Firebase", "Array does not exist for this user.");
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        Log.e("FirebaseData", "Error: " + databaseError.getMessage());
+                    }
+                });
             }
         });
 
@@ -222,7 +260,19 @@ public class EcoTrackerFragment extends Fragment {
     }
 
 
-
+    /**
+     * Deletes an activity from the firebase rtdb.
+     * @param dateRef the date in which the activity is logged
+     * @param acts the activities of the aforementioned date
+     * @param id the id of the activity we want to delete
+     */
+    public void delFromFirebase(DatabaseReference dateRef, List<List<String>> acts, int id,
+                                TextView noActivities) {
+        acts.remove(id);  //removes the activity at position [id]
+        if (acts.isEmpty())   //if no activities left on this date, remove the date from firebase
+            dateRef.removeValue();
+        else dateRef.setValue(acts);  //otherwise, set the activity list of date to be updated list
+    }
 
 
     /**
@@ -240,7 +290,7 @@ public class EcoTrackerFragment extends Fragment {
      * @param y TextCiew for displaying current year in standard form
      * @param activities RadioGroup in which the radiobutton activities are displayed
      * @param noActivities  TextView with message "no activities logged yet for today"
-     * @param dayTotal TextView displaying the day's total emissions
+     * @param dailyTotal TextView displaying the day's total emissions
      */
     public void initUI(ValueEventListener listener, TextView d, TextView y,
                        RadioGroup activities, TextView noActivities, TextView dailyTotal) {
@@ -269,6 +319,7 @@ public class EcoTrackerFragment extends Fragment {
             List<List<Object>> day = (List<List<Object>>) days.get(date);
             for (int i = 0; i < day.size(); i++) {
                 btn = new RadioButton(getContext());
+                btn.setId(i);  //this is used for delete and edit activity features
                 String t = day.get(i).get(2) + "kg CO2: " + day.get(i).get(1);
                 btn.setText(t);
                 activities.addView(btn);
@@ -279,6 +330,7 @@ public class EcoTrackerFragment extends Fragment {
         } else {
             //set default ("no activities today")
             emptyMsg.setVisibility(View.VISIBLE);
+            dailyTotal.setText("0.0 kg of CO2 Emitted");
         }
     }
 

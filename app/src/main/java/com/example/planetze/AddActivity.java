@@ -311,7 +311,7 @@ public class AddActivity extends Fragment {
             @NonNull
             @Override
             public Transaction.Result doTransaction(@NonNull MutableData currentData) {
-                // Step 1: Look at the data in Firebase for this date
+                //find date in the firebase
                 List<Object> a = currentData.getValue(new GenericTypeIndicator<List<Object>>() {});
                 if (a == null)  //true if the current date does not already exist in the database
                     a = new ArrayList<>();  //creates new arraylist for the date
