@@ -130,6 +130,8 @@ public class EcoTrackerFragment extends Fragment {
         final Button addBtn = view.findViewById(R.id.addBtn);
         final Button editBtn = view.findViewById(R.id.editBtn);
         final Button delBtn = view.findViewById(R.id.delBtn);
+        final TextView issuePrompt1 = view.findViewById(R.id.issuePrompt1);
+        final TextView issuePrompt2 = view.findViewById(R.id.issuePrompt2);
 
         ValueEventListener listener = new ValueEventListener() {
             @Override
@@ -216,16 +218,17 @@ public class EcoTrackerFragment extends Fragment {
         delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (activities.getChildCount() == 0) return;  //if no activities, do nothing
                 int id = activities.getCheckedRadioButtonId();
                 if (id == -1) {
-                    //show prompt to select an activity
+                    issuePrompt1.setVisibility(View.VISIBLE);
+                    issuePrompt2.setVisibility(View.VISIBLE);
                     return;
                 }
-                Button btn = activities.findViewById(id);
-                activities.removeView(btn);  //removes btn from visible UI
+                issuePrompt1.setVisibility(View.INVISIBLE);
+                issuePrompt2.setVisibility(View.INVISIBLE);
 
-                //code to remove associated activity in firebase rtdb
-
+                //code below removes associated activity in firebase rtdb
                 //get the date of the activity we want to remove
                 DatabaseReference dateRef = db.getReference("user data")
                         .child(userId)

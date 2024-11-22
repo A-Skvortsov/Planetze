@@ -108,6 +108,7 @@
                 android:textSize="20dp"
                 android:text="*"
                 android:visibility="invisible"
+                android:textStyle="bold|italic"
                 android:textColor="@android:color/holo_red_light"
                 app:layout_constraintBottom_toTopOf="@+id/backBtn"
                 app:layout_constraintEnd_toStartOf="@+id/issuePrompt2" />
