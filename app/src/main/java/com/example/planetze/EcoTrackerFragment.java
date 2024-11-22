@@ -111,6 +111,7 @@ public class EcoTrackerFragment extends Fragment {
         String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
         calendarRef = db.getReference("user data")
                 .child(userId).child("calendar");
+        Log.d("Firebase", "Reference Path: " + calendarRef);  //for debugging
 
 
         final Button calendarToggle = view.findViewById(R.id.calendarToggle);  //button to toggle calendar
@@ -134,6 +135,7 @@ public class EcoTrackerFragment extends Fragment {
                 if (dataSnapshot.exists()) {
                     // Convert the snapshot into a List
                     days = (HashMap<String, Object>) dataSnapshot.getValue();
+                    Log.d("Firebase", "data loaded successfuly" + days);
                     updateDisplay(activities, noActivities);
                 } else {
                     Log.d("Firebase", "Array does not exist for this user.");
@@ -141,7 +143,7 @@ public class EcoTrackerFragment extends Fragment {
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                System.out.println("FirebaseData" + "Error: " + databaseError.getMessage());
+                Log.e("FirebaseData", "Error: " + databaseError.getMessage());
             }
         };
 
@@ -177,13 +179,6 @@ public class EcoTrackerFragment extends Fragment {
             }
         });
 
-
-
-
-
-
-
-
         //show user activities
         activitiesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,8 +194,6 @@ public class EcoTrackerFragment extends Fragment {
 
             }
         });
-
-
         //add activities
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -227,6 +220,9 @@ public class EcoTrackerFragment extends Fragment {
     }
 
 
+
+
+
     /**
      * Used to perform a one-time ping to the firebase to retrieve most up-to-date data
      * @param listener
@@ -237,11 +233,11 @@ public class EcoTrackerFragment extends Fragment {
 
     /**
      * Initializes eco tracker UI
-     * @param listener
-     * @param d
-     * @param y
-     * @param activities
-     * @param noActivities
+     * @param listener ValueEventListener to listen for firebase updates
+     * @param d TextView for displaying current date in form "11 Nov" or "21 Sep"
+     * @param y TextCiew for displaying current year in standard form
+     * @param activities RadioGroup in which the radiobutton activities are displayed
+     * @param noActivities  TextView with message "no activities logged yet for today"
      */
     public void initUI(ValueEventListener listener, TextView d, TextView y,
                        RadioGroup activities, TextView noActivities) {

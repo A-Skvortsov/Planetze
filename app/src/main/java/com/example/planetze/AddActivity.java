@@ -54,13 +54,13 @@ public class AddActivity extends Fragment {
     private final String inputPrompt = "Please select an option for input";
     public final String[] activityCats = Constants.activityCats;
     public final String[][] activities = Constants.activities;
-    public String date = "test string";
+    public String date = "date";  //used to store the selected date
 
     public AddActivity() {
         // Required empty public constructor
     }
     public AddActivity(String d) {
-        date = d;
+        date = d;  //d passed as an argument from eco tracker (current calendar date)
     }
 
     /**
@@ -227,22 +227,22 @@ public class AddActivity extends Fragment {
             inpt1 = new String[]{"< 2km", "2-4km", "4-8km", "> 8km"};  //distance cycled/walked
             text1 = "Distance cycled/walked";
         } else if (act.equals("Flight (< 1,500km)") || act.equals("Flight (> 1,500km)")) {
-            inpt1 = new String[]{"1", "2", "3-4", "> 5"};  //number of flights taken
+            inpt1 = new String[]{"1", "2", "3", "> 3"};  //number of flights taken
             text1 = "Number of flights taken";
         }else if (act.equals("Meal")) {
             inpt1 = new String[]{"Beef", "Pork", "Chicken", "Fish", "Plant-based"};  //type of meal (beef pork chicken fish plant based)
-            inpt2 = new String[]{"1", "2", "3-4", "> 5"};  //number of servings
+            inpt2 = new String[]{"1", "2", "3-4", "> 4"};  //number of servings
             text1 = "Type of meal"; text2 = "Number of servings";
         }else if (act.equals("Buy new clothes")) {
-            inpt1 = new String[]{"1", "2", "3-4", "> 5"};  //number of clothing items purchased
+            inpt1 = new String[]{"1", "2", "3-4", "> 4"};  //number of clothing items purchased
             text1 = "Number of clothing items purchased";
         }else if (act.equals("Buy electronics")) {
             inpt1 = new String[]{"Smartphone", "Laptop/Computer", "T/V"};  //type of electronic device
-            inpt2 = new String[]{"1", "2", "3-4", "> 5"};  //number of devices purchased
+            inpt2 = new String[]{"1", "2", "3-4", "> 4"};  //number of devices purchased
             text1 = "Type of electronic device"; text2 = "Number of devices purchased";
         }else if (act.equals("Other purchases")) {
             inpt1 = new String[]{"Furniture", "Appliances"};  //type of purchase
-            inpt2 = new String[]{"1", "2", "3-4", "> 5"};  //# of purchases
+            inpt2 = new String[]{"1", "2", "3-4", "> 4"};  //# of purchases
             text1 = "Type of purchase"; text2 = "Number of purchases";
         }else if (act.equals("Electricity") || act.equals("Gas") || act.equals("Water")) {
             inpt1 = new String[]{"Under $50", "$50-$100", "$100-$150", "$150-$200", "Over $200"};  //bill amount $
@@ -278,53 +278,11 @@ public class AddActivity extends Fragment {
 
     public List<String> saveActivity(String cat, String act, int input1, int input2) {
         List<String> activity = new ArrayList<>();
-        activity.add(cat); activity.add(act);
-        int activityEmissions = 0;
-        activity.add(String.valueOf(activityEmissions));
-        /*switch (cat) {
-            case "Transportation":
-                switch (act) {
-                    case "Drive personal vehicle":
-                        break;
-                    case "Take public transportation":
-                        break;
-                    case "Cycling/Walking":
-                        break;
-                    case "Flight (< 1,500km)":
-                        break;
-                    default: //"Flight (> 1,500km)"
-                        break;
-                }
-                break;
-            case "Food":
-                //here, act must be "meal"
-                break;
-            case "Consumption":
-                switch (act) {
-                    case "Buy new clothes":
-                        break;
-                    case "Buy electronics":
-                        break;
-                    default:  //"Other purchases"
-                        break;
-                }
-                break;
-            default:
-                switch (act) {
-                    case "Electricity":
-                        break;
-                    case "Gas":
-                        break;
-                    default:  //"Water"
-                        break;
-                }
-                break;
-        }*/
-
-
-
-
-
+        activity.add(cat); activity.add(act);  //add category and activity names
+        double activityEmissions = computeEmissions(act, input1, input2);
+        activity.add(String.valueOf(activityEmissions));  //add total emissions for the activity
+        activity.add(String.valueOf(input1));
+        activity.add(String.valueOf(input2));  //input1 and input2 saved for edit feature implementation
         return activity;
     }
 
@@ -335,7 +293,7 @@ public class AddActivity extends Fragment {
         DatabaseReference calendarRef = db.getReference("user data")
                 .child(userId).child("calendar");
 
-        /*code in this nest only writes and overrides whatever you're writing to. Does not account
+        /*code in this nest writes and overrides whatever you're writing to. Does not account
         for existing data (i.e. does not "update" the database, just overrides it with new data;
         not what we want)*//*
         Map<String, Object> map = new HashMap<>();
@@ -374,5 +332,160 @@ public class AddActivity extends Fragment {
         });
 
     }
+
+
+    public double computeEmissions(String act, int input1, int input2) {
+        double e = 0.0;
+        switch(act) {
+            case "Drive personal vehicle":
+                double x = 0.0, y = 0.0;
+                switch (input1) {
+                    case 0: x = 15; break;
+                    case 1: x = 40; break;
+                    case 2: x = 80; break;
+                    case 3: x = 200; break;
+                    default: x = 500; break;
+                }
+                switch (input2) {  //values taken from "formulas" document
+                    case 0: y = 0.24; break;
+                    case 1: y = 0.27; break;
+                    case 2: y = 0.16; break;
+                    default: y = 0.05; break;
+                }
+                return x * y;  //km driven * kg of CO2 per km
+
+            case "Take public transport":
+                x = 0.0; y = 0.0;
+                //values below hardcoded based on assumptions.
+                //They can be stored in some sort of data file if necessary later. Not a priority atm
+                switch (input1) {
+                    case 0: x = 0.75; break;
+                    case 1: x = 0.5; break;
+                    default: x = 0.5; break;
+                }
+                switch (input2) {
+                    case 0: y = 0.5; break;
+                    case 1: y = 1; break;
+                    case 2: y = 2; break;
+                    default: y = 3; break;
+                }
+                return x * y;
+            case "Cycling/Walking":
+                switch (input1) {
+                    case 0: x = 2; break;
+                    case 1: x = 4; break;
+                    case 2: x = 8; break;
+                    default: x = 12; break;
+                }
+                return -x * 3;  //negative because we reduce carbon emissions if they avoid transport
+            case "Flight (< 1,500km)":
+                x = 225;  //kg of CO2
+                switch (input2) {
+                    case 0: y = 1; break;  //num of flights
+                    case 1: y = 2; break;
+                    case 3: y = 3; break;
+                    default: y = 4; break;
+                }
+                return x * y;
+            case "Flight (> 1,500km)":
+                x = 550;  //kg of CO2
+                switch (input2) {
+                    case 0: y = 1; break;  //num of flights
+                    case 1: y = 2; break;
+                    case 3: y = 3; break;
+                    default: y = 4; break;
+                }
+                return x * y;
+            case "Meal":
+                switch (input1) {
+                    //these values calculated from formulas file:
+                    // ~(#kg if you consume the meal daily) / 350 days per year
+                    //i.e. for beef; daily consumption gives 2500kgco2/year. 2500/350 ~= 7
+                    case 0: x = 7; break;  //beef
+                    case 1: x = 4; break;  //pork
+                    case 2: x = 2.8; break;  //chicken
+                    case 3: x = 2.3; break;  //fish
+                    default: x = 2; break;  //plant-based
+                }
+                switch (input2) {
+                    case 0: y = 1; break;  //num of servings
+                    case 1: y = 2; break;
+                    case 2: y = 4; break;
+                    default: y = 5; break;
+                }
+                return x * y;
+            case "Buy new clothes":
+                x = 6;  //kg per clothing item; computed using formulas file:
+                //monthly buyers of clothes get 360kgco2/year
+                //sps. 5 clothing items per month @6kgco2 per clothing item. This
+                //gets the given 360kgco2/year number. So we use 6kgco2 per clothing item
+                switch (input2) {
+                    case 0: y = 1; break;  //num of clothing items purchased
+                    case 1: y = 2; break;
+                    case 2: y = 4; break;
+                    default: y = 6; break;
+                }
+            case "Buy electronics":
+                switch (input1) {
+                    //values taken from formulas file:
+                    //300kg for one electronic device, we set this as the default
+                    //for smartphone. Then safe to assume computer and TV should be higher emissions
+                    //since they take more resources to make
+                    case 0: x = 300; break;  //smartphone
+                    case 1: x = 600; break;  //computer
+                    default: x = 900; break;  //tv
+                }
+                switch (input2) {
+                    case 0: y = 1; break;  //num of devices purchased
+                    case 1: y = 2; break;
+                    case 2: y = 4; break;
+                    default: y = 5; break;
+                }
+                return x * y;
+            case "Other purchases":
+                switch (input1) {
+                    case 0: x = 100; break;  //furniture
+                    default: x = 900; break;  //appliances; set to same emissions (in kg) as buying a TV
+                }
+                switch (input2) {
+                    case 0: y = 1; break;  //num of items purchased
+                    case 1: y = 2; break;
+                    case 2: y = 4; break;
+                    default: y = 5; break;
+                }
+                return x * y;
+
+            //values for electricity, gas and water are from formulas file:
+            //they are (emissions for 2 occupants, detached house under 1000sqft) / ~350 days in a year
+            //these are to be added to the past 30 days, starting at the day of the added activity
+            //since they are monthly bills (i.e. these emissions occur each day for a month, resulting
+            //in the given bill of x dollars)
+            case "Electricity":
+                switch (input1) {
+                    case 0: e = 0.5; break;
+                    case 1: e = 1; break;
+                    case 2: e = 4; break;
+                    case 3: e = 4.8; break;
+                    default: e = 6.5; break;
+                }return e;
+            case "Gas":
+                switch (input1) {
+                    case 0: e = 0.5; break;
+                    case 1: e = 1; break;
+                    case 2: e = 4; break;
+                    case 3: e = 4.8; break;
+                    default: e = 6.5; break;
+                }return e;
+            default:  //case "Water"
+                switch (input1) {
+                    case 0: e = 0.5; break;
+                    case 1: e = 1; break;
+                    case 2: e = 4; break;
+                    case 3: e = 4.8; break;
+                    default: e = 6.5; break;
+                }return e;
+        }
+    }
+
 
 }//end of class
