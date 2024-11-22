@@ -21,9 +21,8 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
+
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.util.ArrayList;
@@ -125,6 +124,8 @@ public class FirstFragment extends Fragment {
         barChart.getAxisLeft().setAxisMinimum(Math.min(0f, barData.getYMin()));
         barChart.getAxisRight().setEnabled(false);
 
+        barDataSet.setDrawValues(true);
+
         barChart.animateY(2000, Easing.EaseInOutExpo);
 
         barChart.getDescription().setText("");
@@ -156,7 +157,6 @@ public class FirstFragment extends Fragment {
             BarEntry barEntry = new BarEntry(i, value);
 
             barEntries.add(barEntry);
-
         }
 
         return new BarDataSet(barEntries, "");
