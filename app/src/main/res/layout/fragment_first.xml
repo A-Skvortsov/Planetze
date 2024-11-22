@@ -1,17 +1,20 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FirstFragment">
+    tools:context=".FirstFragment"
+    android:fillViewport="true">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="2dp">
 
-        <!-- Header Text -->
+        <!-- Main Text -->
         <TextView
-            android:id="@+id/textView2"
+            android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -22,79 +25,108 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <!-- Pie Chart -->
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/pie_chart"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_margin="25dp"
-            app:layout_constraintBottom_toTopOf="@+id/time_period_toggle"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textView2" />
+        <!-- Pie Chart Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="5dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="10dp"
+            android:contentDescription="@string/emission_breakdown_by_category"
+            android:background="@color/white">
 
-<!--        <com.google.android.material.chip.ChipGroup-->
-<!--            android:id="@+id/chipGroup"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginBottom="90dp"-->
-<!--            android:backgroundTint="@color/white"-->
-<!--            android:gravity="center"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@id/pie_chart"-->
-<!--            app:selectionRequired="true"-->
-<!--            app:singleSelection="true">-->
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pie_chart"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="5dp">
 
-<!--            <com.google.android.material.chip.Chip-->
-<!--                android:id="@+id/chip_daily"-->
-<!--                style="@style/Widget.MaterialComponents.Chip.Choice"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="@string/daily"-->
-<!--                app:chipSurfaceColor="@color/white" />-->
+            </com.github.mikephil.charting.charts.PieChart>
+        </androidx.cardview.widget.CardView>
 
-<!--            <com.google.android.material.chip.Chip-->
-<!--                android:id="@+id/chip_monthly"-->
-<!--                style="@style/Widget.MaterialComponents.Chip.Choice"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="@string/monthly"-->
-<!--                app:chipSurfaceColor="@color/white" />-->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="5dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="10dp"
+            android:background="@color/white">
 
-<!--            <com.google.android.material.chip.Chip-->
-<!--                android:id="@+id/chip_yearly"-->
-<!--                style="@style/Widget.MaterialComponents.Chip.Choice"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="@string/yearly"-->
-<!--                app:chipSurfaceColor="@color/white" />-->
+            <com.github.mikephil.charting.charts.PieChart
+                android:id="@+id/pie_chart2"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_margin="5dp">
+            </com.github.mikephil.charting.charts.PieChart>
+        </androidx.cardview.widget.CardView>
 
-<!--            <com.google.android.material.chip.Chip-->
-<!--                android:id="@+id/chip_overall"-->
-<!--                style="@style/Widget.MaterialComponents.Chip.Choice"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="@string/overall"-->
-<!--                app:chipSurfaceColor="@color/white" />-->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="5dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardCornerRadius="10dp"
+            android:background="@color/white">
 
-<!--        </com.google.android.material.chip.ChipGroup>-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <!-- Bar Chart -->
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/bar_chart"
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    android:layout_weight="1"
+                    android:layout_margin="5dp" />
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:background="@color/palette_light_gray" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <SearchView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
 
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/time_period_toggle"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_height="100dp"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginBottom="90dp"
             android:gravity="center"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2"
-            app:singleSelection="true">
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            app:checkedButton="@+id/button_overall">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_daily"
@@ -103,10 +135,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/daily"
-                app:iconTint="@color/palette_turquoise"
                 android:textColor="@color/palette_light_gray"
-                app:strokeColor="@color/palette_turquoise"
-                app:backgroundTint="@color/custom_button_group_background"/>
+                app:backgroundTint="@color/custom_button_group_background"
+                app:rippleColor="@color/palette_turquoise_tint_200"
+                app:strokeColor="@color/palette_turquoise" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_weekly"
@@ -115,10 +147,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/weekly"
-                app:iconTint="@color/palette_turquoise"
                 android:textColor="@color/palette_light_gray"
-                app:strokeColor="@color/palette_turquoise"
-                app:backgroundTint="@color/custom_button_group_background"/>
+                app:backgroundTint="@color/custom_button_group_background"
+                app:rippleColor="@color/palette_turquoise_tint_200"
+                app:strokeColor="@color/palette_turquoise" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_monthly"
@@ -127,10 +159,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/monthly"
-                app:iconTint="@color/palette_turquoise"
                 android:textColor="@color/palette_light_gray"
-                app:strokeColor="@color/palette_turquoise"
-                app:backgroundTint="@color/custom_button_group_background" />
+                app:backgroundTint="@color/custom_button_group_background"
+                app:rippleColor="@color/palette_turquoise_tint_200"
+                app:strokeColor="@color/palette_turquoise" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/button_overall"
@@ -139,10 +171,10 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/overall"
-                app:iconTint="@color/palette_turquoise"
                 android:textColor="@color/palette_light_gray"
-                app:strokeColor="@color/palette_turquoise"
-                app:backgroundTint="@color/custom_button_group_background" />
+                app:backgroundTint="@color/custom_button_group_background"
+                app:rippleColor="@color/palette_turquoise_tint_200"
+                app:strokeColor="@color/palette_turquoise" />
         </com.google.android.material.button.MaterialButtonToggleGroup>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+    </LinearLayout>
+</ScrollView>

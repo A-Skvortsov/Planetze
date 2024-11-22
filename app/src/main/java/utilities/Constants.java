@@ -11,7 +11,8 @@ public class Constants {
     public static final int housing_qs = 7;
     public static final int consumption_qs = 4;
     //all survey questions. Each sub array is a question followed by all possible answer options
-    public static final String[][] questions = {{"Do you own or regularly use a car?", "Yes", "No"},
+    public static final String[][] questions = {
+            {"Do you own or regularly use a car?", "Yes", "No"},
             {"What type of car do you drive?", "Gasoline", "Diesel", "Hybrid", "Electric", "I don't know"},
             {"How many kilometers/miles do you drive per year?", "Up to 5,000 km", "5,000–10,000 km", "10,000–15,000 km", "15,000–20,000 km", "20,000–25,000 km", "More than 25,000 km"},
             {"How often do you use public transportation?", "Never", "Occasionally (1-2 times/week)", "Frequently (3-4 times/week)", "Always (5+ times/week)"},
@@ -37,7 +38,8 @@ public class Constants {
             {"How often do you buy new clothes?", "Monthly", "Quarterly", "Annually", "Rarely"},
             {"Do you buy second-hand or eco-friendly products?", "Yes, regularly", "Yes, occasionally", "No"},
             {"How many electronic devices have you purchased in the past year?", "None", "1", "2", "3", "4 or more"},
-            {"How often do you recycle?", "Never", "Occasionally", "Frequently", "Always"}};
+            {"How often do you recycle?", "Never", "Occasionally", "Frequently", "Always"}
+    };
 
     public static final String[] country = {
             "Afghanistan",
