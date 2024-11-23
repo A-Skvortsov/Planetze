@@ -104,12 +104,12 @@ public class SurveyFragment extends Fragment {
 
                     db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
                     String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
-                    DatabaseReference surveyRef = db.getReference("user data")
+                    DatabaseReference userRef = db.getReference("user data")
                             .child(userId);
                     //send survey results to firebase as Map<String, List<Double>>
                     Map<String, Object> c = new HashMap<>();
                     c.put("survey_results", list);
-                    surveyRef.updateChildren(c);
+                    userRef.updateChildren(c);
 
                     loadFragment(new SurveyResults());
                     return;
@@ -227,14 +227,33 @@ public class SurveyFragment extends Fragment {
      * @return double representing total annual transport emissions (in kg)
      */
     protected double transportEmissions() {
+        //firebase stuff used to store what car uses drives by default (needed for "Drive personal
+        //vehicle" activity in EcoTracker)
+        db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
+        DatabaseReference userRef = db.getReference("user data")
+                .child(userId);
+        Map<String, Object> c = new HashMap<>();
+
         double totalkg = 0.0;
         double r = 0.0;
         if (transport_ans[0] != 1) {  //true corresponds to user saying "yes" to "do u use car?"
             switch(transport_ans[1]) {  //which car they drive
-                case 0: r = 0.24; break;  //gas emissions rate
-                case 1: r = 0.27; break;  //diesel, etc.
-                case 2: r = 0.05; break;  //electric
-                default: r = 0.16; break;  //hybrid or "i don't know" (default to hybrid)
+                case 0: r = 0.24;
+                    c.put("default_car", "gasoline");
+                    break;  //gas emissions rate
+                case 1: r = 0.27;
+                    c.put("default_car", "diesel");
+                    break;  //diesel, etc.
+                case 2: r = 0.16;
+                    c.put("default_car", "hybrid");
+                    break;  //hybrid
+                case 3: r = 0.05;
+                    c.put("default_car", "electric");
+                    break;  //electric
+                default: r = 0.16;
+                    c.put("default_car", "none");
+                    break;  //"i don't know" answer (rate of emissions defaults to that of hybrid)
             }
             switch(transport_ans[2]) {  //how much they drive
                 case 0: totalkg += r * 5000; break;  //constants are distances driven
@@ -244,7 +263,8 @@ public class SurveyFragment extends Fragment {
                 case 4: totalkg += r * 25000; break;
                 default: totalkg += r * 35000; break;
             }
-        }
+        } else {c.put("default_car", "none");}
+        userRef.updateChildren(c);  //adds default car component to user data for use in EcoTracker
 
         totalkg += public_transport_emissions[transport_ans[3]][transport_ans[4]];  //see Constants.java
 
