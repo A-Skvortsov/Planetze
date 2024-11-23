@@ -10,6 +10,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.widget.Button;
@@ -19,6 +20,9 @@ import androidx.navigation.ui.AppBarConfiguration;
 import com.example.planetze.databinding.ActivityPaymentBinding;
 import com.stripe.android.PaymentConfiguration;
 import com.stripe.android.paymentsheet.PaymentSheet;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +37,8 @@ public class Payment extends AppCompatActivity {
 
     PaymentSheet paymentSheet;
     StringRequest stringRequest;
+    String customerId;
+    String Ephemeral_key;
 
 
     @Override
@@ -44,54 +50,59 @@ public class Payment extends AppCompatActivity {
         binding = ActivityPaymentBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // allows u to talk to stripe
+        PaymentConfiguration.init(this,PUSHABLE_KEY );
 
-        PaymentConfiguration.init(this, PUSHABLE_KEY);
         paymentSheet = new PaymentSheet(this, paymentSheetResult -> {
 
         });
 
-        String url = "cus_RGW7sv4XRGFzAT";
 
-        // sets up a systsem to get networks reuqets
-        RequestQueue requestQueue =  Volley.newRequestQueue(this);
+        //1. We will first here create a customer
+
+        String url = "https://api.stripe.com/v1/customers";
+        //prepares the app to send network requests
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
 
 
-        //sends a request and expects a string response , to in this case stripe
-        //request.Method.POST specfices the type of request u want to make, this case send data (POST)
-        // url the server where ur sending ur info to
-        //the 2 functions handles a requets that was succesful, and one that was failed ie a error
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
+        //returns a strng of the servers repsone from us making a https request
+        //Request.Method.POST --> tell us tht were provides info to the server
+        //url --> where the https request is sent
+        //onResponse wht to do after server has sent back data/(in this case string)
+        //onError wht to do if the server return a error
 
-            new Response.Listener<String>() {
+        StringRequest stringRequest1 = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                // will implement later
+
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    customerId = jsonObject.getString("id");
+                    //getEphemeral_key(customerId);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
 
             }
-
         },
-            new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
 
-                // will implement later
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
 
-            }
-
-        }){
+                    }
+                }
 
 
-            // provides addition info which may be needed when sending our request to the sever
-            // in this case the authorizatio which tells stripe were allowed to use their application through our given api key
+        ){
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map header = new HashMap();
-                // provides proof that u are allowed to make this request to our servie ie STRIPE
-                header.put("Authorization", "Bearer "+SECRET_KEY);
-                return header;
+                Map<String, String> map = new HashMap();
+                map.put("Authorization", "Bearer "+ SECRET_KEY);
+                return map;
             }
         };
-
 
 
 
@@ -100,6 +111,9 @@ public class Payment extends AppCompatActivity {
     }
 
 
+
+
+    }
 
 
 }
