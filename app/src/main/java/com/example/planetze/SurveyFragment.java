@@ -14,10 +14,19 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import utilities.Constants;
 
 public class SurveyFragment extends Fragment {
 
+    private FirebaseDatabase db;
     int current_cat = 0;  //0-transportation,1-food, 2-housing,3-consumption
     int current_q = 0;  //index of current question
     double[] co2PerCategory = {0.0, 0.0, 0.0, 0.0};
@@ -88,13 +97,21 @@ public class SurveyFragment extends Fragment {
                 current_q++;  //iterates to next q
                 if (current_q >= num_qs) {  //true if survey is finished
                     computeCatEmissions(current_cat);
-                    Bundle args = new Bundle();
-                    args.putDoubleArray("co2PerCategory", co2PerCategory);
+                    List<Double> list = new ArrayList<>();
+                    for (int i = 0; i < co2PerCategory.length; i++) {
+                        list.add(co2PerCategory[i]);
+                    }
 
-                    SurveyResults surveyResultsFragment = new SurveyResults();
-                    surveyResultsFragment.setArguments(args);
+                    db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+                    String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
+                    DatabaseReference surveyRef = db.getReference("user data")
+                            .child(userId);
+                    //send survey results to firebase as Map<String, List<Double>>
+                    Map<String, Object> c = new HashMap<>();
+                    c.put("survey_results", list);
+                    surveyRef.updateChildren(c);
 
-                    loadFragment(surveyResultsFragment);
+                    loadFragment(new SurveyResults());
                     return;
                 }
                 if (questions[current_q][0].equals("-")) {  //iter'n to next category if necessary

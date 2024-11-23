@@ -2,6 +2,7 @@ package com.example.planetze;
 
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -30,15 +32,14 @@ import utilities.Constants;
 
  
 public class SurveyResults extends Fragment {
-		/*private FirebaseAuth auth;
-    private DatabaseReference userRef;
+
     private FirebaseDatabase db;
-		*/
+
     final String[] country = Constants.country;
     final double[] country_emissions = Constants.country_emissions;
     String default_country = Constants.default_country;
     double user_e = 0.0;  //total user emissions
-    List<String> results_string;
+
     List<Double> results = new ArrayList<>();
 
     @Override
@@ -50,68 +51,42 @@ public class SurveyResults extends Fragment {
             return insets;
         });
 
-				//this big comment block may be important DO NOT REMOVE FOR NOW
-        /*auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-        userRef = db.getReference("user data");
         String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user
-        DatabaseReference userArrayRef = userRef.child(userId).child("survey_results");
-        // Read the data
-        userArrayRef.addValueEventListener(new ValueEventListener() {
+        DatabaseReference userArrayRef = db.getReference("user data")
+                .child(userId).child("survey_results");
+        userArrayRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // Check if the array exists
                 if (dataSnapshot.exists()) {
-                    // Convert the snapshot into a List
-                    results_string = (List<String>) dataSnapshot.getValue();
-                    for (int i = 0; i < results_string.size(); i++)   //convert results to double
-                        results.add(Double.valueOf(results_string.get(i)));
+                    List<Object> a = (List<Object>) dataSnapshot.getValue();
+                    for (int i = 0; i < a.size(); i++) {
+                        results.add(Double.valueOf(String.valueOf(a.get(i))));
+                    }  //conversion necessary because Firebase stores doubles weirld
+                        // (sometimes integers, sometimes Longs, etc.)
                     results = kgToTons(results);
                     user_e = sum(results);  //saves user result immediately
-                    System.out.println(user_e);
-                    setCategoryGraph(results);  //sets category graph
                 } else {
-                    System.out.println("FirebaseData: Array does not exist for this user.");
+                    Log.d("FirebaseData:", "Array does not exist for this user.");
                 }
 
-
                 //initializes some basics
-                final TextView your_emissions = findViewById(R.id.your_emissions);
-                    String sum = round(user_e) + "   ";
-                    your_emissions.setText(sum);
-                final TextView total_bar = findViewById(R.id.total_bar);
-                    String msg = sum + " tons of CO2 emitted annually";
-                    total_bar.setText(msg);
-                //setCategoryGraph(results);  //sets category graph
+                final TextView your_emissions = view.findViewById(R.id.your_emissions);
+                String sum = round(user_e) + "   ";
+                your_emissions.setText(sum);
+                final TextView total_bar = view.findViewById(R.id.total_bar);
+                String msg = sum + " tons of CO2 emitted annually";
+                total_bar.setText(msg);
+                setCategoryGraph(view, results);  //sets category graph
 
-                initComparisonGraph(default_country);  //initializes comparison graph
-                setUserDataComparisonGraph(user_e);
+                initComparisonGraph(view, default_country);  //initializes comparison graph
+                setUserDataComparisonGraph(view, user_e);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 System.out.println("FirebaseData" + "Error: " + databaseError.getMessage());
             }
-        });*/
-        Bundle args = getArguments();
-
-        assert args != null;
-        double[] results = args.getDoubleArray("co2PerCategory");
-
-        assert results != null;
-        results = kgToTons(results);
-        user_e = sum(results);  //saves user result immediately
-
-        //initializes some basics
-        final TextView your_emissions = view.findViewById(R.id.your_emissions);
-            String sum = round(user_e) + "   ";
-            your_emissions.setText(sum);
-        final TextView total_bar = view.findViewById(R.id.total_bar);
-            String msg = sum + " tons of CO2 emitted annually";
-            total_bar.setText(msg);
-        setCategoryGraph(view, results);  //sets category graph
-
-        initComparisonGraph(view, default_country);  //initializes comparison graph
-        setUserDataComparisonGraph(view, user_e);
+        });
 
         //spinner change listener
         Spinner s = view.findViewById(R.id.spinner);
@@ -120,11 +95,8 @@ public class SurveyResults extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View v,
                                        int position, long id) {
                 String selectedItem = (String) parent.getItemAtPosition(position);
-
-                // Use a current view
                 setComparisonGraph(view, selectedItem);
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 setComparisonGraph(view, default_country);
@@ -139,9 +111,8 @@ public class SurveyResults extends Fragment {
      * Sets the first graph depicting breakdown of user emissions by category
 		 * "public void setCategoryGraph(List<Double> results) {" was the previous method declaration,
 		 * may be useful for future.
-     * @param results
      */
-    public void setCategoryGraph(View view, double[] results) {
+    public void setCategoryGraph(View view, List<Double> results) {
         TextView[] bars = {
                     view.findViewById(R.id.transport),
                     view.findViewById(R.id.food),
