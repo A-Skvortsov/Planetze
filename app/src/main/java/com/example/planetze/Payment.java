@@ -78,7 +78,7 @@ public class Payment extends AppCompatActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     customerId = jsonObject.getString("id");
-                    //getEphemeral_key(customerId);
+                    getEphemeral_key(customerId);
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -109,6 +109,61 @@ public class Payment extends AppCompatActivity {
 
 
     }
+    // Once we have created a customer, we will use the customer id, to get the  Ephemeral key
+    //Ephemeral_key -- helps to connect our app to stripe
+    private void getEphemeral_key(String customerId) {
+        String url = "https://api.stripe.com/v1/ephemeral_keys";
+        //prepares the app to send network requests
+        RequestQueue requestQueue = Volley.newRequestQueue(this);
+
+        //returns a strng of the servers repsone from us making a https request
+        //Request.Method.POST --> tell us tht were provides info to the server
+        //url --> where the https request is sent
+        //onResponse wht to do after server has sent back data/(in this case string)
+        //onError wht to do if the server return a error
+
+        StringRequest stringRequest1 = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    Ephemeral_key = jsonObject.getString("id");
+                    //getEphemeral_key(Ephemeral_key);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+
+
+            }
+        },
+
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }
+
+
+        ){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> map = new HashMap();
+                map.put("Authorization", "Bearer "+ SECRET_KEY);
+                map.put("Stripe-Version", "2024-11-20.acacia");
+                return map;
+            }
+
+            // send data to the https for the POST
+            @Nullable
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<>();
+                map.put("customer", customerId);
+                return map;
+            }
+        };
 
 
 
