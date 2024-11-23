@@ -1,6 +1,7 @@
 package com.example.planetze;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,9 +43,6 @@ public class LogInFragment extends Fragment  {
 
     private TextView inputError, forgotpass;
     private String errorMsg;
-
-
-
 
 
 
@@ -153,7 +151,8 @@ public class LogInFragment extends Fragment  {
                                 if (task.isSuccessful()) {
                                     FirebaseUser user = auth.getCurrentUser();
                                     if (user.isEmailVerified()) {
-                                        loadFragment(new HomeFragment());
+                                        Intent intent = new Intent(getContext(), HomeActivity.class);
+                                        startActivity(intent);
                                         //eco guage
                                         // survey if just registered
                                     }
@@ -184,8 +183,6 @@ public class LogInFragment extends Fragment  {
                 loadFragment(new ForgotPasswordFragment());
             }
         });
-
-
 
 
         return view;

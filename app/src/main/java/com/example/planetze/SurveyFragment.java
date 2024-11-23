@@ -1,26 +1,23 @@
 package com.example.planetze;
 
-import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-
-import java.util.stream.IntStream;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import utilities.Constants;
 
-public class Init_Survey extends AppCompatActivity {
+public class SurveyFragment extends Fragment {
+
     int current_cat = 0;  //0-transportation,1-food, 2-housing,3-consumption
     int current_q = 0;  //index of current question
     double[] co2PerCategory = {0.0, 0.0, 0.0, 0.0};
@@ -38,39 +35,42 @@ public class Init_Survey extends AppCompatActivity {
     //elements of arrays below specify which answer option
     //(represented as int) is selected for a particular question
     int[] transport_ans = new int[num_transport_qs];  //7 qs in transportation category
-    int[] food_ans = new int [num_food_qs];
+    int[] food_ans = new int[num_food_qs];
     int[] housing_ans = new int[num_housing_qs];
     int[] consumption_ans = new int[num_consumption_qs];
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_init_survey);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });  //end of default onCreate() code
+    private TextView please_answer1;
+    private TextView please_answer2;
+    private Button next_btn;
+    private Button back_btn;
+    private TextView category;
+    private TextView question;
+    private RadioGroup options;
 
-        //final vars correspond to UI components
-        final TextView please_answer1 = findViewById(R.id.please_answer1);
-        final TextView please_answer2 = findViewById(R.id.please_answer2);
-        final Button next_btn = findViewById(R.id.next_btn);
-        Button back_btn = findViewById(R.id.back_btn);
-        final TextView category = findViewById(R.id.category);
-        final TextView question = findViewById(R.id.question);
-        final RadioGroup options = findViewById(R.id.options);
-            //nested code initializes survey at first question
-            back_btn.setVisibility(View.INVISIBLE);
-            category.setText(categories[current_cat]);
-            question.setText(questions[current_q][0]);
-            for (int i = 1; i < questions[current_q].length; i++) {
-                RadioButton btn = new RadioButton(Init_Survey.this);
-                btn.setId(i - 1);
-                btn.setText(questions[current_q][i]);
-                options.addView(btn);
-            }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_init_survey, container, false);
+
+        please_answer1 = view.findViewById(R.id.please_answer1);
+        please_answer2 = view.findViewById(R.id.please_answer2);
+        next_btn = view.findViewById(R.id.next_btn);
+        back_btn = view.findViewById(R.id.back_btn);
+        category = view.findViewById(R.id.category);
+        question = view.findViewById(R.id.question);
+        options = view.findViewById(R.id.options);
+
+        //nested code initializes survey at first question
+        back_btn.setVisibility(View.INVISIBLE);
+        category.setText(categories[current_cat]);
+        question.setText(questions[current_q][0]);
+        for (int i = 1; i < questions[current_q].length; i++) {
+            RadioButton btn = new RadioButton(getContext());
+            btn.setId(i - 1);
+            btn.setText(questions[current_q][i]);
+            btn.setTextColor(Color.BLACK);
+            btn.setTextSize(16);
+            options.addView(btn);
+        }
 
         next_btn.setOnClickListener(new View.OnClickListener() {
             /**
@@ -88,10 +88,13 @@ public class Init_Survey extends AppCompatActivity {
                 current_q++;  //iterates to next q
                 if (current_q >= num_qs) {  //true if survey is finished
                     computeCatEmissions(current_cat);
-                    //code below stats next activity (show survey results)
-                    Intent intent = new Intent(Init_Survey.this, SurveyResults.class);
-                    intent.putExtra("co2PerCategory", co2PerCategory);
-                    startActivity(intent);
+                    Bundle args = new Bundle();
+                    args.putDoubleArray("co2PerCategory", co2PerCategory);
+
+                    SurveyResults surveyResultsFragment = new SurveyResults();
+                    surveyResultsFragment.setArguments(args);
+
+                    loadFragment(surveyResultsFragment);
                     return;
                 }
                 if (questions[current_q][0].equals("-")) {  //iter'n to next category if necessary
@@ -121,6 +124,8 @@ public class Init_Survey extends AppCompatActivity {
                 updateSurvey(options, question, category, current_q, current_cat);
             }
         });
+
+        return view;
     }
 
 
@@ -139,13 +144,14 @@ public class Init_Survey extends AppCompatActivity {
 
         options.removeAllViews(); options.clearCheck();  //remove previous answer options
         for (int i = 1; i < questions[q].length; i++) { //loading answer options for the new q
-            RadioButton btn = new RadioButton(Init_Survey.this);
+            RadioButton btn = new RadioButton(getContext());
             btn.setId(i - 1);  //standard btn configurations
             btn.setText(questions[q][i]);
+            btn.setTextColor(Color.BLACK);
+            btn.setTextSize(16);
             options.addView(btn);  //adds btn to the RadioGroup (btn container)
         }
     }
-
 
     /**
      * Updates the global arrays containing user answers for each category
@@ -370,4 +376,9 @@ public class Init_Survey extends AppCompatActivity {
         return s;
     }
 
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment);
+        transaction.commit();
+    }
 }
