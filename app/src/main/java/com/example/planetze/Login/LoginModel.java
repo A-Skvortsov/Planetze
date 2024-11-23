@@ -53,6 +53,7 @@ public class LoginModel {
 
     public void onSignInResult(ActivityResult result, LoginPresenter presenter) {
         if (result.getResultCode() == RESULT_OK) {
+            presenter.setMessage("Launched Google sign up");
             Task<GoogleSignInAccount> accountTask = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
             try {
                 GoogleSignInAccount signInAccount = accountTask.getResult(ApiException.class);

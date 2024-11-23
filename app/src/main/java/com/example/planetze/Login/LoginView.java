@@ -81,6 +81,7 @@ public class LoginView extends Fragment  {
         presenter = new LoginPresenter(new LoginModel(), this);
 
         presenter.setMessage(" ");
+        presenter.setSignUpLauncher();
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,8 +109,6 @@ public class LoginView extends Fragment  {
                 launcher.launch(intent);
             }
         });
-
-        //dosent work with school email
 
         forgotpass.setOnClickListener(new View.OnClickListener() {
             @Override
