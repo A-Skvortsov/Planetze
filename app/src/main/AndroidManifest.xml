@@ -17,7 +17,11 @@
             android:exported="false"
             android:theme="@style/Theme.Planetze" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".EcoBalance"
+            android:exported="false"
+            android:theme="@style/Theme.Planetze" />
+        <activity
+            android:name=".BottomBar"
             android:exported="true"
             android:theme="@style/Theme.Planetze" />
         <activity
