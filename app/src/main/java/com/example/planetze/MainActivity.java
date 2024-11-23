@@ -1,7 +1,7 @@
 package com.example.planetze;
 
+import android.content.Intent;
 import static androidx.navigation.fragment.FragmentKt.findNavController;
-
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,6 +12,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.database.DatabaseReference;
@@ -42,8 +43,11 @@ public class MainActivity extends AppCompatActivity {
 //        NavController navController = navHostFragment.getNavController();
 //        NavigationUI.setupWithNavController(bottomNavigationView, navController);
 
+        //Intent intent = new Intent(MainActivity.this, SurveyResults.class);
+        //startActivity(intent);
+
         if (savedInstanceState == null) {
-            loadFragment(new SignUpFragment());
+            loadFragment(new EcoTrackerFragment());
         }
     }
 
