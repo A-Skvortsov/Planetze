@@ -32,11 +32,14 @@ import utilities.Constants;
 
  
 public class SurveyResults extends Fragment {
+
     private FirebaseDatabase db;
+
     final String[] country = Constants.country;
     final double[] country_emissions = Constants.country_emissions;
     String default_country = Constants.default_country;
     double user_e = 0.0;  //total user emissions
+
     List<Double> results = new ArrayList<>();
 
     @Override
@@ -48,7 +51,6 @@ public class SurveyResults extends Fragment {
             return insets;
         });
 
-				//this big comment block may be important DO NOT REMOVE FOR NOW
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user
         DatabaseReference userArrayRef = db.getReference("user data")

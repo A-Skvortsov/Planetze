@@ -62,7 +62,9 @@ public class AddActivity extends Fragment {
     public List<String> activityToEdit = new ArrayList<>();  //for edit mode
     private boolean spinnerListeners = false;
     private int id = 0;
-    private List<List<String>> a = new ArrayList<>();
+    private String default_car = "none";
+    FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+    String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
 
     public AddActivity() {
         // Required empty public constructor
@@ -203,7 +205,18 @@ public class AddActivity extends Fragment {
                                        int position, long id) {
                 spinnerListeners = true;
                 String selectedActivity = (String) parent.getItemAtPosition(position);
-                displayInputs(box1, box2, txt1, txt2, selectedActivity);
+                DatabaseReference carRef = db.getReference().child("user data")
+                        .child(userId).child("default_car");
+                carRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        default_car = (String) snapshot.getValue();
+                        displayInputs(box1, box2, txt1, txt2, selectedActivity);
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -282,10 +295,20 @@ public class AddActivity extends Fragment {
         j = i.getPosition(activityToEdit.get(1));
         selectActivity.setSelection(j, false);
 
-
-        //sets input boxes
-        //activityToEdit.get(1) corresponds to activity string of the activity
-        displayInputs(box1, box2, txt1, txt2, activityToEdit.get(1));
+        DatabaseReference carRef = db.getReference().child("user data")
+                .child(userId).child("default_car");
+        carRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                default_car = (String) snapshot.getValue();
+                //sets input boxes
+                //activityToEdit.get(1) corresponds to activity string of the activity
+                displayInputs(box1, box2, txt1, txt2, activityToEdit.get(1));
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
 
         //sets checked button of input boxes
         //note that index 2 of activityToEdit is the total emissions of the activity
@@ -313,7 +336,7 @@ public class AddActivity extends Fragment {
         if (act.equals("Drive personal vehicle")) {
             inpt1 = new String[]{"< 15km", "15-40km", "40-80km", "80-200km", "> 200km"};  //distance driven
             inpt2 = new String[]{"Gasoline", "Diesel", "Hybrid", "Electric"};  //optionally: change vehicle type
-            text1 = "Distance driven"; text2 = "Vehicle type (default: "+ "[default]" + ")";
+            text1 = "Distance driven"; text2 = "Vehicle type (default: "+ default_car + ")";
         } else if (act.equals("Take public transportation")) {
             inpt1 = new String[]{"Bus", "Train", "Subway"};  //type of public transport
             inpt2 = new String[]{"< 0.5 hours", "0.5-1 hours", "1-2 hours", "> 2 hours"};  //time spent on public transport
@@ -368,6 +391,16 @@ public class AddActivity extends Fragment {
             btn.setText(inpt2[i]);
             box2.addView(btn);
         }
+        if (act.equals("Drive personal vehicle") && !default_car.equals("none")) {
+            int id = 0;
+            switch(default_car) {
+                case "gasoline": id = 0; break;
+                case "diesel": id = 1; break;
+                case "hybrid": id = 2; break;
+                default: id = 3; break;
+            }
+            box2.check(id + 100);
+        }
     }
 
 
@@ -384,8 +417,6 @@ public class AddActivity extends Fragment {
 
 
     public void updateFirebase(String date, List<String> activity, int id) {
-        FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-        String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
         DatabaseReference dateRef = db.getReference("user data")
                 .child(userId).child("calendar").child(date);
 
@@ -414,8 +445,6 @@ public class AddActivity extends Fragment {
 
 
     public void writeToFirebase(String date, List<String> activity) {
-        FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-        String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
         DatabaseReference calendarRef = db.getReference("user data")
                 .child(userId).child("calendar");
 
