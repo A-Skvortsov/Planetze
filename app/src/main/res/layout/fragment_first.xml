@@ -14,12 +14,12 @@
 
         <!-- Main Text -->
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/emissions_overview_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:gravity="center"
-            android:text="You've emitted 72 kg CO2e this month."
+            android:text=""
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,13 +39,13 @@
             android:contentDescription="@string/emission_breakdown_by_category"
             android:background="@color/white">
 
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/pie_chart"
+            <com.github.mikephil.charting.charts.LineChart
+                android:id="@+id/line_chart"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_margin="5dp">
 
-            </com.github.mikephil.charting.charts.PieChart>
+            </com.github.mikephil.charting.charts.LineChart>
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
@@ -61,7 +61,7 @@
             android:background="@color/white">
 
             <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/pie_chart2"
+                android:id="@+id/pie_chart"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
                 android:layout_margin="5dp">
@@ -105,16 +105,27 @@
                     android:layout_width="0dp"
                     android:layout_height="200dp"
                     android:layout_weight="1"
+                    android:layout_margin="10dp"
                     android:orientation="vertical">
 
-                    <SearchView
+                    <TextView
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:gravity="center"
+                        android:text="@string/compare_with"
+                        android:textSize="16sp" />
+                    <Spinner
+                        android:id="@+id/spinner"
+                        android:layout_width="227dp"
+                        android:layout_height="30dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginBottom="18dp"
+                        android:background="@color/palette_turquoise_tint_300"
+                        app:layout_constraintBottom_toTopOf="@+id/graph2constraint"
+                        app:layout_constraintStart_toEndOf="@+id/select_country" />
                 </LinearLayout>
-
             </LinearLayout>
-
         </androidx.cardview.widget.CardView>
 
         <com.google.android.material.button.MaterialButtonToggleGroup
@@ -134,7 +145,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/daily"
+                android:text="@string/_1d"
                 android:textColor="@color/palette_light_gray"
                 app:backgroundTint="@color/custom_button_group_background"
                 app:rippleColor="@color/palette_turquoise_tint_200"
@@ -146,7 +157,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/weekly"
+                android:text="@string/_1w"
                 android:textColor="@color/palette_light_gray"
                 app:backgroundTint="@color/custom_button_group_background"
                 app:rippleColor="@color/palette_turquoise_tint_200"
@@ -158,7 +169,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/monthly"
+                android:text="@string/_1m"
+                android:textColor="@color/palette_light_gray"
+                app:backgroundTint="@color/custom_button_group_background"
+                app:rippleColor="@color/palette_turquoise_tint_200"
+                app:strokeColor="@color/palette_turquoise" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/button_yearly"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/_1y"
                 android:textColor="@color/palette_light_gray"
                 app:backgroundTint="@color/custom_button_group_background"
                 app:rippleColor="@color/palette_turquoise_tint_200"
@@ -170,7 +193,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/overall"
+                android:text="@string/all"
                 android:textColor="@color/palette_light_gray"
                 app:backgroundTint="@color/custom_button_group_background"
                 app:rippleColor="@color/palette_turquoise_tint_200"

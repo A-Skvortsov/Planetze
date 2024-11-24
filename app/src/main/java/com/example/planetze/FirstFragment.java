@@ -1,23 +1,45 @@
 package com.example.planetze;
 
+import static utilities.Colors.PALETTE_TURQUOISE;
+import static utilities.Colors.PALETTE_TURQUOISE_TINT_200;
+import static utilities.Colors.PALETTE_TURQUOISE_TINT_400;
+import static utilities.Colors.PALETTE_TURQUOISE_TINT_500;
+import static utilities.Colors.PALETTE_TURQUOISE_TINT_800;
+import static utilities.Constants.DAILY;
+import static utilities.Constants.MONTHLY;
+import static utilities.Constants.OVERALL;
+import static utilities.Constants.WEEKLY;
+import static utilities.Constants.YEARLY;
+import static utilities.Constants.country;
+import static utilities.Constants.default_country;
+
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
@@ -26,12 +48,24 @@ import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import utilities.CountryEmissions;
+import utilities.UserEmissionsData;
 
 public class FirstFragment extends Fragment {
 
+    private LineChart lineChart;
     private PieChart pieChart;
-    private PieChart pieChart2;
-    private BarChart barChart;
+    private BarChart comparisonChart;
+    private CountryEmissions countryEmissions;
+    private UserEmissionsData userEmissionsData;
+    private TextView emissionsOverviewTextView;
+
+    private Spinner comparisonSpinner;
+
+    char timePeriod;
 
 
     @Override
@@ -39,31 +73,96 @@ public class FirstFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_first, container, false);
 
+        this.lineChart = view.findViewById(R.id.line_chart);
         this.pieChart = view.findViewById(R.id.pie_chart);
-        this.pieChart2 = view.findViewById(R.id.pie_chart2);
-        this.barChart = view.findViewById(R.id.bar_chart);
+        this.comparisonChart = view.findViewById(R.id.bar_chart);
+        this.countryEmissions = new CountryEmissions(requireContext());
+        this.emissionsOverviewTextView = view.findViewById(R.id.emissions_overview_textview);
+        this.comparisonSpinner = view.findViewById(R.id.spinner);
+
+        // TODO: THE ID BELOW SHOULD BE CHANGED TO ACCURATELY REPRESENT THE USER LOGGED IN
+        this.userEmissionsData = new UserEmissionsData("QMCLRlEKD9h2Np1II1vrNU0vpxt2", new UserEmissionsData.DataReadyListener() {
+            @Override
+            public void onDataReady() {
+                updateUI();
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                showError(errorMessage);
+            }
+        });
 
         MaterialButtonToggleGroup timePeriodToggle = view.findViewById(R.id.time_period_toggle);
 
         timePeriodToggle.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {
                 if (checkedId == R.id.button_daily) {
-                    updateWithDailyData();
+                    timePeriod = DAILY;
                 } else if (checkedId == R.id.button_weekly) {
-                    updateWithWeeklyData();
+                    timePeriod = WEEKLY;
                 } else if (checkedId == R.id.button_monthly) {
-                    updateWithMonthlyData();
+                    timePeriod = MONTHLY;
+                } else if (checkedId == R.id.button_yearly) {
+                    timePeriod = YEARLY;
                 } else if (checkedId == R.id.button_overall) {
-                    updateWithOverallData();
+                    timePeriod = OVERALL;
                 }
+                updateUI();
             }
         });
 
-        renderPieChart(pieChart);
-        renderPieChart(pieChart2);
-        renderBarChart(barChart);
+        comparisonSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View v,
+                                       int position, long id) {
+                String selectedItem = (String) parent.getItemAtPosition(position);
+                renderComparisonChart(comparisonChart, selectedItem);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                renderComparisonChart(comparisonChart, default_country);
+            }
+        });
 
         return view;
+    }
+
+    private void showError(String message) {
+        emissionsOverviewTextView.setText(message);
+        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show();
+    }
+
+    private void updateUI() {
+        renderEmissionsViewText(emissionsOverviewTextView);
+        userEmissionsData.getUserDailyEmissions();
+        renderLineChart(lineChart);
+        renderPieChart(pieChart);
+        renderComparisonUI();
+    }
+
+    /**
+     * Initializes second graph (comparison of user emissions with a selected country)
+     * to default country and loads spinner with list of countries
+     */
+    private void renderComparisonUI() {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
+                android.R.layout.simple_spinner_item, country);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        comparisonSpinner.setAdapter(adapter);
+        int init = adapter.getPosition(default_country);
+        comparisonSpinner.setSelection(init);
+
+        renderComparisonChart(comparisonChart, default_country);  //set UI
+    }
+
+    private void renderEmissionsViewText(TextView emissionsOverviewTextView) {
+        Log.d("render", Float.toString(userEmissionsData.getUserOverallEmissions()));
+
+        String emissionsOverviewText = "You've emitted "
+                + Math.round(userEmissionsData.getUserOverallEmissions() * 100) / 100.0
+                + " kg CO2e.";
+        emissionsOverviewTextView.setText(emissionsOverviewText);
     }
 
     private void updateWithDailyData() {
@@ -83,55 +182,103 @@ public class FirstFragment extends Fragment {
         Log.d("Data", "Overall!");
     }
 
+    private void renderLineChart(LineChart lineChart) {
+        ArrayList<Entry> entries = new ArrayList<>();
+
+        for (int i = 0; i < 25; i++) {
+            Entry entry = new Entry(i, (float) Math.round((Math.random() * 100)) / 100 * (i + 10));
+            entries.add(entry);
+        }
+
+        GradientDrawable gradientDrawable = new GradientDrawable(
+                GradientDrawable.Orientation.TOP_BOTTOM,
+                new int[]{PALETTE_TURQUOISE_TINT_800, PALETTE_TURQUOISE_TINT_400});
+        gradientDrawable.setCornerRadius(0f);
+
+
+        LineDataSet lineDataSet = new LineDataSet(entries, "Sample");
+
+        // Apply the gradient to the line chart
+        lineDataSet.setFillDrawable(gradientDrawable);
+
+        lineDataSet.setColor(PALETTE_TURQUOISE);
+        lineDataSet.setValueTextColor(Color.BLACK);
+        lineDataSet.setLineWidth(2f);
+        lineDataSet.setDrawValues(false);
+        lineDataSet.setDrawFilled(true);
+        lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+
+        LineData lineData = new LineData(lineDataSet);
+
+        lineChart.setData(lineData);
+        lineChart.getDescription().setEnabled(false);
+        lineChart.setDrawGridBackground(false);
+        lineChart.getAxisRight().setEnabled(false);
+        lineChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
+        lineChart.setTouchEnabled(true);
+        lineChart.setDragEnabled(true);
+        lineChart.setScaleEnabled(true);
+        lineChart.animateY(2000, Easing.EaseInOutExpo);
+    }
+
     private void renderPieChart(PieChart pieChart) {
         PieDataSet pieDataSet = getPieDataSet();
 
         ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(Color.parseColor("#009999"));
-        colors.add(Color.parseColor("#23ADAD"));
-        colors.add(Color.parseColor("#4EC2C2"));
-        colors.add(Color.parseColor("#66CCCC"));
+        colors.add(PALETTE_TURQUOISE);
+        colors.add(PALETTE_TURQUOISE_TINT_200);
+        colors.add(PALETTE_TURQUOISE_TINT_400);
+        colors.add(PALETTE_TURQUOISE_TINT_500);
 
         pieDataSet.setColors(colors);
         pieChart.setData(new PieData(pieDataSet));
-
+        pieChart.getDescription().setEnabled(false);
 
         pieChart.animateXY(2000, 2000, Easing.EaseInOutExpo);
 
-        pieChart.getDescription().setEnabled(false);
     }
 
-    private void renderBarChart(BarChart barChart) {
-        BarDataSet barDataSet = getBarDataSet();
+    private void renderComparisonChart(BarChart comparisonChart, String country) {
+        Double countryPerCapitaEmissions = countryEmissions.getCountryPerCapitaEmissions(country);
+        float userEmissions = userEmissionsData.getUserDailyEmissions();
+
+        if (countryPerCapitaEmissions == null) {
+            comparisonChart.invalidate();
+            return;
+        }
+
+        BarEntry barEntry1 = new BarEntry(0, userEmissions);
+        BarEntry barEntry2 = new BarEntry(1, countryPerCapitaEmissions.floatValue());
+
+        List<BarEntry> barEntries = new ArrayList<>(Arrays.asList(barEntry1, barEntry2));
+
+        BarDataSet barDataSet = new BarDataSet(barEntries, "");
 
         ArrayList<Integer> colors = new ArrayList<>();
-        colors.add(Color.parseColor("#23ADAD"));
-        colors.add(Color.parseColor("#009999"));
 
-        barDataSet.setDrawValues(false);
+        colors.add(PALETTE_TURQUOISE_TINT_200);
+        colors.add(PALETTE_TURQUOISE);
+
         barDataSet.setColors(colors);
         BarData barData = new BarData(barDataSet);
-        barChart.setData(barData);
+        comparisonChart.setData(barData);
 
-        String[] sampleCountries = {"Canada", "USA"};
+        String[] sampleCountries = {"You", country};
 
-        XAxis xAxis = barChart.getXAxis();
+        XAxis xAxis = comparisonChart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(sampleCountries));
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGranularity(1);
         xAxis.setGranularityEnabled(true);
 
-        barChart.getAxisLeft().setAxisMinimum(Math.min(0f, barData.getYMin()));
-        barChart.getAxisRight().setEnabled(false);
+        comparisonChart.getAxisLeft().setAxisMinimum(Math.min(0f, barData.getYMin()));
+        comparisonChart.getAxisRight().setEnabled(false);
+        comparisonChart.getDescription().setText("");
 
-        barDataSet.setDrawValues(true);
 
-        barChart.animateY(2000, Easing.EaseInOutExpo);
-
-        barChart.getDescription().setText("");
+        comparisonChart.animateY(2000, Easing.EaseInOutExpo);
     }
 
-    @NonNull
     private static PieDataSet getPieDataSet() {
         ArrayList<PieEntry> pieEntries = new ArrayList<>();
         String[] sampleCategories = {"Transportation", "Energy", "Food", "Shopping"};
@@ -144,21 +291,5 @@ public class FirstFragment extends Fragment {
         }
 
         return new PieDataSet(pieEntries, "");
-    }
-
-    @NonNull
-    private static BarDataSet getBarDataSet() {
-        ArrayList<BarEntry> barEntries = new ArrayList<>();
-
-        for (int i = 0; i < 2; i++) {
-            float value = (float) (i * 10.0) > 0? (float) (i * 10.0): 5;
-            System.out.println(value);
-
-            BarEntry barEntry = new BarEntry(i, value);
-
-            barEntries.add(barEntry);
-        }
-
-        return new BarDataSet(barEntries, "");
     }
 }

@@ -5,6 +5,16 @@ public class Constants {
     //all survey question categories
     public static final String[] categories = {"Transportation", "Food", "Housing", "Consumption"};
 
+    public static final String DEFAULT_DATE = "0000-00-00";
+
+    public static final char DAILY = 'D';
+    public static final char WEEKLY = 'W';
+    public static final char MONTHLY = 'M';
+    public static final char YEARLY = 'Y';
+    public static final char OVERALL = 'O';
+
+
+    public static final int EMISSIONS_INDEX = 2;
 
     public static final int transport_qs = 7;  //number of qs in transport category
     public static final int food_qs = 6;

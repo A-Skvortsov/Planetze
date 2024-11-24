@@ -1,4 +1,4 @@
-package com.example.planetze;
+package utilities;
 
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
