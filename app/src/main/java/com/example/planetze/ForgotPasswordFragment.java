@@ -12,7 +12,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.planetze.Login.LoginView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -106,7 +108,7 @@ public class ForgotPasswordFragment extends Fragment {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadFragment(new LogInFragment());
+                loadFragment(new LoginView());
             }
         });
 
@@ -126,9 +128,20 @@ public class ForgotPasswordFragment extends Fragment {
     }
 
     private void sendPassResetEmail(String email) {
-        auth.sendPasswordResetEmail(email);
-        messagetext = "Password reset link sent! Please check your email";
-        message.setText(messagetext);
+        auth.sendPasswordResetEmail(email).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    messagetext = "Password reset link sent! Please check your email";
+                    message.setText(messagetext);
+
+                }else{
+                    messagetext = "There was an error in sending verification email, please try again";
+                    message.setText(messagetext);
+                }
+            }
+        });;
+
     }
 
     private void loadFragment(Fragment fragment) {
@@ -168,4 +181,5 @@ public class ForgotPasswordFragment extends Fragment {
             }
         });
     }
+
 }
