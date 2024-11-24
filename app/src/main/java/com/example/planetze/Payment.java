@@ -28,6 +28,7 @@ import com.example.planetze.databinding.ActivityPaymentBinding;
 import com.stripe.android.PaymentConfiguration;
 import com.stripe.android.paymentsheet.PaymentSheet;
 import com.stripe.android.paymentsheet.PaymentSheetResult;
+import com.stripe.android.paymentsheet.PaymentSheetResultCallback;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +45,7 @@ public class Payment extends AppCompatActivity {
 
     PaymentSheet paymentSheet;
     StringRequest stringRequest;
-    String customerId ="";
+    String customerId = "";
     String Ephemeral_key;
     String Client_secret;
 
@@ -54,44 +55,22 @@ public class Payment extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         @NonNull ActivityPaymentBinding binding = ActivityPaymentBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        btn = findViewById(R.id.button2);
 
-
-        // allows u to talk to stripe
         PaymentConfiguration.init(this, PUSHABLE_KEY);
         paymentSheet = new PaymentSheet(this, this::onPaymentResult);
-         getcustomerid();
-        btn = findViewById(R.id.button2);
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (Client_secret != null) {
-                    paymentSheet.presentWithPaymentIntent(Client_secret, new PaymentSheet.Configuration("Plantze", new PaymentSheet.CustomerConfiguration(customerId, Ephemeral_key)));
-                }
-
-                else {
-                    Toast.makeText(Payment.this, "hello", Toast.LENGTH_SHORT).show();
-
-                }
+                PaymentFlow();
             }
         });
 
 
 
-
-    }//end of on create
-
-    private void onPaymentResult(PaymentSheetResult paymentSheetResult) {
-        if (paymentSheetResult instanceof  PaymentSheetResult.Completed){
-            Toast.makeText(Payment.this, "Payment Succesfull", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-    public void getcustomerid(){
         String url = "https://api.stripe.com/v1/customers";
         //prepares the app to send network requests
-
-
 
 
         //returns a strng of the servers repsone from us making a https request
@@ -105,10 +84,9 @@ public class Payment extends AppCompatActivity {
             public void onResponse(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
-                    String customerId = jsonObject.getString("id");
-                    Log.d("PaymentActivity", "Customer ID: " + customerId);
+                    customerId = jsonObject.getString("id");
                     Toast.makeText(Payment.this, customerId, Toast.LENGTH_SHORT).show();
-                    getEphemeral_key(customerId);
+                    getEphemeral_key();
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -118,7 +96,6 @@ public class Payment extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
 
 
             }
@@ -126,41 +103,51 @@ public class Payment extends AppCompatActivity {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
                 Map<String, String> map = new HashMap<>();
-                map.put("Authorization", "Bearer "+ SECRET_KEY);
-                return map;            }
+                map.put("Authorization", "Bearer " + SECRET_KEY);
+                return map;
+            }
         };
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest1);
+
+
+    }//end of create
+
+    private void PaymentFlow() {
+        paymentSheet.presentWithPaymentIntent(Client_secret, new PaymentSheet.Configuration("Plantze", new PaymentSheet.CustomerConfiguration(customerId, Ephemeral_key)));
+
     }
 
+    private void onPaymentResult(PaymentSheetResult paymentSheetResult) {
 
-    public void getEphemeral_key(String customerId) {
-        //1. We will first here create a customer
+        if (paymentSheetResult instanceof PaymentSheetResult.Completed){
+            Toast.makeText(Payment.this, "Done payment", Toast.LENGTH_SHORT).show();
 
+        }
 
+        else{
+            Toast.makeText(Payment.this, "Didnt work", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    private void getEphemeral_key() {
         String url = "https://api.stripe.com/v1/ephemeral_keys";
-
-
         //prepares the app to send network requests
-
-
-
-
         //returns a strng of the servers repsone from us making a https request
         //Request.Method.POST --> tell us tht were provides info to the server
         //url --> where the https request is sent
         //onResponse wht to do after server has sent back data/(in this case string)
         //onError wht to do if the server return a error
         StringRequest stringRequest1 = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @OptIn(markerClass = UnstableApi.class)
             @Override
             public void onResponse(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     Ephemeral_key = jsonObject.getString("id");
+                    Toast.makeText(Payment.this, Ephemeral_key, Toast.LENGTH_SHORT).show();
                     getClientSecret(customerId, Ephemeral_key);
-                    Toast.makeText(Payment.this,Ephemeral_key, Toast.LENGTH_SHORT).show();
-
-
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -170,8 +157,6 @@ public class Payment extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-
 
 
             }
@@ -192,36 +177,28 @@ public class Payment extends AppCompatActivity {
                 map.put("customer", customerId);
                 return map;            }
         };
+
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest1);
 
     }
 
-
-    public void getClientSecret(String customerId, String ephemeralKey) {
+    private void getClientSecret(String customerId, String ephemeralKey) {
         String url = "https://api.stripe.com/v1/payment_intents";
-
-
         //prepares the app to send network requests
-
-
-
-
         //returns a strng of the servers repsone from us making a https request
         //Request.Method.POST --> tell us tht were provides info to the server
         //url --> where the https request is sent
         //onResponse wht to do after server has sent back data/(in this case string)
         //onError wht to do if the server return a error
-        StringRequest stringRequest2 = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+        StringRequest stringRequest1 = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @OptIn(markerClass = UnstableApi.class)
             @Override
             public void onResponse(String response) {
                 try {
                     JSONObject jsonObject = new JSONObject(response);
                     Client_secret = jsonObject.getString("client_secret");
-                    Toast.makeText(Payment.this,Client_secret, Toast.LENGTH_SHORT).show();
-                    //PaymentFlow();
-
-
+                    Toast.makeText(Payment.this, Client_secret, Toast.LENGTH_SHORT).show();
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -232,19 +209,17 @@ public class Payment extends AppCompatActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
 
-                error.printStackTrace();
-
-
 
             }
         }) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> head = new HashMap<>();
-                head.put("Authorization", "Bearer "+ SECRET_KEY);
-                return head; }
+                Map<String, String> map = new HashMap<>();
+                map.put("Authorization", "Bearer "+ SECRET_KEY);
+                return map; }
 
 
+            // send data to the https for the POST
             @Nullable
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
@@ -253,20 +228,14 @@ public class Payment extends AppCompatActivity {
                 map.put("amount", "1000" + "00");
                 map.put("currency", "usd");
                 map.put("automatic_payment_methods[enabled]", "true");
-                return map;
-            }
+                return map;            }
         };
+
         RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest2);
+        requestQueue.add(stringRequest1);
+
     }
 
 
 }
-
-
-
-
-
-
-
 
