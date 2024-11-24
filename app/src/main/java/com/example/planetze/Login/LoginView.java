@@ -25,6 +25,7 @@ import com.example.planetze.ForgotPasswordFragment;
 import com.example.planetze.HomeFragment;
 import com.example.planetze.R;
 import com.example.planetze.SignUpFragment;
+import com.example.planetze.UserData;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -56,6 +57,8 @@ public class LoginView extends Fragment  {
     private Button googleSignUp;
 
     private LoginPresenter presenter;
+
+    private ActivityResult r;
 
     ActivityResultLauncher<Intent> launcher;
 
@@ -98,15 +101,7 @@ public class LoginView extends Fragment  {
         googleSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(getString(R.string.default_web_client_id))
-                        .requestEmail()
-                        .build();
-
-                GoogleSignInClient client = GoogleSignIn.getClient(getViewActivity(), options);
-
-                Intent intent = client.getSignInIntent();
-                launcher.launch(intent);
+                presenter.startGoogleSignin();
             }
         });
 
@@ -117,9 +112,6 @@ public class LoginView extends Fragment  {
                 loadFragment(new ForgotPasswordFragment());
             }
         });
-
-
-
 
         return view;
     }
@@ -139,7 +131,7 @@ public class LoginView extends Fragment  {
         transaction.commit();
     }
 
-    public Activity getViewActivity() {
+    private Activity getViewActivity() {
         return getActivity();
     }
 
@@ -150,8 +142,22 @@ public class LoginView extends Fragment  {
                     public void onActivityResult(ActivityResult result) {
                         presenter.onSignInResult(result);
                     }
-                });;
+                });
     }
+
+    public void startGoogleSignin() {
+        GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        GoogleSignInClient client = GoogleSignIn.getClient(getViewActivity(), options);
+
+        Intent intent = client.getSignInIntent();
+        launcher.launch(intent);
+    }
+
+
 
 
 

@@ -72,8 +72,6 @@ public class SignUpFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private String errorMsg;
-
-    private ArrayList<String> emailArray;
     private DatabaseReference userRef;
     private FirebaseDatabase db;
     ActivityResultLauncher<Intent> launcher;
@@ -112,7 +110,6 @@ public class SignUpFragment extends Fragment {
 
         Activity activity = getActivity();
         setSignUpLauncher();
-        emailArray = new ArrayList<String>();
 
         signinLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,8 +143,6 @@ public class SignUpFragment extends Fragment {
                 launcher.launch(intent);
             }
         });
-
-
 
         return view;
 
@@ -303,6 +298,7 @@ public class SignUpFragment extends Fragment {
                             String id = auth.getCurrentUser().getUid();
                             userRef.child(id+"/name").setValue(name);
                             userRef.child(id+"/email").setValue(email);
+                            userRef.child(id+"/is_new_user").setValue(true);
                             //userRef.child(id+"/password").setValue(pass);
                             auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

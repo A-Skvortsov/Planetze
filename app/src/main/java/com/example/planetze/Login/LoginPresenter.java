@@ -1,11 +1,20 @@
 package com.example.planetze.Login;
 
+import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
+
+import android.content.Intent;
+
 import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 
 public class LoginPresenter {
 
     private LoginModel model;
     private LoginView view;
+
+    ActivityResultLauncher<Intent> launcher;
 
     public LoginPresenter(LoginModel model, LoginView view) {
         this.view = view;
@@ -25,9 +34,7 @@ public class LoginPresenter {
 
     }
 
-    public void setSignUpLauncher() {
-        view.setSignUpLauncher();
-    }
+    public void setSignUpLauncher() { view.setSignUpLauncher();}
 
     public void onSignInResult(ActivityResult result) {
         model.onSignInResult(result, this);
@@ -41,5 +48,8 @@ public class LoginPresenter {
         view.takeToHomePage();
     }
 
+    public void startGoogleSignin() {
+        view.startGoogleSignin();
+    }
 
 }

@@ -1,5 +1,8 @@
 package com.example.planetze;
 
+import static android.app.Activity.RESULT_OK;
+import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -9,6 +12,12 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.junit.Assert.*;
 
+import android.content.Intent;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
 import com.example.planetze.Login.LoginModel;
@@ -22,12 +31,8 @@ import com.example.planetze.Login.LoginView;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class LoginUnitTest {
-    @Mock
-    LoginModel model;
-    @Mock
-    LoginView view;
-
-
+    @Mock LoginModel model;
+    @Mock LoginView view;
 
     @Test
     public void testNullEmail() {
@@ -41,7 +46,7 @@ public class LoginUnitTest {
     public void testNullPassword() {
         LoginPresenter presenter = new LoginPresenter(model,view);
         presenter.loginUser("jiangminki0@gmail.com", null);
-        verify(view).setMessage("Email cannot be empty");
+        verify(view).setMessage("Password cannot be empty");
 
     }
 
@@ -100,7 +105,7 @@ public class LoginUnitTest {
     public void testRightEmailRightPassword() {
         LoginPresenter presenter = new LoginPresenter(model,view);
         presenter.loginUser("jiangminki0@gmail.com", "hellohello");
-        verify(view).setMessage("Login sucessful");
+        verify(view).setMessage("Login successful");
     }
 
     @Test
@@ -124,7 +129,26 @@ public class LoginUnitTest {
         verify(view).takeToHomePage();
     }
 
+    @Test
+    public void testSignUpLauncher() {
+        LoginPresenter presenter = new LoginPresenter(model,view);
+        presenter.setSignUpLauncher();
+        verify(view).setSignUpLauncher();
+    }
 
+    @Test
+    public void testSignInResult() {
+        LoginPresenter presenter = new LoginPresenter(model,view);
+        ActivityResult result = null;
+        presenter.onSignInResult(result);
+        //verify(view).setMessage("Launched Google sign up");
+    }
 
+    @Test
+    public void testStartGoogleSignIn() {
+        LoginPresenter presenter = new LoginPresenter(model,view);
+        presenter.startGoogleSignin();
+        verify(view).startGoogleSignin();
+    }
 
 }

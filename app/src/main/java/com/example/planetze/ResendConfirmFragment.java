@@ -42,7 +42,6 @@ public class ResendConfirmFragment extends Fragment {
         resendConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                email = getArguments().getString("email").trim();
                 auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
