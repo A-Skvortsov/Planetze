@@ -227,10 +227,6 @@ public class EcoTrackerFragment extends Fragment {
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //puts these away in case they were brought up, no need for them
-                issuePrompt1.setVisibility(View.INVISIBLE);
-                issuePrompt2.setVisibility(View.INVISIBLE);
-
                 if (!activitySelected(activities, issuePrompt1, issuePrompt2)) return;
                 int id = activities.getCheckedRadioButtonId();
 

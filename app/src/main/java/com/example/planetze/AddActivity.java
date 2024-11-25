@@ -133,8 +133,8 @@ public class AddActivity extends Fragment {
             id = args.getInt("id");
         }
 
-        final Spinner selectCat = view.findViewById(R.id.selectCat);
-        final Spinner selectActivity = view.findViewById(R.id.selectActivity);
+        final Spinner catSpinner = view.findViewById(R.id.catSpinner);
+        final Spinner actSpinner = view.findViewById(R.id.actSpinner);
         final Button backBtn = view.findViewById(R.id.backBtn);
         final Button saveBtn = view.findViewById(R.id.saveBtn);
         final RadioGroup box1 = view.findViewById(R.id.inputBox1);
@@ -161,8 +161,8 @@ public class AddActivity extends Fragment {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String cat = (String) selectCat.getSelectedItem();
-                String act = (String) selectActivity.getSelectedItem();
+                String cat = (String) catSpinner.getSelectedItem();
+                String act = (String) actSpinner.getSelectedItem();
                 int input1 = box1.getCheckedRadioButtonId();
                 int input2 = box2.getCheckedRadioButtonId();
                 if (cat.equals(msg1) || act.equals(msg2)) {
@@ -189,50 +189,51 @@ public class AddActivity extends Fragment {
 
         spinnerListeners = false;  //technical stuff related to edit mode. Don't read unless debugging.
         // Summary:
-        // category is set first, then activity (both manually in initEditingProcess). Thus,
+        //category is set first, then activity (both manually in initEditingProcess). Thus,
         //category listener will be invoked first. This variable being false prevents the listener
         //from doing anything (since, normally, category listener overrides activity listener data).
-        //Then, only after we run activity listener and everything is set up, we give permission for
-        //category listener to run for future category changes
-        selectCat.setOnItemSelectedListener(null);
-        selectActivity.setOnItemSelectedListener(null);
-        initSpinners(selectCat, selectActivity, activityCats);  //inits spinners to default
-        if (edit == 1) initEditingProcess(activityToEdit, selectCat, selectActivity,
+        //Then, only after the first category setting is done and everything is set up, we give
+        //permission for category listener to run for future category changes
+        initSpinners(catSpinner, actSpinner, activityCats);  //inits spinners to default
+        if (edit == 1) initEditingProcess(activityToEdit, catSpinner, actSpinner,
                 box1, box2, txt1, txt2);  //if in editing mode, also init data of activity to edit
 
         //listener for category selection (sets activity spinner accordingly)
-        selectCat.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        catSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 if (spinnerListeners) {
                     String selectedCat = (String) parent.getItemAtPosition(position);
-                    setActivitySpinner(selectedCat, selectActivity);
+                    setActivitySpinner(selectedCat, actSpinner);
                 }
+                //spinnerListeners = true;
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
         //listener for activity selection (sets input boxes accordingly)
-        selectActivity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        actSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                spinnerListeners = true;
-                String selectedActivity = (String) parent.getItemAtPosition(position);
-                DatabaseReference carRef = db.getReference().child("user data")
-                        .child(userId).child("default_car");
-                carRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        default_car = (String) snapshot.getValue();
-                        displayInputs(box1, box2, txt1, txt2, selectedActivity);
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                    }
-                });
+                if (true) {
+                    String selectedActivity = (String) parent.getItemAtPosition(position);
+                    DatabaseReference carRef = db.getReference().child("user data")
+                            .child(userId).child("default_car");
+                    carRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            default_car = (String) snapshot.getValue();
+                            displayInputs(box1, box2, txt1, txt2, selectedActivity);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+                } spinnerListeners = true;
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -247,17 +248,17 @@ public class AddActivity extends Fragment {
     /**
      * Sets activity spinner based on selected category (i.e. transport, food, etc.)
      * @param selectedCat
-     * @param selectActivity
+     * @param actSpinner
      */
-    public void setActivitySpinner(String selectedCat, Spinner selectActivity) {
+    public void setActivitySpinner(String selectedCat, Spinner actSpinner) {
         for (int i = 1; i < activityCats.length; i++) {
             if (selectedCat.equals(activityCats[i])) {
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                         android.R.layout.simple_spinner_item, activities[i-1]);
                 adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                selectActivity.setAdapter(adapter);
+                actSpinner.setAdapter(adapter);
                 int x = adapter.getPosition(msg2);  //inits spinner to  "Select an Activity"
-                selectActivity.setSelection(x);
+                actSpinner.setSelection(x);
             }
         }
     }
@@ -266,50 +267,50 @@ public class AddActivity extends Fragment {
     /**
      * default; for adding activities
      */
-    public void initSpinners(Spinner selectCat, Spinner selectActivity, String[] activityCats) {
+    public void initSpinners(Spinner catSpinner, Spinner actSpinner, String[] activityCats) {
         //spinner initializations
         ArrayAdapter<String> adapter1 = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, activityCats);  //used to load spinner
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        selectCat.setAdapter(adapter1);  //loads spinner
+        catSpinner.setAdapter(adapter1);  //loads spinner
         int init = adapter1.getPosition(msg1);  //initializes spinner to default "Select a Category"
-        selectCat.setSelection(init);
+        catSpinner.setSelection(init);
 
         //initialize second spinner based on first spinner selection
         String[] x = {msg2};
         ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, x);
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        selectActivity.setAdapter(adapter2);
+        actSpinner.setAdapter(adapter2);
         init = adapter1.getPosition(msg2);  //initializes spinner to default "Select an Activity"
-        selectActivity.setSelection(init);
+        actSpinner.setSelection(init);
     }
 
     /**
      * for editing. Makes it so that, upon clicking "edit" button from ecotracker,
      * AddActivity initializes with the selected activity preset
      * @param activityToEdit
-     * @param selectCat category spinner
-     * @param selectActivity activity spinner
+     * @param catSpinner category spinner
+     * @param actSpinner activity spinner
      * @param box1 radiogroup hosting the buttons of first input question
      * @param box2 radiogroup hosting the buttons of second input question (if necessary)
      * @param txt1 textbox describing first input question
      * @param txt2 "" for second question
      */
-    public void initEditingProcess(List<String> activityToEdit, Spinner selectCat,
-                                   Spinner selectActivity, RadioGroup box1, RadioGroup box2,
+    public void initEditingProcess(List<String> activityToEdit, Spinner catSpinner,
+                                   Spinner actSpinner, RadioGroup box1, RadioGroup box2,
                                    TextView txt1, TextView txt2) {
 
         //sets category spinner
-        ArrayAdapter<String> i = (ArrayAdapter<String>) selectCat.getAdapter();
+        ArrayAdapter<String> i = (ArrayAdapter<String>) catSpinner.getAdapter();
         int j = i.getPosition(activityToEdit.get(0));
-        selectCat.setSelection(j);
+        catSpinner.setSelection(j);
 
         //sets activity spinner
-        setActivitySpinner(activityToEdit.get(0), selectActivity);  //sets spinner to "Select an activity" by default
-        i = (ArrayAdapter<String>) selectActivity.getAdapter();
+        setActivitySpinner(activityToEdit.get(0), actSpinner);  //sets spinner to "Select an activity" by default
+        i = (ArrayAdapter<String>) actSpinner.getAdapter();
         j = i.getPosition(activityToEdit.get(1));
-        selectActivity.setSelection(j, false);
+        actSpinner.setSelection(j, false);
 
         DatabaseReference carRef = db.getReference().child("user data")
                 .child(userId).child("default_car");
@@ -329,6 +330,7 @@ public class AddActivity extends Fragment {
         //sets checked button of input boxes
         //note that index 2 of activityToEdit is the total emissions of the activity
         //Indices 3 and 4 are what contain the input selections, which is what we set below
+        System.out.println(activityToEdit);
         box1.check(Integer.parseInt(activityToEdit.get(3)));
         if (box2.getChildCount() != 0)  //only init second input box if the question demands input
             box2.check(Integer.parseInt(activityToEdit.get(4)));
