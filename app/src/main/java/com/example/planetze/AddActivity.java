@@ -67,6 +67,7 @@ public class AddActivity extends Fragment {
     private String default_car = "none";
     FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
     String userId = "QMCLRlEKD9h2Np1II1vrNU0vpxt2";  //this should be changed to the particular logged in user once everything works
+    int recursionLimiter = 0;
 
     public AddActivity() {
         // Required empty public constructor
@@ -183,7 +184,11 @@ public class AddActivity extends Fragment {
                     updateFirebase(date, activity, id);  //update firebase (for edit mode)
                 } else {writeToFirebase(date, activity);}  //write list to firebase
                 EcoTrackerFragment.fetchSnapshot();  //update ecotracker info
-                getParentFragmentManager().popBackStack();  //returns to eco tracker
+                Bundle bundle = new Bundle();
+                bundle.putString("date", date);
+                NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
+                        .findFragmentById(R.id.fragment));
+                navController.navigate(R.id.EcoTrackerFragment, bundle);
             }
         });
 
@@ -206,8 +211,7 @@ public class AddActivity extends Fragment {
                 if (spinnerListeners) {
                     String selectedCat = (String) parent.getItemAtPosition(position);
                     setActivitySpinner(selectedCat, actSpinner);
-                }
-                //spinnerListeners = true;
+                } spinnerListeners = true;
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -218,22 +222,20 @@ public class AddActivity extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
-                if (true) {
-                    String selectedActivity = (String) parent.getItemAtPosition(position);
-                    DatabaseReference carRef = db.getReference().child("user data")
-                            .child(userId).child("default_car");
-                    carRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            default_car = (String) snapshot.getValue();
-                            displayInputs(box1, box2, txt1, txt2, selectedActivity);
-                        }
+                String selectedActivity = (String) parent.getItemAtPosition(position);
+                DatabaseReference carRef = db.getReference().child("user data")
+                        .child(userId).child("default_car");
+                carRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        default_car = (String) snapshot.getValue();
+                        displayInputs(box1, box2, txt1, txt2, selectedActivity);
+                    }
 
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {
-                        }
-                    });
-                } spinnerListeners = true;
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                    }
+                });
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -317,24 +319,25 @@ public class AddActivity extends Fragment {
         carRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+                //this is what we need the listener for: to retrieve default_car value
                 default_car = (String) snapshot.getValue();
                 //sets input boxes
                 //activityToEdit.get(1) corresponds to activity string of the activity
                 displayInputs(box1, box2, txt1, txt2, activityToEdit.get(1));
+
+                //sets checked button of input boxes
+                //note that index 2 of activityToEdit is the total emissions of the activity
+                //Indices 3 and 4 are what contain the input selections, which is what we set below
+                box1.check(Integer.parseInt(activityToEdit.get(3)));
+                if (box2.getChildCount() != 0)  //only init second input box if the question demands input
+                    box2.check(Integer.parseInt(activityToEdit.get(4)));
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
         });
 
-        //sets checked button of input boxes
-        //note that index 2 of activityToEdit is the total emissions of the activity
-        //Indices 3 and 4 are what contain the input selections, which is what we set below
-        System.out.println(activityToEdit);
-        box1.check(Integer.parseInt(activityToEdit.get(3)));
-        if (box2.getChildCount() != 0)  //only init second input box if the question demands input
-            box2.check(Integer.parseInt(activityToEdit.get(4)));
-    }
+       }
 
     /**
      * Displays input options for user once activity has been selected
@@ -437,13 +440,21 @@ public class AddActivity extends Fragment {
     public void updateFirebase(String date, List<String> activity, int id) {
         DatabaseReference dateRef = db.getReference("user data")
                 .child(userId).child("calendar").child(date);
-
         dateRef.runTransaction(new Transaction.Handler() {
             @NonNull
             @Override
             public Transaction.Result doTransaction(@NonNull MutableData currentData) {
+                Object rawData = currentData.getValue();
+                if (rawData == null && recursionLimiter < 100) {
+                    System.out.println("rawData was null, retrying transaction");
+                    recursionLimiter++;  //prevents infinite recursion
+                    updateFirebase(date, activity, id);  //retries recursively
+                    return Transaction.abort();
+                }
+
                 //find date in the firebase
                 List<Object> a = currentData.getValue(new GenericTypeIndicator<List<Object>>() {});
+                System.out.println(a);
                 a.set(id, activity);
                 currentData.setValue(a);  //writes to firebase
                 return Transaction.success(currentData);  //required for Transactions
@@ -454,7 +465,7 @@ public class AddActivity extends Fragment {
                 if (error != null) {
                     Log.e("Firebase", "Error updating data: " + error.getMessage());
                 } else {
-                    Log.d("Firebase", "Data updated successfully!");
+                    Log.d("Firebase", "Data updated successfully!111");
                 }
             }
         });
@@ -540,7 +551,6 @@ public class AddActivity extends Fragment {
                     case 102: y = 2; break;
                     default: y = 3; break;
                 }
-                System.out.println("ok al good");
                 return x * y;
             case "Cycling/Walking":
                 switch (input1) {

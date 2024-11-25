@@ -64,6 +64,7 @@ public class EcoTrackerFragment extends Fragment {
     List<List<String>> acts = new ArrayList<>();  //used to store the activities of a day
     List<String> activityToEdit = new ArrayList<>();  //used to store the activity selected for editing
     String date = "";
+    int presetCalendar = 0;
 
     public EcoTrackerFragment() {
         // Required empty public constructor
@@ -94,6 +95,12 @@ public class EcoTrackerFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        Bundle args = getArguments();
+        if (args != null && args.containsKey("date")) {
+            presetCalendar = 1;
+            date = args.getString("date");
+        } else {presetCalendar = 0;}
 
     }
 
@@ -187,7 +194,7 @@ public class EcoTrackerFragment extends Fragment {
                 dateText.setText(date1);
                 yearText.setText(String.valueOf(y));
                 date = y + "-" + m + "-" + d;
-                fetchSnapshot();
+                fetchSnapshot();  //updates displayed info to be for the selected date
             }
         });
 
@@ -312,18 +319,25 @@ public class EcoTrackerFragment extends Fragment {
      */
     public void initUI(ValueEventListener listener, TextView d, TextView y,
                        RadioGroup activities, TextView noActivities, TextView dailyTotal) {
+        if (presetCalendar == 0) {
+            //displays current date
+            Calendar today = Calendar.getInstance();
+            String t = today.get(Calendar.DAY_OF_MONTH) + " " +
+                    months[today.get(Calendar.MONTH)];
+            d.setText(t);
+            y.setText(String.valueOf(today.get(Calendar.YEAR)));
+            date = today.get(Calendar.YEAR) + "-" + (today.get(Calendar.MONTH) + 1) + "-"
+                    + today.get(Calendar.DAY_OF_MONTH);
+        } else {  //occurs if start EcoTracker from AddActivity instead of through bottom bar/nav
+            String[] t = date.split("-");
+            String day = t[2]; String month = months[Integer.parseInt(t[1]) - 1]; String year = t[0];
+            String x = day + " " + month;
+            d.setText(x);
+            y.setText(year);
+        }
         //pings Firebase to show activities of current date
         fetchSnapshot();
         updateDisplay(activities, noActivities, dailyTotal);
-
-        //displays current date
-        Calendar today = Calendar.getInstance();
-        String t = today.get(Calendar.DAY_OF_MONTH) + " " +
-                months[today.get(Calendar.MONTH)];
-        d.setText(t);
-        y.setText(String.valueOf(today.get(Calendar.YEAR)));
-        date = today.get(Calendar.YEAR) +"-"+(today.get(Calendar.MONTH)+1)+"-"
-                +today.get(Calendar.DAY_OF_MONTH);
     }
 
     public void updateDisplay(RadioGroup activities, TextView emptyMsg, TextView dailyTotal) {
