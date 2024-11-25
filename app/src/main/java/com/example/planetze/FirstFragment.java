@@ -51,7 +51,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import utilities.CountryEmissions;
+import utilities.CountryEmissionsData;
 import utilities.UserEmissionsData;
 
 public class FirstFragment extends Fragment {
@@ -59,13 +59,13 @@ public class FirstFragment extends Fragment {
     private LineChart lineChart;
     private PieChart pieChart;
     private BarChart comparisonChart;
-    private CountryEmissions countryEmissions;
+    private CountryEmissionsData countryEmissions;
     private UserEmissionsData userEmissionsData;
     private TextView emissionsOverviewTextView;
 
     private Spinner comparisonSpinner;
 
-    char timePeriod;
+    private char timePeriod;
 
 
     @Override
@@ -76,9 +76,11 @@ public class FirstFragment extends Fragment {
         this.lineChart = view.findViewById(R.id.line_chart);
         this.pieChart = view.findViewById(R.id.pie_chart);
         this.comparisonChart = view.findViewById(R.id.bar_chart);
-        this.countryEmissions = new CountryEmissions(requireContext());
+        this.countryEmissions = new CountryEmissionsData(requireContext());
         this.emissionsOverviewTextView = view.findViewById(R.id.emissions_overview_textview);
         this.comparisonSpinner = view.findViewById(R.id.spinner);
+
+        this.timePeriod = OVERALL;
 
         // TODO: THE ID BELOW SHOULD BE CHANGED TO ACCURATELY REPRESENT THE USER LOGGED IN
         this.userEmissionsData = new UserEmissionsData("QMCLRlEKD9h2Np1II1vrNU0vpxt2", new UserEmissionsData.DataReadyListener() {
@@ -134,8 +136,7 @@ public class FirstFragment extends Fragment {
     }
 
     private void updateUI() {
-        renderEmissionsViewText(emissionsOverviewTextView);
-        userEmissionsData.getUserDailyEmissions();
+        renderEmissionsViewText();
         renderLineChart(lineChart);
         renderPieChart(pieChart);
         renderComparisonUI();
@@ -156,13 +157,34 @@ public class FirstFragment extends Fragment {
         renderComparisonChart(comparisonChart, default_country);  //set UI
     }
 
-    private void renderEmissionsViewText(TextView emissionsOverviewTextView) {
-        Log.d("render", Float.toString(userEmissionsData.getUserOverallEmissions()));
+    private void renderEmissionsViewText() {
+        float userEmissions = userEmissionsData.getUserEmissionsKG(timePeriod);
+        emissionsOverviewTextView.setText(getUserEmissionsText());
+    }
 
-        String emissionsOverviewText = "You've emitted "
-                + Math.round(userEmissionsData.getUserOverallEmissions() * 100) / 100.0
-                + " kg CO2e.";
-        emissionsOverviewTextView.setText(emissionsOverviewText);
+    private String getUserEmissionsText() {
+        switch(timePeriod) {
+            case DAILY:
+                return "You emitted "
+                        + Math.round(userEmissionsData.getUserEmissionsKG(DAILY) * 100) / 100.0
+                        + " kg CO2e today.";
+            case WEEKLY:
+                return "You emitted "
+                        + Math.round(userEmissionsData.getUserEmissionsKG(WEEKLY) * 100) / 100.0
+                        + " kg CO2e this week.";
+            case MONTHLY:
+                return "You emitted "
+                        + Math.round(userEmissionsData.getUserEmissionsKG(MONTHLY) * 100) / 100.0
+                        + " kg CO2e this month.";
+            case YEARLY:
+                return "You emitted "
+                        + Math.round(userEmissionsData.getUserEmissionsKG(YEARLY) * 100) / 100.0
+                        + " kg CO2e this year.";
+            default:
+                return "You emitted "
+                        + Math.round(userEmissionsData.getUserEmissionsKG(OVERALL) * 100) / 100.0
+                        + " kg CO2e.";
+        }
     }
 
     private void updateWithDailyData() {
@@ -186,8 +208,8 @@ public class FirstFragment extends Fragment {
         ArrayList<Entry> entries = new ArrayList<>();
 
         for (int i = 0; i < 25; i++) {
-            Entry entry = new Entry(i, (float) Math.round((Math.random() * 100)) / 100 * (i + 10));
-            entries.add(entry);
+                Entry entry = new Entry(i, (float) Math.round((Math.random() * 100)) / 100 * (i + 10));
+                entries.add(entry);
         }
 
         GradientDrawable gradientDrawable = new GradientDrawable(
@@ -239,13 +261,17 @@ public class FirstFragment extends Fragment {
     }
 
     private void renderComparisonChart(BarChart comparisonChart, String country) {
-        Double countryPerCapitaEmissions = countryEmissions.getCountryPerCapitaEmissions(country);
-        float userEmissions = userEmissionsData.getUserDailyEmissions();
+        Double countryPerCapitaEmissions = countryEmissions.getComparableEmissionsDataKG(country, timePeriod);
+        float userEmissions = userEmissionsData.getUserEmissionsKG(timePeriod);
+
+        System.out.println(countryPerCapitaEmissions + ", " + userEmissions);
 
         if (countryPerCapitaEmissions == null) {
             comparisonChart.invalidate();
             return;
         }
+
+        System.out.println(countryPerCapitaEmissions.floatValue());
 
         BarEntry barEntry1 = new BarEntry(0, userEmissions);
         BarEntry barEntry2 = new BarEntry(1, countryPerCapitaEmissions.floatValue());
