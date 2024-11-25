@@ -15,8 +15,12 @@ lifecycleViewmodelKtx = "2.6.1"
 firebaseAuth = "23.1.0"
 navigationFragment = "2.8.4"
 navigationUi = "2.8.4"
+play-services-auth = "20.7.0"
+mockito = "2.18.0"
 
 [libraries]
+play-services-auth = {group = "com.google.android.gms", name = "play-services-auth", version.ref = "play-services-auth"}
+mockito = {group = "org.mockito", name="mockito-core", version.ref="mockito"}
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

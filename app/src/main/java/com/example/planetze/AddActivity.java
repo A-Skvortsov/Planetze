@@ -231,7 +231,6 @@ public class AddActivity extends Fragment {
                         default_car = (String) snapshot.getValue();
                         displayInputs(box1, box2, txt1, txt2, selectedActivity);
                     }
-
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                     }
@@ -312,6 +311,7 @@ public class AddActivity extends Fragment {
         setActivitySpinner(activityToEdit.get(0), actSpinner);  //sets spinner to "Select an activity" by default
         i = (ArrayAdapter<String>) actSpinner.getAdapter();
         j = i.getPosition(activityToEdit.get(1));
+
         actSpinner.setSelection(j, false);
 
         DatabaseReference carRef = db.getReference().child("user data")
