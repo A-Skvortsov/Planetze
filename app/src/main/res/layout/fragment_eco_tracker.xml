@@ -34,7 +34,8 @@
             android:background="@color/palette_turquoise"
             android:gravity="center"
             android:text="0.0 kg of CO2 Emitted"
-
+            android:textStyle="bold"
+            android:textSize="20sp"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="@+id/title"
             app:layout_constraintStart_toStartOf="@+id/title"

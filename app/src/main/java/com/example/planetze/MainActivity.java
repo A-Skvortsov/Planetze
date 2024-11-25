@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         //startActivity(intent);
 
         if (savedInstanceState == null) {
-            loadFragment(new EcoTrackerFragment());
+            loadFragment(new SignUpFragment());
         }
     }
 

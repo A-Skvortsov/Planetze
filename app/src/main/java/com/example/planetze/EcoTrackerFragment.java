@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.renderscript.Sampler;
 import android.util.Log;
@@ -62,6 +64,7 @@ public class EcoTrackerFragment extends Fragment {
     List<List<String>> acts = new ArrayList<>();  //used to store the activities of a day
     List<String> activityToEdit = new ArrayList<>();  //used to store the activity selected for editing
     String date = "";
+    int presetCalendar = 0;
 
     public EcoTrackerFragment() {
         // Required empty public constructor
@@ -92,6 +95,13 @@ public class EcoTrackerFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        Bundle args = getArguments();
+        if (args != null && args.containsKey("date")) {
+            presetCalendar = 1;
+            date = args.getString("date");
+        } else {presetCalendar = 0;}
+
     }
 
     /**
@@ -115,11 +125,10 @@ public class EcoTrackerFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_eco_tracker, container, false);
 
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-        String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
+        String userId = "QMCLRlEKD9h2Np1II1vrNU0vpxt2";  //this should be changed to the particular logged in user once everything works
         calendarRef = db.getReference("user data")
                 .child(userId).child("calendar");
         Log.d("Firebase", "Reference Path: " + calendarRef);  //for debugging
-
 
         final Button calendarToggle = view.findViewById(R.id.calendarToggle);  //button to toggle calendar
         final ConstraintLayout calendarView = view.findViewById(R.id.calendarView);  //view containing calendar
@@ -145,7 +154,7 @@ public class EcoTrackerFragment extends Fragment {
                 if (dataSnapshot.exists()) {
                     // Convert the snapshot into a List
                     days = (HashMap<String, Object>) dataSnapshot.getValue();
-                    Log.d("Firebase", "data loaded successfuly" + days);
+                    Log.d("Firebase", "data loaded successfully" + days);
                     updateDisplay(activities, noActivities, dailyTotal);
                 } else {
                     Log.d("Firebase", "Array does not exist for this user.");
@@ -185,7 +194,7 @@ public class EcoTrackerFragment extends Fragment {
                 dateText.setText(date1);
                 yearText.setText(String.valueOf(y));
                 date = y + "-" + m + "-" + d;
-                fetchSnapshot();
+                fetchSnapshot();  //updates displayed info to be for the selected date
             }
         });
 
@@ -213,17 +222,18 @@ public class EcoTrackerFragment extends Fragment {
                 issuePrompt2.setVisibility(View.INVISIBLE);
 
                 //passes date parameter so activity is added to current date
-                loadFragment(new AddActivity(date));
+                Bundle bundle = new Bundle();
+                bundle.putString("date", date);
+                NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
+                        .findFragmentById(R.id.fragment));
+                navController.navigate(R.id.AddActivity, bundle);
+                //loadFragment(new AddActivity());
             }
         });
         //edit activities
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //puts these away in case they were brought up, no need for them
-                issuePrompt1.setVisibility(View.INVISIBLE);
-                issuePrompt2.setVisibility(View.INVISIBLE);
-
                 if (!activitySelected(activities, issuePrompt1, issuePrompt2)) return;
                 int id = activities.getCheckedRadioButtonId();
 
@@ -309,18 +319,25 @@ public class EcoTrackerFragment extends Fragment {
      */
     public void initUI(ValueEventListener listener, TextView d, TextView y,
                        RadioGroup activities, TextView noActivities, TextView dailyTotal) {
+        if (presetCalendar == 0) {
+            //displays current date
+            Calendar today = Calendar.getInstance();
+            String t = today.get(Calendar.DAY_OF_MONTH) + " " +
+                    months[today.get(Calendar.MONTH)];
+            d.setText(t);
+            y.setText(String.valueOf(today.get(Calendar.YEAR)));
+            date = today.get(Calendar.YEAR) + "-" + (today.get(Calendar.MONTH) + 1) + "-"
+                    + today.get(Calendar.DAY_OF_MONTH);
+        } else {  //occurs if start EcoTracker from AddActivity instead of through bottom bar/nav
+            String[] t = date.split("-");
+            String day = t[2]; String month = months[Integer.parseInt(t[1]) - 1]; String year = t[0];
+            String x = day + " " + month;
+            d.setText(x);
+            y.setText(year);
+        }
         //pings Firebase to show activities of current date
         fetchSnapshot();
         updateDisplay(activities, noActivities, dailyTotal);
-
-        //displays current date
-        Calendar today = Calendar.getInstance();
-        String t = today.get(Calendar.DAY_OF_MONTH) + " " +
-                months[today.get(Calendar.MONTH)];
-        d.setText(t);
-        y.setText(String.valueOf(today.get(Calendar.YEAR)));
-        date = today.get(Calendar.YEAR) +"-"+(today.get(Calendar.MONTH)+1)+"-"
-                +today.get(Calendar.DAY_OF_MONTH);
     }
 
     public void updateDisplay(RadioGroup activities, TextView emptyMsg, TextView dailyTotal) {
@@ -387,7 +404,15 @@ public class EcoTrackerFragment extends Fragment {
                     //gets the list (activity) at position id (as wanted)
                     activityToEdit = ((List<List<String>>) dataSnapshot.getValue()).get(id);
                     //boot addActivity in edit mode, passing activityToEdit
-                    loadFragment(new AddActivity(date, activityToEdit, id));
+                    Bundle bundle = new Bundle();
+                    bundle.putString("date", date);
+                    bundle.putStringArrayList("activityToEdit", (ArrayList<String>) activityToEdit);
+                    bundle.putInt("id", id);
+                    NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
+                            .findFragmentById(R.id.fragment));
+                    navController.navigate(R.id.AddActivity, bundle);
+
+                    //loadFragment(new AddActivity(date, activityToEdit, id));
                     Log.d("Firebase", "data loaded successfully1" + activityToEdit);
 
                 } else {
