@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -64,7 +66,7 @@ public class AddActivity extends Fragment {
     private int id = 0;
     private String default_car = "none";
     FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-    String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
+    String userId = "QMCLRlEKD9h2Np1II1vrNU0vpxt2";  //this should be changed to the particular logged in user once everything works
 
     public AddActivity() {
         // Required empty public constructor
@@ -123,6 +125,14 @@ public class AddActivity extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_activity, container, false);
 
+        Bundle args = getArguments();
+        date = args.getString("date");
+        if (args.size() != 1) {  //corresponds to edit mode
+            edit = 1;
+            activityToEdit = args.getStringArrayList("activityToEdit");
+            id = args.getInt("id");
+        }
+
         final Spinner selectCat = view.findViewById(R.id.selectCat);
         final Spinner selectActivity = view.findViewById(R.id.selectActivity);
         final Button backBtn = view.findViewById(R.id.backBtn);
@@ -139,7 +149,13 @@ public class AddActivity extends Fragment {
             @Override
             public void onClick(View v) {
                 EcoTrackerFragment.fetchSnapshot();
-                getParentFragmentManager().popBackStack();
+                //getParentFragmentManager().popBackStack();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("date", date);
+                NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
+                        .findFragmentById(R.id.fragment));
+                navController.navigate(R.id.EcoTrackerFragment, bundle);
             }
         });
         saveBtn.setOnClickListener(new View.OnClickListener() {
