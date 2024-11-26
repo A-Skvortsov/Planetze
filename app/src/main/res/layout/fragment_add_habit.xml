@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddHabit">
+
+    <!-- Constraint layout as main parent -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Habits list display -->
+        <SearchView
+            android:id="@+id/searchView"
+            android:layout_width="281dp"
+            android:layout_height="61dp"
+            android:layout_marginTop="72dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="347dp"
+            android:layout_height="232dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/searchView"
+            app:layout_constraintHorizontal_bias="0.492"
+            app:layout_constraintStart_toStartOf="@+id/searchView"
+            app:layout_constraintTop_toBottomOf="@+id/searchView" />
+
+        <!-- buttons -->
+
+        <Button
+            android:id="@+id/backBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="28dp"
+            android:layout_marginBottom="28dp"
+            android:text="Back"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/toggleButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+            <Button
+                android:id="@+id/allHabitsBtn"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="All Habits"
+                tools:layout_editor_absoluteX="89dp"
+                tools:layout_editor_absoluteY="411dp"
+                android:textColor="@color/palette_turquoise"
+                />
+
+            <Button
+                android:id="@+id/yourHabitsBtn"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your Habits"
+                tools:layout_editor_absoluteX="192dp"
+                tools:layout_editor_absoluteY="22dp"
+                android:textColor="@color/palette_turquoise"/>
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+        <Button
+            android:id="@+id/outlinedButton"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adopt Habit"
+            app:layout_constraintEnd_toEndOf="@+id/listView"
+            app:layout_constraintTop_toBottomOf="@+id/listView" />
+
+
+        <!-- Filter section -->
+        <TextView
+            android:id="@+id/filterPrompt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="160dp"
+            android:text="Filter by:"
+            android:textSize="20sp"
+            android:textStyle="bold|italic"
+            app:layout_constraintStart_toStartOf="@+id/listView"
+            app:layout_constraintTop_toBottomOf="@+id/listView" />
+
+        <Spinner
+            android:id="@+id/categorySpinner"
+            android:layout_width="219dp"
+            android:layout_height="49dp"
+            android:layout_marginTop="108dp"
+            app:layout_constraintEnd_toEndOf="@+id/listView"
+            app:layout_constraintTop_toBottomOf="@+id/listView" />
+
+        <Spinner
+            android:id="@+id/impactSpinner"
+            android:layout_width="219dp"
+            android:layout_height="49dp"
+            android:layout_marginTop="28dp"
+            app:layout_constraintEnd_toEndOf="@+id/categorySpinner"
+            app:layout_constraintTop_toBottomOf="@+id/categorySpinner" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

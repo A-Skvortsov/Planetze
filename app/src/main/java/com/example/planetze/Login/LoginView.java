@@ -121,7 +121,9 @@ public class LoginView extends Fragment  {
     }
 
     public void takeToHomePage() {
-        loadFragment(new HomeFragment());
+        Intent intent = new Intent(getActivity(), com.example.planetze.HomeActivity.class);
+        startActivity(intent);
+        //loadFragment(new HomeFragment());
     }
 
     private void loadFragment(Fragment fragment) {
