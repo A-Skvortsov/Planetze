@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
          */
 
-        //initilizeData();
+        initilizeData();
 
         if (savedInstanceState == null) {
             //onOpenApp();
@@ -69,9 +69,49 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void takeToHomePage() {
+        //change this later
+        String userID = UserData.getUserID(getApplicationContext());
 
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                DataSnapshot users = task.getResult();
+                for(DataSnapshot user:users.getChildren()) {
+                    boolean cond1 = user.getKey().toString().trim().equals(userID);
+                    boolean cond2 = user.child("is_new_user").getValue().toString().equals("true");
+                    //System.out.println(user.child("is_new_user").getValue().toString());
+                    if (cond1 && cond2) {
+                        loadFragment(new SurveyFragment());
+                        break;
+                    }
+                    else if (cond1) {
+                        loadFragment(new EcoTrackerFragment());
+                        break;
+                    }
 
+                }
+                //loadFragment(new EcoTrackerFragment());
+            }
+        });
+    }
 
+    private void onOpenApp() {
+        if (!UserData.isLoggedIn(getApplicationContext())) {
+            loadFragment(new LoginView());
+        }
+        else {
+            takeToHomePage();
+        }
+    }
+
+    private void initilizeData() {
+        boolean isLoggedIn = UserData.isLoggedIn(getApplicationContext());
+        boolean stayLoggedOn = UserData.stayLoggedOn(getApplicationContext());
+        if (isLoggedIn && !stayLoggedOn) {
+            UserData.logout(getApplicationContext());
+        }
+    }
 
 
 }
