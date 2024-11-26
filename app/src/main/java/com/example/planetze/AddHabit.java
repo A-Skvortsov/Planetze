@@ -2,13 +2,23 @@ package com.example.planetze;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.SearchView;
 import android.widget.Spinner;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +40,9 @@ public class AddHabit extends Fragment {
     private String mParam2;
     private final String[] categories = Constants.categories;
     private final String[] impacts = Constants.impacts;
+    FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
     private String userId = "QMCLRlEKD9h2Np1II1vrNU0vpxt2";
+    List<List<String>> allHabits;
 
 
     public AddHabit() {
@@ -71,6 +83,7 @@ public class AddHabit extends Fragment {
         View view = inflater.inflate(R.layout.fragment_add_habit, container, false);
 
         populateHabitList(view);
+        attachSearchToList(view);
         initFilterSpinners(view);
 
 
@@ -80,19 +93,38 @@ public class AddHabit extends Fragment {
 
     /**
      * Populates the searchable list of habits with available habits
+     * Retrieves all standard habits from Firebase
      * @param view
      */
     private void populateHabitList(View view) {
-        List<List<String>> allHabits = getAllHabitsFromFirebase();
-        List<List<String>> currentHabits = getCurrentHabits(userId);
+        ListView list = view.findViewById(R.id.listView);  //habits populate this container
 
-        allHabits = removeDuplicates(allHabits, currentHabits);
+        DatabaseReference habitsRef = db.getReference().child("habits");
+        habitsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                allHabits = (List<List<String>>) snapshot.getValue();
+                allHabits = removeDuplicates(allHabits, getCurrentHabits(userId));
 
+                List<String> habits = new ArrayList<>();  //this will be used to populate the listview
+                for (int i = 0; i < allHabits.size(); i++)
+                    habits.add(allHabits.get(i).get(1));//1 corresponds to position of habit name
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                        android.R.layout.simple_list_item_1, habits);
+                list.setAdapter(adapter);
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
-    private List<List<String>> getAllHabitsFromFirebase() {
+    private void attachSearchToList(View view) {
+        SearchView searchView = view.findViewById(R.id.searchView);
+        ListView listView = view.findViewById(R.id.listView);
 
-        return new ArrayList<>();
+
     }
 
     private List<List<String>> getCurrentHabits(String userId) {
@@ -101,11 +133,10 @@ public class AddHabit extends Fragment {
 
     private List<List<String>> removeDuplicates(List<List<String>> allHabits,
                                                 List<List<String>> currentHabits) {
-        if (currentHabits == null || currentHabits.size() == 0) return allHabits;
+        if (currentHabits == null || currentHabits.isEmpty()) return allHabits;
         for (int i = 0; i < currentHabits.size(); i++) {
-            if (allHabits.contains(currentHabits.get(i))) {
-                allHabits.remove(allHabits.indexOf(currentHabits.get(i)));
-            }
+            //if currentHabits.get(i) not in allHabits, does nothing
+            allHabits.remove(currentHabits.get(i));
         }
         return allHabits;
     }
@@ -120,9 +151,10 @@ public class AddHabit extends Fragment {
         Spinner impactSpinner = view.findViewById(R.id.impactSpinner);
 
         //sets category filter spinner
+        String[] arr = {"Select a category", "Transportation", "Food",
+            "Housing", "Consumption"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_spinner_item, categories);
-        adapter.add("Select a category");
+                android.R.layout.simple_spinner_item, arr);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         categorySpinner.setAdapter(adapter);
         //default setting is "Select a category"
@@ -133,10 +165,9 @@ public class AddHabit extends Fragment {
         //sets impact filter spinner
         adapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, impacts);
-        adapter.add("Select an impact level");
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         impactSpinner.setAdapter(adapter);
-        i = adapter.getPosition("Select an imapct level");
+        i = adapter.getPosition("Select an impact level");
         impactSpinner.setSelection(i);
     }
 }

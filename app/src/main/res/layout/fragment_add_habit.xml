@@ -12,21 +12,23 @@
         android:layout_height="match_parent">
 
         <!-- Habits list display -->
+
         <SearchView
             android:id="@+id/searchView"
             android:layout_width="281dp"
             android:layout_height="61dp"
-            android:layout_marginTop="72dp"
+            android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
         <ListView
             android:id="@+id/listView"
             android:layout_width="347dp"
             android:layout_height="232dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             app:layout_constraintEnd_toEndOf="@+id/searchView"
-            app:layout_constraintHorizontal_bias="0.492"
+            app:layout_constraintHorizontal_bias="0.484"
             app:layout_constraintStart_toStartOf="@+id/searchView"
             app:layout_constraintTop_toBottomOf="@+id/searchView" />
 
@@ -36,8 +38,8 @@
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="28dp"
-            android:layout_marginBottom="28dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginBottom="120dp"
             android:text="Back"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
@@ -46,18 +48,19 @@
             android:id="@+id/toggleButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintEnd_toStartOf="@+id/actionBtn"
+            app:layout_constraintTop_toTopOf="@+id/actionBtn"
+            app:singleSelection="true">
+
             <Button
                 android:id="@+id/allHabitsBtn"
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="All Habits"
-                tools:layout_editor_absoluteX="89dp"
-                tools:layout_editor_absoluteY="411dp"
                 android:textColor="@color/palette_turquoise"
-                />
+                tools:layout_editor_absoluteX="89dp"
+                tools:layout_editor_absoluteY="411dp" />
 
             <Button
                 android:id="@+id/yourHabitsBtn"
@@ -65,12 +68,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Your Habits"
+                android:textColor="@color/palette_turquoise"
                 tools:layout_editor_absoluteX="192dp"
-                tools:layout_editor_absoluteY="22dp"
-                android:textColor="@color/palette_turquoise"/>
+                tools:layout_editor_absoluteY="22dp" />
         </com.google.android.material.button.MaterialButtonToggleGroup>
+
         <Button
-            android:id="@+id/outlinedButton"
+            android:id="@+id/actionBtn"
             style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -80,11 +84,20 @@
 
 
         <!-- Filter section -->
+
+        <Spinner
+            android:id="@+id/categorySpinner"
+            android:layout_width="219dp"
+            android:layout_height="49dp"
+            android:layout_marginTop="84dp"
+            app:layout_constraintEnd_toEndOf="@+id/listView"
+            app:layout_constraintTop_toBottomOf="@+id/listView" />
+
         <TextView
             android:id="@+id/filterPrompt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="160dp"
+            android:layout_marginTop="136dp"
             android:text="Filter by:"
             android:textSize="20sp"
             android:textStyle="bold|italic"
@@ -92,18 +105,10 @@
             app:layout_constraintTop_toBottomOf="@+id/listView" />
 
         <Spinner
-            android:id="@+id/categorySpinner"
-            android:layout_width="219dp"
-            android:layout_height="49dp"
-            android:layout_marginTop="108dp"
-            app:layout_constraintEnd_toEndOf="@+id/listView"
-            app:layout_constraintTop_toBottomOf="@+id/listView" />
-
-        <Spinner
             android:id="@+id/impactSpinner"
             android:layout_width="219dp"
             android:layout_height="49dp"
-            android:layout_marginTop="28dp"
+            android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="@+id/categorySpinner"
             app:layout_constraintTop_toBottomOf="@+id/categorySpinner" />
 

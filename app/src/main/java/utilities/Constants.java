@@ -10,7 +10,7 @@ public class Constants {
 
     //all survey question categories
     public static final String[] categories = {"Transportation", "Food", "Housing", "Consumption"};
-    public static final String[] impacts = {"Small impact (< 25kg CO2)",
+    public static final String[] impacts = {"Select an impact level", "Small impact (< 25kg CO2)",
             "Medium impact (< 50kg CO2)", "Big impact (> 50kg CO2)"};
 
     public static final int transport_qs = 7;  //number of qs in transport category

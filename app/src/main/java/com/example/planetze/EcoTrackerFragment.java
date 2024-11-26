@@ -139,14 +139,16 @@ public class EcoTrackerFragment extends Fragment {
         final TextView dailyTotal = view.findViewById(R.id.dailyTotal);
 
         final TextView noActivities = view.findViewById(R.id.noActivities);
-        final Button activitiesBtn = view.findViewById(R.id.activitiesBtn);
         final RadioGroup activities = view.findViewById(R.id.activitiesGroup);
-        final Button habitsBtn = view.findViewById(R.id.habitsBtn);
         final Button addBtn = view.findViewById(R.id.addBtn);
         final Button editBtn = view.findViewById(R.id.editBtn);
         final Button delBtn = view.findViewById(R.id.delBtn);
         final TextView issuePrompt1 = view.findViewById(R.id.issuePrompt1);
         final TextView issuePrompt2 = view.findViewById(R.id.issuePrompt2);
+        final Button activitiesBtn = view.findViewById(R.id.activitiesBtn);
+        final Button habitsBtn = view.findViewById(R.id.habitsBtn);
+
+
 
         listener = new ValueEventListener() {
             @Override
@@ -211,7 +213,11 @@ public class EcoTrackerFragment extends Fragment {
         habitsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Bundle bundle = new Bundle();
+                bundle.putString("date", date);
+                NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
+                        .findFragmentById(R.id.fragment));
+                navController.navigate(R.id.AddHabit, bundle);
             }
         });
         //add activities
