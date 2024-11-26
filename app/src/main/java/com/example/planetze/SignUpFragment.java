@@ -298,7 +298,9 @@ public class SignUpFragment extends Fragment {
                             String id = auth.getCurrentUser().getUid();
                             userRef.child(id+"/name").setValue(name);
                             userRef.child(id+"/email").setValue(email);
-                            userRef.child(id+"/is_new_user").setValue(true);
+                            //userRef.child(id+"/is_new_user").setValue(true);
+                            setDefaultSettings(id);
+
                             //userRef.child(id+"/password").setValue(pass);
                             auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -329,6 +331,11 @@ public class SignUpFragment extends Fragment {
                         }
                     }
                 });
+    }
+
+    private void setDefaultSettings(String userID) {
+        userRef.child(userID+"/is_new_user").setValue(true);
+        userRef.child(userID+"/Settings/stayLoggedOn").setValue(false);
     }
 
     public void setSignUpLauncher() {

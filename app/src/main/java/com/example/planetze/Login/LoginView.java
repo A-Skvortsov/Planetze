@@ -1,6 +1,7 @@
 package com.example.planetze.Login;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,10 +22,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.planetze.EcoTrackerFragment;
 import com.example.planetze.ForgotPasswordFragment;
 import com.example.planetze.HomeFragment;
 import com.example.planetze.R;
 import com.example.planetze.SignUpFragment;
+import com.example.planetze.SurveyFragment;
 import com.example.planetze.UserData;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -112,7 +115,6 @@ public class LoginView extends Fragment  {
                 loadFragment(new ForgotPasswordFragment());
             }
         });
-
         return view;
     }
 
@@ -120,8 +122,8 @@ public class LoginView extends Fragment  {
         inputError.setText(msg);
     }
 
-    public void takeToHomePage() {
-        loadFragment(new HomeFragment());
+    public Context getViewContext() {
+        return getContext();
     }
 
     private void loadFragment(Fragment fragment) {

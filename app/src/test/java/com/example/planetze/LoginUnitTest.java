@@ -7,11 +7,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import org.mockito.junit.MockitoJUnitRunner;
+import static org.mockito.Mockito.doThrow;
 
 
 import static org.junit.Assert.*;
 
+import android.content.Context;
 import android.content.Intent;
 
 import androidx.activity.result.ActivityResult;
@@ -105,14 +108,7 @@ public class LoginUnitTest {
     public void testRightEmailRightPassword() {
         LoginPresenter presenter = new LoginPresenter(model,view);
         presenter.loginUser("jiangminki0@gmail.com", "hellohello");
-        verify(view).setMessage("Login successful");
-    }
-
-    @Test
-    public void testSuccessfulLogin() {
-        LoginPresenter presenter = new LoginPresenter(model,view);
-        presenter.loginUser("jiangminki0@gmail.com", "hellohello");
-        verify(view).takeToHomePage();
+        verify(view).takeToSurvey();
     }
 
     @Test
@@ -120,13 +116,6 @@ public class LoginUnitTest {
         LoginPresenter presenter = new LoginPresenter(model,view);
         presenter.setMessage("this is a message");
         verify(view).setMessage("this is a message");
-    }
-
-    @Test
-    public void testTakeToHomePage() {
-        LoginPresenter presenter = new LoginPresenter(model,view);
-        presenter.takeToHomePage();
-        verify(view).takeToHomePage();
     }
 
     @Test
