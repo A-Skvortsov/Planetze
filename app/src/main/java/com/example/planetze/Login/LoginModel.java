@@ -76,6 +76,27 @@ public class LoginModel {
 
     private void takeToHomePage(LoginPresenter presenter) {
         //change this later
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                DataSnapshot users = task.getResult();
+                String userID = UserData.getUserID(presenter.getViewContext());
+                for(DataSnapshot user:users.getChildren()) {
+                    boolean cond1 = user.getKey().toString().trim().equals(userID);
+                    boolean cond2 = user.child("is_new_user").getValue().toString().equals("true");
+                    //System.out.println(user.getKey().toString().trim() + "       " +userID);
+                    if (cond1 && cond2) {
+                        presenter.takeToSurvey();
+                        break;
+                    }
+                    else if (cond1) {
+                        presenter.takeToHub();
+                        break;
+                    }
+                }
+                //presenter.takeToHub();
+            }
+        });
     }
 
     public void onSignInResult(ActivityResult result, LoginPresenter presenter) {

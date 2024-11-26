@@ -126,6 +126,14 @@ public class LoginView extends Fragment  {
         return getContext();
     }
 
+    public void takeToSurvey() {
+        loadFragment(new SurveyFragment());
+    }
+
+    public void takeToHub() {
+        loadFragment(new EcoTrackerFragment());
+    }
+
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
