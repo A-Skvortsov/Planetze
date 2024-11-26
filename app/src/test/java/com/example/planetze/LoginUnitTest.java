@@ -119,6 +119,27 @@ public class LoginUnitTest {
     }
 
     @Test
+    public void testTakeToSurvery() {
+        LoginPresenter presenter = new LoginPresenter(model,view);
+        presenter.takeToSurvey();
+        verify(view).takeToSurvey();
+    }
+
+    @Test
+    public void testTakeToHub() {
+        LoginPresenter presenter = new LoginPresenter(model,view);
+        presenter.takeToHub();
+        verify(view).takeToHub();
+    }
+
+    @Test
+    public void testGetViewContext() {
+        LoginPresenter presenter = new LoginPresenter(model,view);
+        Context context = view.getViewContext();
+        when(presenter.getViewContext()).thenReturn(context);
+    }
+
+    @Test
     public void testSignUpLauncher() {
         LoginPresenter presenter = new LoginPresenter(model,view);
         presenter.setSignUpLauncher();
