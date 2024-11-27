@@ -53,7 +53,8 @@ public class EcoTrackerFragment extends Fragment {
             //from addActivity fragment when returning to ecotrackerfragment in order to update
             //ecotracker activity info upon return
     private static DatabaseReference habitsRef;  //^^same with this
-    private static ValueEventListener listener;  //^^same with this
+    private static ValueEventListener activitiesListener;  //^^same with this
+    private static ValueEventListener habitsListener;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -66,6 +67,7 @@ public class EcoTrackerFragment extends Fragment {
 
     HashMap<String, Object> days = new HashMap<>();  //used to store the days of a user calendar
     List<List<String>> acts = new ArrayList<>();  //used to store the activities of a day
+    List<List<String>> currentHabits = new ArrayList<>();
     List<String> activityToEdit = new ArrayList<>();  //used to store the activity selected for editing
     String date = "";
     int presetCalendar = 0;
@@ -158,7 +160,7 @@ public class EcoTrackerFragment extends Fragment {
 
 
 
-        listener = new ValueEventListener() {
+        activitiesListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Check if the array exists
@@ -176,9 +178,23 @@ public class EcoTrackerFragment extends Fragment {
                 Log.e("FirebaseData", "Error: " + databaseError.getMessage());
             }
         };
+        habitsListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    currentHabits = (List<List<String>>) snapshot.getValue();
+                    Log.d("Firebase", "data loaded successfully" + currentHabits);
+                    updateDisplay();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("FirebaseData", "Error: " + error.getMessage());
+            }
+        };
 
         //initializes everything
-        initUI(listener, dateText, yearText, activities, noActivities, dailyTotal);
+        initUI(activitiesListener, dateText, yearText, activities, noActivities, dailyTotal);
 
         //Toggles calendar view
         calendarToggle.setOnClickListener(new View.OnClickListener() {
@@ -319,7 +335,8 @@ public class EcoTrackerFragment extends Fragment {
      * Used to perform a one-time ping to the firebase to retrieve most up-to-date data
      */
     public static void fetchSnapshot() {
-        calendarRef.addListenerForSingleValueEvent(listener);
+        calendarRef.addListenerForSingleValueEvent(activitiesListener);
+        habitsRef.addListenerForSingleValueEvent(habitsListener);
     }
 
     /**
@@ -386,14 +403,31 @@ public class EcoTrackerFragment extends Fragment {
     }
 
     public void displayHabits() {
-        RadioGroup activities = globalView.findViewById(R.id.activitiesGroup);
+        RadioGroup rg = globalView.findViewById(R.id.activitiesGroup);
         TextView emptyMsg = globalView.findViewById(R.id.emptyMsg);
 
-        activities.clearCheck(); activities.removeAllViews();
+        rg.clearCheck(); rg.removeAllViews();
         emptyMsg.setVisibility(View.INVISIBLE);
+        emptyMsg.setText("No habits adopted yet");
+
+        if (currentHabits.isEmpty()) {
+            //set default ("no habits adopted yet")
+            emptyMsg.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        RadioButton button;
+        for (int i = 0; i < currentHabits.size(); i++) {
+            button = new RadioButton(getContext());
+            button.setId(i);
+            String t = Double.parseDouble(currentHabits.get(i).get(2)) + "kg CO2: " +
+                    currentHabits.get(i).get(1);
+            button.setText(t);
+            rg.addView(button);
+        }
     }
 
-    okqwojgqoejg
+    //okqwojgqoejg
 
     public void switchToActivities() {
         RadioGroup rg = globalView.findViewById(R.id.activitiesGroup);
