@@ -5,6 +5,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +40,7 @@ public class AddHabit extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
     private String mParam2;
+    private View globalView;
     private final String[] categories = Constants.categories;
     private final String[] impacts = Constants.impacts;
     FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
@@ -85,9 +87,8 @@ public class AddHabit extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_habit, container, false);
-
+        globalView = view;
         currentHabits = getCurrentHabits(userId);
-        System.out.println(currentHabits);
         initHabitLists(view);
 
         attachSearchToList(view);
@@ -134,13 +135,19 @@ public class AddHabit extends Fragment {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 //filters listView results based on "query" (search string)
-                ((ArrayAdapter) listView.getAdapter()).getFilter().filter(query);
+                ArrayAdapter adapter = (ArrayAdapter) listView.getAdapter();
+                if (adapter != null)
+                    adapter.getFilter().filter(query);
+                else Log.d("SearchView: ", "adapter is null");
                 return false;
             }
             @Override
             public boolean onQueryTextChange(String newText) {
                 //filters listView results as search string updates
-                ((ArrayAdapter) listView.getAdapter()).getFilter().filter(newText);
+                ArrayAdapter adapter = (ArrayAdapter) listView.getAdapter();
+                if (adapter != null)
+                    adapter.getFilter().filter(newText);
+                else Log.d("SearchView: ", "adapter is null");
                 return false;
             }
         });
@@ -187,6 +194,11 @@ public class AddHabit extends Fragment {
     }
 
 
+    /**
+     * Splits entire collection of all possible habits down into the four categories
+     * for filtering search
+     * @param view
+     */
     private void splitHabitsByCategory(View view) {
         //Each index of habitsByCategory corresponds to a list of habits with a particular category
         habitsByCategory = new ArrayList<>();
@@ -205,6 +217,11 @@ public class AddHabit extends Fragment {
         System.out.println(habitsByCategory);
     }
 
+
+    /**
+     * Splits the entire collection of habits into impact levels for filtering search
+     * @param view
+     */
     private void splitHabitsByImpact(View view) {
 
     }
@@ -269,7 +286,20 @@ public class AddHabit extends Fragment {
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                
+                if (parent.getItemAtPosition(position).equals("Select a category")) return;
+                List<List<String>> habitList;
+                switch ((String) parent.getItemAtPosition(position)) {
+                    case "Select a category": return;
+                    case "Transportation":
+                        habitList = habitsByCategory.get(0); break;
+                    case "Food":
+                        habitList = habitsByCategory.get(1); break;
+                    case "Housing":
+                        habitList = habitsByCategory.get(2); break;
+                    default:  //"Consumption"
+                        habitList = habitsByCategory.get(3); break;
+                }
+                populateHabitList(globalView, habitList);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
