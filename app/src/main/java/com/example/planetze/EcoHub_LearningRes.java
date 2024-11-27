@@ -20,14 +20,13 @@ import com.example.planetze.databinding.ActivityEcoHhubBinding;
 
 import java.util.ArrayList;
 
-public class EcoHhub extends AppCompatActivity {
+public class EcoHub_LearningRes extends AppCompatActivity {
 
     private ActivityEcoBalanceDestinationBinding binding;
-    ListData listdat;
+    ListDataEcohub listdat;
     String[] descriptions;
-    String[] locations;
-    ArrayList<ListData> arrayList = new ArrayList<>();
-    ListAdapter listAdapter;
+    ArrayList<ListDataEcohub> arrayList = new ArrayList<>();
+    ListAdapter_eco listAdapter;
     int[] images;
 
     @Override
@@ -37,18 +36,17 @@ public class EcoHhub extends AppCompatActivity {
         binding = ActivityEcoBalanceDestinationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        descriptions = new String[]{"Helping Plant Trees", "Building Wells", "Bike providers"};
-        locations = new String[]{"Ethiopia", "Russia", "India"};
-        images = new int[]{R.drawable.ic_google, R.drawable.ic_mail, R.drawable.ic_lock};
+        descriptions = new String[]{"Learning Resources", "Green Trends"};
+        images = new int[]{R.drawable.ic_google, R.drawable.ic_mail};
 
 
         for (int i = 0; i < images.length; i++){
 
-            listdat = new ListData(images[i], descriptions[i], locations[i]);
+            listdat = new ListDataEcohub(images[i], descriptions[i]);
             arrayList.add(listdat);
         }
 
-        listAdapter = new ListAdapter(getApplicationContext(), arrayList);
+        listAdapter = new ListAdapter_eco(getApplicationContext(), arrayList);
         binding.listview.setAdapter(listAdapter);
         binding.listview.setClickable(true);
 
@@ -57,7 +55,6 @@ public class EcoHhub extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent intent = new Intent(getApplicationContext(), Details.class);
-                intent.putExtra("locations", locations[position]);
                 intent.putExtra("descriptions", descriptions[position]);
                 intent.putExtra("images", images[position]);
                 startActivity(intent);
