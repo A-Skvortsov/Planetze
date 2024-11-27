@@ -113,6 +113,7 @@ public class EcoTrackerFragment extends Fragment {
                 habitsToggled = args.getBoolean("habitsToggled");
         } else {presetCalendar = 0;}
 
+
     }
 
     /**
@@ -160,6 +161,17 @@ public class EcoTrackerFragment extends Fragment {
         final Button activitiesBtn = view.findViewById(R.id.activitiesBtn);
         final Button habitsBtn = view.findViewById(R.id.habitsBtn);
 
+        String prompt;
+        if (habitsToggled && activities.getChildCount() != 0) {
+            prompt = "Log a habit to reduce your carbon emissions!";
+            issuePrompt2.setText(prompt);
+            issuePrompt2.setVisibility(View.VISIBLE);
+        } else if (habitsToggled) {
+            prompt = "Click 'edit' to adopt a habit";
+            issuePrompt2.setText(prompt);
+            issuePrompt2.setVisibility(View.VISIBLE);
+        }
+        issuePrompt1.setVisibility(View.INVISIBLE);
 
 
         activitiesListener = new ValueEventListener() {
@@ -218,6 +230,13 @@ public class EcoTrackerFragment extends Fragment {
         calendar.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(MaterialCalendarView view, CalendarDay day, boolean s) {
+                if (habitsToggled) {
+                    String prompt = "Log a habit to reduce your carbon emissions!";
+                    issuePrompt2.setText(prompt);
+                } else {
+                    issuePrompt2.setVisibility(View.INVISIBLE);
+                } issuePrompt1.setVisibility(View.INVISIBLE);  //don't want a red warning star regardless
+
                 int d = day.getDay(); int m = day.getMonth(); int y = day.getYear();
                 String date1 = d + " " + months[m-1];
                 dateText.setText(date1);
@@ -231,8 +250,11 @@ public class EcoTrackerFragment extends Fragment {
         activitiesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //should clear the linearlayout of any views and display activity data as stored
-                //in firebase
+                String prompt = "Please select an activity to edit/delete";
+                issuePrompt2.setText(prompt);
+                issuePrompt2.setVisibility(View.INVISIBLE);
+                issuePrompt1.setVisibility(View.INVISIBLE);
+
                 habitsToggled = false;
                 switchToActivities();
             }
@@ -243,6 +265,14 @@ public class EcoTrackerFragment extends Fragment {
             public void onClick(View v) {
                 habitsToggled = true;
                 switchToHabits();
+
+                String prompt;
+                if (activities.getChildCount() != 0)
+                    prompt = "Log a habit to reduce your carbon emissions!";
+                else prompt = "Click 'edit' to adopt a habit";
+                issuePrompt2.setText(prompt);
+                issuePrompt2.setVisibility(View.VISIBLE);
+                issuePrompt1.setVisibility(View.INVISIBLE);
             }
         });
         //add activities
@@ -284,6 +314,8 @@ public class EcoTrackerFragment extends Fragment {
         delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String prompt = "Please select an activity to edit/delete";
+                issuePrompt2.setText(prompt);
                 if (!activitySelected(activities, issuePrompt1, issuePrompt2)) return;
                 int id = activities.getCheckedRadioButtonId();
 
@@ -407,6 +439,9 @@ public class EcoTrackerFragment extends Fragment {
 
                 if (id == -1) {
                     issuePrompt1.setVisibility(View.VISIBLE);
+
+                    String prompt = "You must select a habit to log";
+                    issuePrompt2.setText(prompt);
                     issuePrompt2.setVisibility(View.VISIBLE);
                     return;
                 }
@@ -464,8 +499,6 @@ public class EcoTrackerFragment extends Fragment {
         Button delBtn = globalView.findViewById(R.id.delBtn);
         Button editBtn = globalView.findViewById(R.id.editBtn);
         delBtn.setVisibility(View.VISIBLE);
-        TextView issuePrompt1 = globalView.findViewById(R.id.issuePrompt1);
-        TextView issuePrompt2 = globalView.findViewById(R.id.issuePrompt2);
 
         String t = "Add";
         addBtn.setText(t);
@@ -482,6 +515,7 @@ public class EcoTrackerFragment extends Fragment {
 
         activities.clearCheck(); activities.removeAllViews();
         emptyMsg.setVisibility(View.INVISIBLE);
+        emptyMsg.setText("No activities today yet");
 
         double emissions = 0.0;
         RadioButton btn;
@@ -510,9 +544,8 @@ public class EcoTrackerFragment extends Fragment {
 
     private boolean activitySelected(RadioGroup activities, TextView issuePrompt1,
                                      TextView issuePrompt2) {
-        if (activities.getChildCount() == 0) return false;  //if no activities, do nothing
         int id = activities.getCheckedRadioButtonId();
-        if (id == -1) {
+        if (activities.getChildCount() == 0 || id == -1) {
             issuePrompt1.setVisibility(View.VISIBLE);
             issuePrompt2.setVisibility(View.VISIBLE);
             return false;

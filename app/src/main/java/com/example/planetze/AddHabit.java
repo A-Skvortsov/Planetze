@@ -215,11 +215,15 @@ public class AddHabit extends Fragment {
         ListView list = view.findViewById(R.id.listView);  //habits populate this list container
 
         List<String> populatorList = new ArrayList<>();  //this will be used to populate the listview
-        for (int i = 0; i < habits.size(); i++)
-            populatorList.add(habits.get(i).get(1));  //1 corresponds to index of habit name
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
-                android.R.layout.simple_list_item_1, populatorList);
-        list.setAdapter(adapter);
+        if (habits != null) {
+            for (int i = 0; i < habits.size(); i++)
+                populatorList.add(habits.get(i).get(1));  //1 corresponds to index of habit name
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                    android.R.layout.simple_list_item_1, populatorList);
+            list.setAdapter(adapter);
+        } else {
+            list.setAdapter(null);
+        }
         //set this to default to prevent adopting/quitting habits that may no longer appear in the list
         selectedHabit = "";
     }
@@ -458,6 +462,7 @@ public class AddHabit extends Fragment {
         for (int i = 0; i < allHabits.size(); i++) {
             //second index of a habit in allHabits is the habit name
             if (habitToAdopt.equals(allHabits.get(i).get(1))) {
+                if (currentHabits == null) currentHabits = new ArrayList<>();
                 currentHabits.add(new ArrayList<>(allHabits.get(i)));  //add to current habits
                 allHabits.remove(i);  //remove from allHabits
 
@@ -590,70 +595,4 @@ public class AddHabit extends Fragment {
 
         return clonedList;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-    //commented code is deprecated.
-    /*
-     * Sets the filter spinner logic (i.e. what to do when selection of spinner changed)
-     * for category filter
-     * @param view
-     *
-    public void setCategoryFilterSpinnerListener(View view) {
-        Spinner categorySpinner = view.findViewById(R.id.categorySpinner);
-        categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                List<List<String>> habitList;
-                switch ((String) parent.getItemAtPosition(position)) {
-                    case "Select a category": return;
-                    case "Transportation":
-                        habitList = habitsByCategory.get(0); break;
-                    case "Food":
-                        habitList = habitsByCategory.get(1); break;
-                    case "Housing":
-                        habitList = habitsByCategory.get(2); break;
-                    default:  //"Consumption"
-                        habitList = habitsByCategory.get(3); break;
-                }
-                populateHabitList(globalView, habitList);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-    }
-
-    *
-     * Sets the filter spinner logic (i.e. what to do when selection of spinner changed)
-     * for impact level filter
-     * @param view
-     *
-    private void setImpactLevelFilterSpinnerListener(View view) {
-        Spinner impactSpinner = view.findViewById(R.id.impactSpinner);
-        impactSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (parent.getItemAtPosition(position).equals("Select an impact level")) return;
-                List<List<String>> habitList = new ArrayList<>();
-                for (int i = 1; i < parent.getCount(); i++) {
-                    if (parent.getItemAtPosition(position).equals(impacts[i])) {
-                        habitList = habitsByImpact.get(i-1);
-                    }
-                }
-                populateHabitList(globalView, habitList);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
-        });
-    }*/
-
 }

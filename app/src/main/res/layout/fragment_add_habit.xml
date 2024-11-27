@@ -126,6 +126,18 @@
             app:layout_constraintEnd_toEndOf="@+id/impactSpinner"
             app:layout_constraintTop_toBottomOf="@+id/impactSpinner" />
 
+        <TextView
+            android:id="@+id/recommendation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Adopt a habit from 'all habits' to start"
+            android:textStyle="bold|italic"
+            app:layout_constraintBottom_toBottomOf="@+id/listView"
+            app:layout_constraintEnd_toEndOf="@+id/listView"
+            app:layout_constraintStart_toStartOf="@+id/listView"
+            app:layout_constraintTop_toTopOf="@+id/listView"
+            android:visibility="invisible"/>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
