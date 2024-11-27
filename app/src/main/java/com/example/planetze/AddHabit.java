@@ -122,16 +122,13 @@ public class AddHabit extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 allHabits = (List<List<String>>) snapshot.getValue();
-                allHabits = removeDuplicates(allHabits, currentHabits);
-                populateHabitList(view, allHabits);
-
                 splitHabitsByCategory(view);  //initializes lists that sort habits by category/impact
                 splitHabitsByImpact(view);
+                allHabits = removeDuplicates(allHabits, currentHabits);  //for display purposes
+                populateHabitList(view, allHabits);
 
                 Button allHabitsBtn = globalView.findViewById(R.id.allHabitsBtn);
-                System.out.println("ok" + allHabitsBtn.isSelected());
                 initButtons(view);
-                System.out.println("ok2" + allHabitsBtn.isSelected());
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -229,20 +226,24 @@ public class AddHabit extends Fragment {
 
 
     private List<List<String>> setDisplayHabits(Spinner categorySpinner, Spinner impactSpinner) {
-        List<List<String>> habitList = clone(allHabits);
+        List<List<String>> habitList;
+        //either filters user's habits or all habits
+        if (viewingUserHabits()) habitList = clone(currentHabits);
+        else habitList = clone(allHabits);
+
         String category = (String) categorySpinner.getSelectedItem();
         String impactLevel = (String) impactSpinner.getSelectedItem();
 
         switch (category) {  //reduces habitList by category selection
             case "Select a category": break;
             case "Transportation":
-                habitList = clone(habitsByCategory.get(0)); break;
+                habitList.removeIf(n -> !habitsByCategory.get(0).contains(n)); break;
             case "Food":
-                habitList = clone(habitsByCategory.get(1)); break;
+                habitList.removeIf(n -> !habitsByCategory.get(1).contains(n)); break;
             case "Housing":
-                habitList = clone(habitsByCategory.get(2)); break;
+                habitList.removeIf(n -> !habitsByCategory.get(2).contains(n)); break;
             default:  //"Consumption"
-                habitList = clone(habitsByCategory.get(3)); break;
+                habitList.removeIf(n -> !habitsByCategory.get(3).contains(n)); break;
         }
 
         if (!impactLevel.equals("Select an impact level")) {
@@ -263,9 +264,11 @@ public class AddHabit extends Fragment {
 
     /**
      * Initializes buttons and button listener for "all habits" and "your habits" buttons
+     * and the "adopt"/"quit" button
      * @param view
      */
     private void initButtons(View view) {
+        setActionBtnListener(view);
         Button allHabitsBtn = view.findViewById(R.id.allHabitsBtn);
         Button yourHabitsBtn = view.findViewById(R.id.yourHabitsBtn);
         Button backBtn = view.findViewById(R.id.backBtn);
@@ -273,9 +276,11 @@ public class AddHabit extends Fragment {
         allHabitsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("all habits pressed");
+                Button allHabitsBtn = globalView.findViewById(R.id.allHabitsBtn);
                 Button yourHabitsBtn = globalView.findViewById(R.id.yourHabitsBtn);
                 Button actionBtn = globalView.findViewById(R.id.actionBtn);
+                allHabitsBtn.setSelected(true);
+                yourHabitsBtn.setSelected(false);
                 String s = "Adopt";
                 actionBtn.setText(s);
 
@@ -296,6 +301,8 @@ public class AddHabit extends Fragment {
                 Button allHabitsBtn = globalView.findViewById(R.id.allHabitsBtn);
                 Button yourHabitsBtn = globalView.findViewById(R.id.yourHabitsBtn);
                 Button actionBtn = globalView.findViewById(R.id.actionBtn);
+                yourHabitsBtn.setSelected(true);
+                allHabitsBtn.setSelected(false);
                 String s = "Quit";
                 actionBtn.setText(s);
 
@@ -313,7 +320,6 @@ public class AddHabit extends Fragment {
             @Override
             public void onClick(View v) {
                 EcoTrackerFragment.fetchSnapshot();
-                //getParentFragmentManager().popBackStack();
 
                 Bundle bundle = new Bundle();
                 bundle.putString("date", date);
@@ -415,6 +421,11 @@ public class AddHabit extends Fragment {
 
     //SELECT HABIT TO ADOPT/QUIT LOGIC
 
+    private boolean viewingUserHabits() {
+        Button btn = globalView.findViewById(R.id.yourHabitsBtn);
+        return btn.isSelected();
+    }
+
     private void setHabitListListeners(View view) {
         ListView list = view.findViewById(R.id.listView);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -441,20 +452,76 @@ public class AddHabit extends Fragment {
     }
 
 
+    /**
+     * Adopt a habit function
+     * @param habitToAdopt
+     */
     private void adoptHabit(String habitToAdopt) {
         ListView listView = globalView.findViewById(R.id.listView);
-        if (selectedHabit.equals("") || !contains(listView, selectedHabit)) return;
+        //should be viewing all habits. User habits are already adopted ones
+        if (viewingUserHabits()) return;
 
-        //otherwise adopt habit
+        for (int i = 0; i < allHabits.size(); i++) {
+            //second index of a habit in allHabits is the habit name
+            if (habitToAdopt.equals(allHabits.get(i).get(1))) {
+                currentHabits.add(new ArrayList<>(allHabits.get(i)));  //add to current habits
+                allHabits.remove(i);  //remove from allHabits
 
+                //update filter lists to be based on updated allHabits
+                splitHabitsByCategory(globalView);
+                splitHabitsByImpact(globalView);
+                break;
+            }
+        }
+
+        writeUsersHabitsToFirebase();
+        //returnToEcoTracker();
     }
 
 
     private void quitHabit(String habitToQuit) {
         ListView listView = globalView.findViewById(R.id.listView);
-        if (selectedHabit.equals("") || !contains(listView, selectedHabit)) return;
-        
-        //otherwise quit habit
+        //Should be viewing user habits. Those are the adopted ones that we can now quit
+        if (!viewingUserHabits()) return;
+
+        for (int i = 0; i < currentHabits.size(); i++) {
+            if (habitToQuit.equals(currentHabits.get(i).get(1))) {
+                allHabits.add(new ArrayList<>(currentHabits.get(i)));  //add to all habits
+                currentHabits.remove(i);  //remove from user habits
+
+                //update filter lists to be based on updated allHabits
+                splitHabitsByCategory(globalView);
+                splitHabitsByImpact(globalView);
+                break;
+            }
+        }
+
+        writeUsersHabitsToFirebase();
+        //returnToEcoTracker();
+    }
+
+
+    private void writeUsersHabitsToFirebase() {
+        DatabaseReference currentHabitsRef = db.getReference().child("user data")
+                .child(userId).child("current_habits");
+
+        currentHabitsRef.setValue(currentHabits)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("Firebase", "Data written successfully!");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firebase", "Failed to write data: " + e.getMessage());
+                });
+    }
+
+    private void returnToEcoTracker() {
+        EcoTrackerFragment.fetchSnapshot();
+        Bundle bundle = new Bundle();
+        bundle.putString("date", date);
+
+        NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
+                .findFragmentById(R.id.fragment));
+        navController.navigate(R.id.EcoTrackerFragment, bundle);
     }
 
 

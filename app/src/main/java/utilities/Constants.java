@@ -55,67 +55,6 @@ public class Constants {
             {"Select an Activity", "Meal"},
             {"Select an Activity", "Buy new clothes", "Buy electronics", "Other purchases"},
             {"Select an Activity", "Electricity", "Gas", "Water"}};
-    public static final String[][][][] activities1 = {
-            {  //transport category
-                    {  //drive personal vehicle
-                            {"Drive personal vehicle"},
-                            {},  //distance driven
-                            {}  //vehicle type (if not default)
-                    },
-                    {  //Take Public Transportation
-                            {"Take public transportation"},
-                            {},  //type of public transport
-                            {}  //time spent in hours
-                    },
-                    {  //Cycling or Walking
-                            {"Cycling/Walking"},
-                            {}  //distance cycled/walked
-                    },
-                    {  //Flight
-                            {"Flight"},
-                            {},  //num flights
-                            {}  //short or long haul
-                    }
-            },
-            {  //food category
-                    {
-                            {"Meal"},
-                            {},  //type of meal
-                            {}  //number of servings
-                    }
-            },
-            {  //consumption category
-                    {
-                            {"Buy new clothes"},
-                            {}  //number of clothing items purchased
-                    },
-                    {
-                            {"Buy electronics"},
-                            {},  //type of electronic device (smartphone, laptop, TV)
-                            {}  //number of devices purchased
-                    },
-                    {
-                            {"Other purchases"},
-                            {},  //type of purchase (i.e. furniture, appliance)
-                            {}  //number of purchases
-                    }
-            },
-            {  //energy bills
-                    {
-                            {"Electricity"},
-                            {}  //bill amount
-                    },
-                    {
-                            {"Gas"},
-                            {}  //bill amount
-                    },
-                    {
-                            {"Water"},
-                            {}  //bill amount
-                    }
-            }
-    };
-
 
     public static final String[] country = {
             "Afghanistan",
