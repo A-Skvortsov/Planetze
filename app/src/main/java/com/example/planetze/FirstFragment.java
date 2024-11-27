@@ -136,6 +136,8 @@ public class FirstFragment extends Fragment {
     }
 
     private void updateUI() {
+        System.out.println(userEmissionsData.getUserEmissionsDataKG(timePeriod));
+
         renderEmissionsViewText();
         renderLineChart(lineChart);
         renderPieChart(pieChart);
@@ -214,7 +216,8 @@ public class FirstFragment extends Fragment {
 
         GradientDrawable gradientDrawable = new GradientDrawable(
                 GradientDrawable.Orientation.TOP_BOTTOM,
-                new int[]{PALETTE_TURQUOISE_TINT_800, PALETTE_TURQUOISE_TINT_400});
+                new int[]{PALETTE_TURQUOISE_TINT_800, PALETTE_TURQUOISE_TINT_400}
+        );
         gradientDrawable.setCornerRadius(0f);
 
 
@@ -264,14 +267,11 @@ public class FirstFragment extends Fragment {
         Double countryPerCapitaEmissions = countryEmissions.getComparableEmissionsDataKG(country, timePeriod);
         float userEmissions = userEmissionsData.getUserEmissionsKG(timePeriod);
 
-        System.out.println(countryPerCapitaEmissions + ", " + userEmissions);
 
         if (countryPerCapitaEmissions == null) {
             comparisonChart.invalidate();
             return;
         }
-
-        System.out.println(countryPerCapitaEmissions.floatValue());
 
         BarEntry barEntry1 = new BarEntry(0, userEmissions);
         BarEntry barEntry2 = new BarEntry(1, countryPerCapitaEmissions.floatValue());

@@ -2,7 +2,8 @@ package utilities;
 
 import static utilities.Constants.DAILY;
 import static utilities.Constants.DEFAULT_DATE;
-import static utilities.Constants.EMISSIONS_INDEX;
+import static utilities.Constants.EMISSIONS_AMOUNT_INDEX;
+import static utilities.Constants.EMISSION_TYPE_INDEX;
 import static utilities.Constants.MONTHLY;
 import static utilities.Constants.WEEKLY;
 import static utilities.Constants.YEARLY;
@@ -11,17 +12,18 @@ import com.example.planetze.Database;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class UserEmissionsData {
     private String userId;
@@ -83,64 +85,12 @@ public class UserEmissionsData {
                     }
                 }
             }
-
             @Override
             public void onFailed(DatabaseError databaseError) {
                 System.out.println("FAIL");
                 if (listener != null) listener.onError("Error fetching data: " + databaseError.getMessage());
             }
         });
-    }
-
-
-    /**
-     * Gets the past 29 days of the calendar.
-     * @return
-     */
-    public List<String> getPast29Days(String date) {
-        List<String> past29Days = new ArrayList<>();
-
-        //convert date string to year, month, day integers
-        String[] ymdStrings = date.split("-");
-        int[] ymdInts = new int[3];
-        for (int i = 0; i < ymdStrings.length; i++)
-            ymdInts[i] = Integer.parseInt(ymdStrings[i]);
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(ymdInts[0],
-                ymdInts[1] - 1,  /* note here that months in Calendar class go from 0-11, but we have them set from 1-12. So subtract 1 from ours */
-                ymdInts[2]);
-        calendar.add(Calendar.DAY_OF_MONTH, -1);  //iterates back one day since saveActivity
-        //already adds the activity for the current day
-
-        //adds past 29 days
-        for (int i = 0; i < 29; i++) {
-            String d = calendar.get(Calendar.YEAR) +"-"+(calendar.get(Calendar.MONTH)+1)+"-"
-                    +calendar.get(Calendar.DAY_OF_MONTH);
-            past29Days.add(d);
-            calendar.add(Calendar.DAY_OF_MONTH, -1);  //iterates back one day
-        }
-
-        return past29Days;
-    }
-
-    public float getOverallEmissions() {
-        if (data.size() <= 1) {
-            return 0;
-        }
-
-        float emissions = 0;
-
-        Date c = Calendar.getInstance().getTime();
-
-        String formattedDate = simpleDateFormat.format(c);
-
-        while (!formattedDate.equals(DEFAULT_DATE)) {
-            emissions += sumEmissions(formattedDate);
-            formattedDate = getLastAvailableDate(formattedDate);
-        }
-
-        return emissions;
     }
 
     public float getUserEmissionsKG(char timePeriod) {
@@ -162,13 +112,13 @@ public class UserEmissionsData {
         }
     }
 
-    public Object getUserEmissionsDateKG(char timePeriod) {
+    public List<EmissionsNodeCollection> getUserEmissionsDataKG(char timePeriod) {
         if (data == null)
             return null;
 
         switch(timePeriod) {
             case DAILY:
-                return getUserDailyEmissionsData();
+                return getDailyEmissionsData();
             case MONTHLY:
                 return getMonthlyEmissionsData();
             case WEEKLY:
@@ -180,42 +130,45 @@ public class UserEmissionsData {
         }
     }
 
-    private Object getUserDailyEmissionsData() {
-        if (data.size() <= 1) {
-            return 0;
-        }
-
-        Date c = Calendar.getInstance().getTime();
-
-        String formattedDate = simpleDateFormat.format(c);
-
-        if (data.containsKey(formattedDate) && !formattedDate.equals(DEFAULT_DATE)) {
-            return data.get(formattedDate);
-        }
-
-        String lastAvailableDate = getLastAvailableDate(formattedDate);
-
-        // TODO: Change this to use the results from the survey
-        if (!lastAvailableDate.equals(DEFAULT_DATE)) {
-            return data.get(lastAvailableDate);
-        }
-        return null;
+    private float getDailyEmissions() {
+        return getTotalEmissions(1);
     }
 
-    private Object getWeeklyEmissionsData() {
-        return null;
+    private float getWeeklyEmissions() {
+        return getTotalEmissions(7);
     }
 
-    private Object getMonthlyEmissionsData() {
-        return null;
+    private float getMonthlyEmissions() {
+        return getTotalEmissions(31);
     }
 
-    private Object getOverallEmissionsData() {
-        return null;
+    private float getYearlyEmissions() {
+        return getTotalEmissions(365);
     }
 
-    private Object getYearlyEmissionsData() {
-        return null;
+    private float getOverallEmissions() {
+        return getTotalEmissions(Integer.MAX_VALUE);
+    }
+
+
+    private List<EmissionsNodeCollection> getDailyEmissionsData() {
+        return generatedEmissionsData(2);
+    }
+
+    private List<EmissionsNodeCollection> getWeeklyEmissionsData() {
+        return generatedEmissionsData(7);
+    }
+
+    private List<EmissionsNodeCollection> getMonthlyEmissionsData() {
+        return generatedEmissionsData(31);
+    }
+
+    private List<EmissionsNodeCollection> getYearlyEmissionsData() {
+        return generatedEmissionsData(365);
+    }
+
+    private List<EmissionsNodeCollection> getOverallEmissionsData() {
+        return generatedEmissionsData(Integer.MAX_VALUE);
     }
 
     private float getAverageEmissionsUpTo(String date) {
@@ -239,93 +192,31 @@ public class UserEmissionsData {
 
             List<List<Object>> activities = (List<List<Object>>) dateData;
 
+            assert activities != null;
             for (List<Object> activity : activities) {
-                emissions += Float.parseFloat((String) activity.get(EMISSIONS_INDEX));
+                emissions += Float.parseFloat((String) activity.get(EMISSIONS_AMOUNT_INDEX));
             }
         }
         return emissions / (float) (data.size() - 1);
     }
 
-    private float getDailyEmissions() {
-        if (data.size() <= 1) {
+    private float getTotalEmissions(int days) {
+        List<EmissionsNodeCollection> emissionsData = generatedEmissionsData(days);
+
+        if (emissionsData == null || emissionsData.isEmpty()) {
             return 0;
         }
 
-        System.out.println(getAverageEmissionsUpTo("2024-10-10"));
-
-        Date c = Calendar.getInstance().getTime();
-
-        String formattedDate = simpleDateFormat.format(c);
-
-        if (data.containsKey(formattedDate) && !formattedDate.equals(DEFAULT_DATE)) {
-            return sumEmissions(formattedDate);
+        float totalEmissions = 0;
+        for (EmissionsNodeCollection emissionsNodeCollection : emissionsData) {
+            for (EmissionNode node : emissionsNodeCollection.getData()) {
+                totalEmissions += node.getEmissionsAmount();
+            }
         }
 
-        String lastAvailableDate = getLastAvailableDate(formattedDate);
-
-        // TODO: Change this to use the results from the survey
-        if (!lastAvailableDate.equals(DEFAULT_DATE)) {
-            return sumEmissions(lastAvailableDate);
-        }
-        return 0;
+        return totalEmissions;
     }
 
-    private float getWeeklyEmissions() {
-        if (data.size() <= 1) {
-            return 0;
-        }
-
-        float emissions = 0;
-
-        Date c = Calendar.getInstance().getTime();
-
-        String formattedDate = simpleDateFormat.format(c);
-
-        for (int i = 0; i < 7; i++) {
-            emissions += sumEmissions(formattedDate);
-            formattedDate = getLastAvailableDate(formattedDate);
-        }
-
-        return emissions;
-    }
-
-    private float getMonthlyEmissions() {
-        if (data.size() <= 1) {
-            return 0;
-        }
-
-        float emissions = 0;
-
-        Date c = Calendar.getInstance().getTime();
-
-        String formattedDate = simpleDateFormat.format(c);
-
-        for (int i = 0; i < 365; i++) {
-            emissions += sumEmissions(formattedDate);
-            formattedDate = getLastAvailableDate(formattedDate);
-        }
-
-        return emissions;
-    }
-
-    private float getYearlyEmissions() {
-        if (data.size() <= 1) {
-            return 0;
-        }
-
-        float emissions = 0;
-
-        Date c = Calendar.getInstance().getTime();
-
-        String formattedDate = simpleDateFormat.format(c);
-
-        for (int i = 0; i < 365; i++) {
-            emissions += sumEmissions(formattedDate);
-            formattedDate = getLastAvailableDate(formattedDate);
-        }
-
-        return emissions;
-    }
 
     private float sumEmissions(String date) {
         if (data == null || !data.containsKey(date) || date.equals(DEFAULT_DATE)) {
@@ -339,7 +230,7 @@ public class UserEmissionsData {
 
         assert activities != null;
         for (List<Object> activity : activities) {
-            emissions += Float.parseFloat((String) activity.get(EMISSIONS_INDEX));
+            emissions += Float.parseFloat((String) activity.get(EMISSIONS_AMOUNT_INDEX));
         }
 
         return emissions;
@@ -382,4 +273,144 @@ public class UserEmissionsData {
         return calendar.get(Calendar.YEAR) +"-"+(calendar.get(Calendar.MONTH)+1)+"-"
                 +calendar.get(Calendar.DAY_OF_MONTH);
     }
+
+    public List<EmissionsNodeCollection> generatedEmissionsData(int days) {
+        // Make sure there is enough data to use to interpolate
+        if (data == null || data.size() < 2) {
+            return null;
+        }
+
+        Date date = Calendar.getInstance().getTime();
+        String x2 = simpleDateFormat.format(date);
+        String x1 = x2;
+
+        Set<String> addedDates = new HashSet<>();
+
+        List<EmissionsNodeCollection> chartData = new ArrayList<>();
+
+
+        for (int i = sortedDates.size() - 1; i >= 1; i--) {
+            if (sortedDates.contains(x2) && !addedDates.contains(x2)) {
+                EmissionsNodeCollection collection = dataToEmissionsNodesCollection(x2, data.get(x2));
+                chartData.add(0, collection);
+                addedDates.add(x2);
+                x2 = getTheDayBefore(x2);
+                x1 = getLastAvailableDate(x2);
+            } else if (chartData.isEmpty()) {
+                x1 = getLastAvailableDate(x2);
+                EmissionsNodeCollection collection = dataToEmissionsNodesCollection(x2, data.get(x1));
+                chartData.add(0, collection);
+                addedDates.add(x2);
+                x2 = getTheDayBefore(x2);
+                x1 = getLastAvailableDate(x2);
+            } else {
+                EmissionsNodeCollection dataForX1 = dataToEmissionsNodesCollection(x1, data.get(x1));
+
+                EmissionsNodeCollection interpolatedCollection = interpolateData(dataForX1, chartData.get(0), x2);
+                chartData.add(0, interpolatedCollection);
+                addedDates.add(x2);
+
+                x2 = getTheDayBefore(x2);
+                x1 = getLastAvailableDate(x2);
+            }
+
+            if (chartData.size() == days) {
+                break;
+            }
+        }
+
+        return chartData;
+    }
+
+    private EmissionsNodeCollection interpolateData(EmissionsNodeCollection data1, EmissionsNodeCollection data2, String newDate) {
+        if (daysBetweenDates(data1.getDate(), data2.getDate()) < 0
+                && daysBetweenDates(data1.getDate(), newDate) <= 0
+                && daysBetweenDates(newDate, data2.getDate()) >= 0) {
+            return null;
+        }
+
+        EmissionsNodeCollection interpolatedCollection = new EmissionsNodeCollection(newDate);
+
+        ArrayList<EmissionNode> nodes1 = data1.getData();
+        ArrayList<EmissionNode> nodes2 = data2.getData();
+
+        Map<String, Float> emissionMap1 = new HashMap<>();
+        Map<String, Float> emissionMap2 = new HashMap<>();
+
+        for (EmissionNode node : nodes1) {
+            emissionMap1.put(node.getEmissionType(), node.getEmissionsAmount());
+        }
+
+        for (EmissionNode node : nodes2) {
+            emissionMap2.put(node.getEmissionType(), node.getEmissionsAmount());
+        }
+
+        Set<String> allEmissionTypes = new HashSet<>(emissionMap1.keySet());
+        allEmissionTypes.addAll(emissionMap2.keySet());
+
+        for (String emissionType : allEmissionTypes) {
+            float value1 = emissionMap1.getOrDefault(emissionType, 0f);
+            float value2 = emissionMap2.getOrDefault(emissionType, 0f);
+
+            int daysBetweenData1AndNewDate = daysBetweenDates(data1.getDate(), newDate);
+            int daysBetweenData1AndData2 = daysBetweenDates(data1.getDate(), data2.getDate());
+
+            // Apply the linear interpolation formula to estimate the emissions value
+            float interpolatedEmissionsValue = value1 + ((value2 - value1) * daysBetweenData1AndNewDate) / daysBetweenData1AndData2;
+
+            EmissionNode interpolatedNode = new EmissionNode(emissionType, interpolatedEmissionsValue);
+
+            interpolatedCollection.addData(interpolatedNode);
+        }
+
+        return interpolatedCollection;
+    }
+
+
+
+    private int daysBetweenDates(String date1, String date2) {
+        if (date1 == null || date2 == null) {
+            return -1;
+        }
+
+        try {
+            Date parsedDate1 = simpleDateFormat.parse(date1);
+            Date parsedDate2 = simpleDateFormat.parse(date2);
+
+            // Make sure the parsed dates are not null
+            assert parsedDate1 != null;
+            assert parsedDate2 != null;
+
+            // Calculate the time difference between the two dates in milliseconds
+            long diffInMillis = parsedDate2.getTime() - parsedDate1.getTime();
+
+            // Convert the time difference in milliseconds to days
+            return (int) (diffInMillis / (1000 * 60 * 60 * 24));
+        } catch(ParseException e) {
+            throw new RuntimeException("An error occurred while the program was calculated the "
+                                        + "number of days between to dates. " + e);
+        }
+
+    }
+
+    public EmissionsNodeCollection dataToEmissionsNodesCollection(String date, Object data) {
+        if (data == null) {
+            return null;
+        }
+
+        EmissionsNodeCollection collection = new EmissionsNodeCollection(date);
+
+        List<List<Object>> dataList = (List<List<Object>>) data;
+
+        for (List<Object> row : dataList) {
+            String emissionType = (String) row.get(EMISSION_TYPE_INDEX);
+            float emissionAmount = Float.parseFloat(row.get(EMISSIONS_AMOUNT_INDEX).toString());
+
+            EmissionNode node = new EmissionNode(emissionType, emissionAmount);
+            collection.addData(node);
+        }
+
+        return collection;
+    }
+
 }

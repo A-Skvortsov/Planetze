@@ -14,7 +14,8 @@ public class Constants {
     public static final char OVERALL = 'O';
 
 
-    public static final int EMISSIONS_INDEX = 2;
+    public static final int EMISSION_TYPE_INDEX = 0;
+    public static final int EMISSIONS_AMOUNT_INDEX = 2;
 
     public static final int transport_qs = 7;  //number of qs in transport category
     public static final int food_qs = 6;
