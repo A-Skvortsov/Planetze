@@ -1,6 +1,5 @@
 package com.example.planetze;
 
-import android.app.Dialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,31 +11,26 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.planetze.Login.LoginView;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link UserOptions#newInstance} factory method to
+ * Use the {@link UserSettingsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UserOptions extends Fragment {
+public class UserSettingsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private DatabaseReference userRef;
-    private FirebaseDatabase db;
+    private Button logoutButton;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    private View settingView;
-
-    public UserOptions() {
+    public UserSettingsFragment() {
         // Required empty public constructor
     }
 
@@ -46,11 +40,11 @@ public class UserOptions extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment UserOptions.
+     * @return A new instance of fragment UserSettingsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static UserOptions newInstance(String param1, String param2) {
-        UserOptions fragment = new UserOptions();
+    public static UserSettingsFragment newInstance(String param1, String param2) {
+        UserSettingsFragment fragment = new UserSettingsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -71,21 +65,13 @@ public class UserOptions extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_user_options, container, false);
-        settingView = inflater.inflate(R.layout.fragment_user_settings, container, false);
+        return inflater.inflate(R.layout.fragment_user_settings, container, false);
+    }
 
+    public Button setButtons(View view) {
+        logoutButton = view.findViewById(R.id.logout_button);
 
-        db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-        userRef = db.getReference("user data");
-
-        String userID = UserData.getUserID(getContext());
-
-        Button userSettingsButton = view.findViewById(R.id.button);
-
-        UserSettingsFragment setup = new UserSettingsFragment();
-        //setup.setButtons(settingView);
-
-        Button logoutButton = setup.setButtons(settingView);
+        /*
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,28 +81,9 @@ public class UserOptions extends Fragment {
             }
         });
 
-        userSettingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //logout();
-                popup();
-
-            }
-        });
-
-
-        return view;
-    }
-
-    private void logout() {
-        UserData.logout(getContext());
-        loadFragment(new LoginView());
-    }
-
-    private void popup() {
-        Dialog dialog = new Dialog(getContext());
-        dialog.setContentView(R.layout.fragment_user_settings);
-        dialog.show();
+         */
+        return logoutButton;
+        //View view = inflater.inflate(R.layout.fragment_user_settings, container, false);
     }
 
     private void loadFragment(Fragment fragment) {
@@ -126,3 +93,5 @@ public class UserOptions extends Fragment {
         transaction.commit();
     }
 }
+
+

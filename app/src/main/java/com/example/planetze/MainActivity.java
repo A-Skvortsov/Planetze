@@ -9,6 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.planetze.Login.LoginView;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -51,7 +53,8 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             //onOpenApp();
             //loadFragment(new EcoTrackerFragment());
-            loadFragment(new UserOptions());
+            //loadFragment(new UserOptions());
+            loadFragment(new SignUpFragment());
         }
     }
 

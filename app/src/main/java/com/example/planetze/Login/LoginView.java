@@ -20,7 +20,10 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.planetze.EcoTrackerFragment;
 import com.example.planetze.ForgotPasswordFragment;
@@ -131,7 +134,15 @@ public class LoginView extends Fragment  {
     }
 
     public void takeToHub() {
-        loadFragment(new EcoTrackerFragment());
+
+        //Bundle bundle = new Bundle();
+        System.out.println(getActivity().getSupportFragmentManager().findFragmentById(R.id.LoginView) == null);
+        //requireActivity().getSupportFragmentManager().executePendingTransactions();
+        Fragment f = requireActivity().getSupportFragmentManager().findFragmentById(R.id.fragment);
+        NavController navController = NavHostFragment.findNavController(f);
+        navController.navigate(R.id.EcoTrackerFragment);
+
+        //loadFragment(new EcoTrackerFragment());
     }
 
     private void loadFragment(Fragment fragment) {
@@ -154,6 +165,8 @@ public class LoginView extends Fragment  {
                     }
                 });
     }
+
+    //take to home fragment and connect so bottem bar can show
 
     public void startGoogleSignin() {
         GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)

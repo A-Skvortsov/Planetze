@@ -25,4 +25,23 @@
             android:id="@+id/action_SecondFragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/LoginView"
+        android:name="com.example.planetze.Login.LoginView"
+        android:label="@string/login_label"
+        tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/action_LoginView_to_EcoTrackerFragment"
+            app:destination="@id/EcoTrackerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/EcoTrackerFragment"
+        android:name="com.example.planetze.EcoTrackerFragment"
+        android:label=" Eco Tracker"
+        tools:layout="@layout/fragment_eco_tracker">
+    </fragment>
+
 </navigation>

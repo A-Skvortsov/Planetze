@@ -12,6 +12,8 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.planetze.EcoTrackerFragment;
 import com.example.planetze.HomeFragment;
@@ -76,6 +78,10 @@ public class LoginModel {
 
     private void takeToHomePage(LoginPresenter presenter) {
         //change this later
+
+        presenter.takeToHub();
+
+        /*
         userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -94,9 +100,10 @@ public class LoginModel {
                         break;
                     }
                 }
-                //presenter.takeToHub();
             }
         });
+
+         */
     }
 
     public void onSignInResult(ActivityResult result, LoginPresenter presenter) {
