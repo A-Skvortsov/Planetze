@@ -319,13 +319,7 @@ public class AddHabit extends Fragment {
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EcoTrackerFragment.fetchSnapshot();
-
-                Bundle bundle = new Bundle();
-                bundle.putString("date", date);
-                NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment));
-                navController.navigate(R.id.EcoTrackerFragment, bundle);
+                returnToEcoTracker();
             }
         });
 
@@ -475,7 +469,7 @@ public class AddHabit extends Fragment {
         }
 
         writeUsersHabitsToFirebase();
-        //returnToEcoTracker();
+        returnToEcoTracker();
     }
 
 
@@ -497,7 +491,7 @@ public class AddHabit extends Fragment {
         }
 
         writeUsersHabitsToFirebase();
-        //returnToEcoTracker();
+        returnToEcoTracker();
     }
 
 
@@ -518,6 +512,7 @@ public class AddHabit extends Fragment {
         EcoTrackerFragment.fetchSnapshot();
         Bundle bundle = new Bundle();
         bundle.putString("date", date);
+        bundle.putBoolean("habitsToggled", true);
 
         NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
                 .findFragmentById(R.id.fragment));
