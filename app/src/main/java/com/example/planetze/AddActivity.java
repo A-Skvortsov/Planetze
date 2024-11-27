@@ -65,8 +65,8 @@ public class AddActivity extends Fragment {
     private boolean spinnerListeners = false;
     private int id = 0;
     private String default_car = "none";
-    FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-    String userId = "QMCLRlEKD9h2Np1II1vrNU0vpxt2";  //this should be changed to the particular logged in user once everything works
+    static FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+    static String userId = "QMCLRlEKD9h2Np1II1vrNU0vpxt2";  //this should be changed to the particular logged in user once everything works
     int recursionLimiter = 0;
 
     public AddActivity() {
@@ -473,7 +473,7 @@ public class AddActivity extends Fragment {
     }
 
 
-    public void writeToFirebase(String date, List<String> activity) {
+    public static void writeToFirebase(String date, List<String> activity) {
         DatabaseReference calendarRef = db.getReference("user data")
                 .child(userId).child("calendar");
 
