@@ -46,10 +46,12 @@ public class MainActivity extends AppCompatActivity {
          */
 
         initilizeData();
+        //UserData.logout(getApplicationContext());
 
         if (savedInstanceState == null) {
             //onOpenApp();
-            loadFragment(new EcoTrackerFragment());
+            //loadFragment(new EcoTrackerFragment());
+            loadFragment(new UserOptions());
         }
     }
 
