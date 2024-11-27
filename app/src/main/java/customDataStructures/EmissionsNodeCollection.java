@@ -1,4 +1,4 @@
-package utilities;
+package customDataStructures;
 
 import androidx.annotation.NonNull;
 
@@ -7,6 +7,8 @@ import java.util.ArrayList;
 public class EmissionsNodeCollection {
     private String date;
     private ArrayList<EmissionNode> data;
+
+    private boolean interpolated;
 
     public EmissionsNodeCollection(String date) {
         this.date = date;

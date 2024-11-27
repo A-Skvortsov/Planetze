@@ -20,7 +20,6 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,12 +54,13 @@ import java.util.List;
 import java.util.Map;
 
 import utilities.CountryEmissionsData;
-import utilities.EmissionNode;
-import utilities.EmissionsNodeCollection;
+import customDataStructures.EmissionNode;
+import customDataStructures.EmissionsNodeCollection;
 import utilities.UserEmissionsData;
 
 public class FirstFragment extends Fragment {
 
+    private View view;
     private LineChart lineChart;
     private PieChart pieChart;
     private BarChart comparisonChart;
@@ -68,6 +68,7 @@ public class FirstFragment extends Fragment {
     private UserEmissionsData userEmissionsData;
     private TextView emissionsOverviewTextView;
     private Spinner comparisonSpinner;
+    private TextView comparisonPercentageText;
 
     private char timePeriod;
 
@@ -77,16 +78,19 @@ public class FirstFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_first, container, false);
 
+        this.view = view;
+
         this.lineChart = view.findViewById(R.id.line_chart);
         this.pieChart = view.findViewById(R.id.pie_chart);
         this.comparisonChart = view.findViewById(R.id.bar_chart);
         this.countryEmissions = new CountryEmissionsData(requireContext());
         this.emissionsOverviewTextView = view.findViewById(R.id.emissions_overview_textview);
         this.comparisonSpinner = view.findViewById(R.id.spinner);
+        this.comparisonPercentageText = view.findViewById(R.id.comparison_percentage_text);
 
         this.timePeriod = OVERALL;
 
-        // TODO: THE ID BELOW SHOULD BE CHANGED TO ACCURATELY REPRESENT THE USER LOGGED IN
+        // TODO: THE SOURCE OF THE ID BELOW SHOULD BE CHANGED TO ACCURATELY REFLECT THE CURRENT USER
         this.userEmissionsData = new UserEmissionsData("QMCLRlEKD9h2Np1II1vrNU0vpxt2", new UserEmissionsData.DataReadyListener() {
             @Override
             public void onDataReady() {
@@ -160,7 +164,7 @@ public class FirstFragment extends Fragment {
         int init = adapter.getPosition(default_country);
         comparisonSpinner.setSelection(init);
 
-        renderComparisonChart(comparisonChart, default_country);  //set UI
+        renderComparisonChart(comparisonChart, default_country);
     }
 
     private void renderEmissionsViewText() {
@@ -299,6 +303,8 @@ public class FirstFragment extends Fragment {
         comparisonChart.getDescription().setText("");
 
         comparisonChart.animateY(2000, Easing.EaseInOutExpo);
+
+        showComparisonPercentage(userEmissions, countryPerCapitaEmissions.floatValue());
     }
 
     private PieDataSet getPieDataSet() {
@@ -326,5 +332,24 @@ public class FirstFragment extends Fragment {
         }
 
         return new PieDataSet(pieEntries, "");
+    }
+
+    private void showComparisonPercentage(float userEmissions, float countryPerCapitaEmissions) {
+        if (userEmissions > countryPerCapitaEmissions) {
+            double percentage = Math.round(((userEmissions - countryPerCapitaEmissions)
+                    / countryPerCapitaEmissions * 100.0) * 10) / 10.0;
+            String text = "+" + percentage + "%";
+            comparisonPercentageText.setText(text);
+            comparisonPercentageText.setTextColor(Color.RED);
+        } else if (userEmissions < countryPerCapitaEmissions) {
+            double percentage = Math.round(((countryPerCapitaEmissions - userEmissions)
+                    / countryPerCapitaEmissions * 100.0) * 10) / 10.0;
+            String text = "-" + percentage + "%";
+            comparisonPercentageText.setText(text);
+            comparisonPercentageText.setTextColor(Color.GREEN);
+        } else {
+            comparisonPercentageText.setText("0.0%");
+            comparisonPercentageText.setTextColor(Color.GRAY);
+        }
     }
 }

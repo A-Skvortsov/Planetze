@@ -1,4 +1,4 @@
-package utilities;
+package customDataStructures;
 
 public class EmissionNode {
     private String emissionType;

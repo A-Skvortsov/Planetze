@@ -63,4 +63,6 @@
     <string name="_1y">1Y</string>
     <string name="all">ALL</string>
     <string name="_1w">1W</string>
+    <string name="piechart">PieChart</string>
+    <string name="n_a">N/A</string>
 </resources>

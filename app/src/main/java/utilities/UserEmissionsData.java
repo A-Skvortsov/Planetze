@@ -25,6 +25,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import customDataStructures.EmissionNode;
+import customDataStructures.EmissionsNodeCollection;
+
 public class UserEmissionsData {
     private String userId;
     private HashMap<String, Object> data;
