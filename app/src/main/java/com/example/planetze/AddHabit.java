@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.RadioButton;
+import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Spinner;
 
@@ -223,7 +223,23 @@ public class AddHabit extends Fragment {
      * @param view
      */
     private void splitHabitsByImpact(View view) {
+        habitsByImpact = new ArrayList<>();
+        for (int i = 0; i < impacts.length - 1; i++) {  //initializes the list
+            habitsByImpact.add(new ArrayList<>());
+        }
 
+        int impact = 0;
+        for (int i = 0; i < allHabits.size(); i++) {
+            impact = getImpactLevel(allHabits.get(i));
+            if (impact <= 25) {  //for hard coded constants 25, 50, see "impact" array in Constants.java
+                habitsByImpact.get(0).add(allHabits.get(i));
+            } else if (impact <= 50) {
+                habitsByImpact.get(1).add(allHabits.get(i));
+            } else {
+                habitsByImpact.get(2).add(allHabits.get(i));
+            }
+        }
+        System.out.println(habitsByImpact);
     }
 
 
@@ -272,21 +288,82 @@ public class AddHabit extends Fragment {
         i = adapter.getPosition("Select an impact level");
         impactSpinner.setSelection(i);
 
-        setFilterSpinnerListeners(view);
+        setApplyFilterBtnListener(view);
+        setCategoryFilterSpinnerListener(view);
+        setImpactLevelFilterSpinnerListener(view);
     }
+
+    private void setApplyFilterBtnListener(View view) {
+        Button btn = view.findViewById(R.id.applyFilterBtn);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Spinner categorySpinner = globalView.findViewById(R.id.categorySpinner);
+                Spinner impactSpinner = globalView.findViewById(R.id.impactSpinner);
+
+                List<List<String>> habits = setDisplayHabits(categorySpinner, impactSpinner);
+                populateHabitList(globalView, habits);
+            }
+        });
+    }
+
+    private List<List<String>> setDisplayHabits(Spinner categorySpinner, Spinner impactSpinner) {
+        List<List<String>> habitList = new ArrayList<>();
+        String category = (String) categorySpinner.getSelectedItem();
+        String impactLevel = (String) impactSpinner.getSelectedItem();
+
+        switch (category) {  //reduces habitList by category selection
+            case "Select a category": habitList = allHabits;
+            case "Transportation":
+                habitList = habitsByCategory.get(0); break;
+            case "Food":
+                habitList = habitsByCategory.get(1); break;
+            case "Housing":
+                habitList = habitsByCategory.get(2); break;
+            default:  //"Consumption"
+                habitList = habitsByCategory.get(3); break;
+        }
+
+        if (!impactLevel.equals("Select an impact level")) {
+            for (int i = 1; i < impacts.length; i++) {
+                if (impactLevel.equals(impacts[i])) {
+                    //habitList = habitsByImpact.get(i - 1);
+                    //for (int j = 0; j <) //reduce to habits matching impact level
+
+                    break;
+                }
+            }
+        }
+        populateHabitList(globalView, habitList);
+
+
+        return habitList;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /**
      * Sets the filter spinner logic (i.e. what to do when selection of spinner changed)
+     * for category filter
      * @param view
      */
-    public void setFilterSpinnerListeners(View view) {
+    public void setCategoryFilterSpinnerListener(View view) {
         Spinner categorySpinner = view.findViewById(R.id.categorySpinner);
-
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (parent.getItemAtPosition(position).equals("Select a category")) return;
                 List<List<String>> habitList;
                 switch ((String) parent.getItemAtPosition(position)) {
                     case "Select a category": return;
@@ -304,7 +381,44 @@ public class AddHabit extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
+    }
+
+    /**
+     * Sets the filter spinner logic (i.e. what to do when selection of spinner changed)
+     * for impact level filter
+     * @param view
+     */
+    private void setImpactLevelFilterSpinnerListener(View view) {
+        Spinner impactSpinner = view.findViewById(R.id.impactSpinner);
+        impactSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (parent.getItemAtPosition(position).equals("Select an impact level")) return;
+                List<List<String>> habitList = new ArrayList<>();
+                for (int i = 1; i < parent.getCount(); i++) {
+                    if (parent.getItemAtPosition(position).equals(impacts[i])) {
+                        habitList = habitsByImpact.get(i-1);
+                    }
+                }
+                populateHabitList(globalView, habitList);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
 
 
+    /**
+     * Computes impact level (in kg of CO2) of a particular habit
+     * @param habit the habit to compute the impact level for
+     * @return
+     */
+    private int getImpactLevel(List<String> habit) {
+        String str = habit.get(2);  //3rd index always contains impact level
+        int i = Math.abs(Integer.valueOf(str));  //we just use positive values for comparison **
+        return i;
+
+        //** in reality, all habits have a negative value for impact level, representing
+        //lowered CO2 emissions. Habits are meant to be good deeds that lower your CO2
     }
 }
