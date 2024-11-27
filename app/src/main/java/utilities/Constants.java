@@ -48,7 +48,7 @@ public class Constants {
 
 
     public static final String[] activityCats = {"Select a Category",
-            "Transportation", "Food", "Consumption", "Bills"};
+            "Transportation", "Food", "Consumption", "Energy"};
     public static final String[][] activities = {
             {"Select an Activity", "Drive personal vehicle", "Take public transportation",
                     "Cycling/Walking", "Flight (< 1,500km)", "Flight (> 1,500km)"},

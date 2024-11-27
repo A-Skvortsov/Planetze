@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -40,6 +42,7 @@ public class AddHabit extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
     private String mParam2;
+    private String date;
     private View globalView;
     private final String[] categories = Constants.categories;
     private final String[] impacts = Constants.impacts;
@@ -49,6 +52,7 @@ public class AddHabit extends Fragment {
     List<List<String>> currentHabits;
     List<List<List<String>>> habitsByCategory;
     List<List<List<String>>> habitsByImpact;
+    String selectedHabit = "";
 
 
     public AddHabit() {
@@ -85,6 +89,9 @@ public class AddHabit extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Bundle args = getArguments();  //needed solely for when returning to EcoTracker
+        date = args.getString("date");
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_habit, container, false);
         globalView = view;
@@ -93,10 +100,16 @@ public class AddHabit extends Fragment {
 
         attachSearchToList(view);
         initFilterSpinners(view);
+        setHabitListListeners(view);
 
         return view;
     }
 
+
+
+
+
+    //HABIT RETRIEVAL LOGIC
 
     /**
      * Populates the searchable list of habits with available habits
@@ -114,41 +127,15 @@ public class AddHabit extends Fragment {
 
                 splitHabitsByCategory(view);  //initializes lists that sort habits by category/impact
                 splitHabitsByImpact(view);
+
+                Button allHabitsBtn = globalView.findViewById(R.id.allHabitsBtn);
+                System.out.println("ok" + allHabitsBtn.isSelected());
+                initButtons(view);
+                System.out.println("ok2" + allHabitsBtn.isSelected());
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
-    }
-
-
-    /**
-     * related to UI; making the habit list searchable via the SearchView
-     * @param view
-     */
-    private void attachSearchToList(View view) {
-        SearchView searchView = view.findViewById(R.id.searchView);
-        ListView listView = view.findViewById(R.id.listView);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                //filters listView results based on "query" (search string)
-                ArrayAdapter adapter = (ArrayAdapter) listView.getAdapter();
-                if (adapter != null)
-                    adapter.getFilter().filter(query);
-                else Log.d("SearchView: ", "adapter is null");
-                return false;
-            }
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                //filters listView results as search string updates
-                ArrayAdapter adapter = (ArrayAdapter) listView.getAdapter();
-                if (adapter != null)
-                    adapter.getFilter().filter(newText);
-                else Log.d("SearchView: ", "adapter is null");
-                return false;
             }
         });
     }
@@ -176,25 +163,6 @@ public class AddHabit extends Fragment {
 
 
     /**
-     * Removes duplicates between two lists of lists of strings.
-     * Use: for removing the user's already adopted habits from the total habit list
-     * (we only give them the option to add habits they haven't already added)
-     * @param allHabits
-     * @param currentHabits
-     * @return
-     */
-    private List<List<String>> removeDuplicates(List<List<String>> allHabits,
-                                                List<List<String>> currentHabits) {
-        if (currentHabits == null || currentHabits.isEmpty()) return allHabits;
-        for (int i = 0; i < currentHabits.size(); i++) {
-            //if currentHabits.get(i) not in allHabits, does nothing
-            allHabits.remove(currentHabits.get(i));
-        }
-        return allHabits;
-    }
-
-
-    /**
      * Splits entire collection of all possible habits down into the four categories
      * for filtering search
      * @param view
@@ -214,7 +182,6 @@ public class AddHabit extends Fragment {
                 }
             }
         }
-        System.out.println(habitsByCategory);
     }
 
 
@@ -239,7 +206,6 @@ public class AddHabit extends Fragment {
                 habitsByImpact.get(2).add(allHabits.get(i));
             }
         }
-        System.out.println(habitsByImpact);
     }
 
 
@@ -257,9 +223,112 @@ public class AddHabit extends Fragment {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_list_item_1, populatorList);
         list.setAdapter(adapter);
+        //set this to default to prevent adopting/quitting habits that may no longer appear in the list
+        selectedHabit = "";
     }
 
 
+    private List<List<String>> setDisplayHabits(Spinner categorySpinner, Spinner impactSpinner) {
+        List<List<String>> habitList = clone(allHabits);
+        String category = (String) categorySpinner.getSelectedItem();
+        String impactLevel = (String) impactSpinner.getSelectedItem();
+
+        switch (category) {  //reduces habitList by category selection
+            case "Select a category": break;
+            case "Transportation":
+                habitList = clone(habitsByCategory.get(0)); break;
+            case "Food":
+                habitList = clone(habitsByCategory.get(1)); break;
+            case "Housing":
+                habitList = clone(habitsByCategory.get(2)); break;
+            default:  //"Consumption"
+                habitList = clone(habitsByCategory.get(3)); break;
+        }
+
+        if (!impactLevel.equals("Select an impact level")) {
+            for (int i = 1; i < impacts.length; i++) {
+                if (impactLevel.equals(impacts[i])) {
+                    final int x = i;
+                    //predicate argument translates to; if habitList(index) not in
+                    //habitsByImpact(particular impact level), then remove index from habitList
+                    habitList.removeIf(n -> !habitsByImpact.get(x-1).contains(n));
+                    break;
+                }
+            }
+        }
+
+        return habitList;
+    }
+
+
+    /**
+     * Initializes buttons and button listener for "all habits" and "your habits" buttons
+     * @param view
+     */
+    private void initButtons(View view) {
+        Button allHabitsBtn = view.findViewById(R.id.allHabitsBtn);
+        Button yourHabitsBtn = view.findViewById(R.id.yourHabitsBtn);
+        Button backBtn = view.findViewById(R.id.backBtn);
+
+        allHabitsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("all habits pressed");
+                Button yourHabitsBtn = globalView.findViewById(R.id.yourHabitsBtn);
+                Button actionBtn = globalView.findViewById(R.id.actionBtn);
+                String s = "Adopt";
+                actionBtn.setText(s);
+
+                //resets filter
+                Spinner categorySpinner = globalView.findViewById(R.id.categorySpinner);
+                categorySpinner.setSelection(0);
+                Spinner impactSpinner = globalView.findViewById(R.id.impactSpinner);
+                impactSpinner.setSelection(0);
+
+                //resets displayed habits list to all habits
+                populateHabitList(globalView, allHabits);
+            }
+        });
+
+        yourHabitsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Button allHabitsBtn = globalView.findViewById(R.id.allHabitsBtn);
+                Button yourHabitsBtn = globalView.findViewById(R.id.yourHabitsBtn);
+                Button actionBtn = globalView.findViewById(R.id.actionBtn);
+                String s = "Quit";
+                actionBtn.setText(s);
+
+                Spinner categorySpinner = globalView.findViewById(R.id.categorySpinner);
+                categorySpinner.setSelection(0);
+                Spinner impactSpinner = globalView.findViewById(R.id.impactSpinner);
+                impactSpinner.setSelection(0);
+
+                //resets displayed habits list to user's current habits
+                populateHabitList(globalView, currentHabits);
+            }
+        });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EcoTrackerFragment.fetchSnapshot();
+                //getParentFragmentManager().popBackStack();
+
+                Bundle bundle = new Bundle();
+                bundle.putString("date", date);
+                NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
+                        .findFragmentById(R.id.fragment));
+                navController.navigate(R.id.EcoTrackerFragment, bundle);
+            }
+        });
+
+    }
+
+
+
+
+    //SEARCH/FILTER SEARCH LOGIC
 
     /**
      * initializes spinners for filtering habits
@@ -289,9 +358,41 @@ public class AddHabit extends Fragment {
         impactSpinner.setSelection(i);
 
         setApplyFilterBtnListener(view);
-        setCategoryFilterSpinnerListener(view);
-        setImpactLevelFilterSpinnerListener(view);
+        //setCategoryFilterSpinnerListener(view);
+        //setImpactLevelFilterSpinnerListener(view);
     }
+
+
+    /**
+     * related to UI; making the habit list searchable via the SearchView
+     * @param view
+     */
+    private void attachSearchToList(View view) {
+        SearchView searchView = view.findViewById(R.id.searchView);
+        ListView listView = view.findViewById(R.id.listView);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                //filters listView results based on "query" (search string)
+                ArrayAdapter adapter = (ArrayAdapter) listView.getAdapter();
+                if (adapter != null) {
+                    adapter.getFilter().filter(query);
+                } else Log.d("SearchView: ", "adapter is null");
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //filters listView results as search string updates
+                ArrayAdapter adapter = (ArrayAdapter) listView.getAdapter();
+                if (adapter != null) {
+                    adapter.getFilter().filter(newText);
+                } else Log.d("SearchView: ", "adapter is null");
+                return false;
+            }
+        });
+    }
+
 
     private void setApplyFilterBtnListener(View view) {
         Button btn = view.findViewById(R.id.applyFilterBtn);
@@ -308,37 +409,124 @@ public class AddHabit extends Fragment {
         });
     }
 
-    private List<List<String>> setDisplayHabits(Spinner categorySpinner, Spinner impactSpinner) {
-        List<List<String>> habitList = new ArrayList<>();
-        String category = (String) categorySpinner.getSelectedItem();
-        String impactLevel = (String) impactSpinner.getSelectedItem();
 
-        switch (category) {  //reduces habitList by category selection
-            case "Select a category": habitList = allHabits;
-            case "Transportation":
-                habitList = habitsByCategory.get(0); break;
-            case "Food":
-                habitList = habitsByCategory.get(1); break;
-            case "Housing":
-                habitList = habitsByCategory.get(2); break;
-            default:  //"Consumption"
-                habitList = habitsByCategory.get(3); break;
-        }
 
-        if (!impactLevel.equals("Select an impact level")) {
-            for (int i = 1; i < impacts.length; i++) {
-                if (impactLevel.equals(impacts[i])) {
-                    //habitList = habitsByImpact.get(i - 1);
-                    //for (int j = 0; j <) //reduce to habits matching impact level
 
-                    break;
+
+    //SELECT HABIT TO ADOPT/QUIT LOGIC
+
+    private void setHabitListListeners(View view) {
+        ListView list = view.findViewById(R.id.listView);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                selectedHabit = (String) parent.getItemAtPosition(position);
+            }
+        });
+    }
+
+    private void setActionBtnListener(View view) {
+        Button actionBtn = view.findViewById(R.id.actionBtn);
+        actionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Button actionBtn = globalView.findViewById(R.id.actionBtn);
+                if (actionBtn.getText().equals("Adopt")) {
+                    adoptHabit(selectedHabit);
+                } else {
+                    quitHabit(selectedHabit);
                 }
             }
+        });
+    }
+
+
+    private void adoptHabit(String habitToAdopt) {
+        ListView listView = globalView.findViewById(R.id.listView);
+        if (selectedHabit.equals("") || !contains(listView, selectedHabit)) return;
+
+        //otherwise adopt habit
+
+    }
+
+
+    private void quitHabit(String habitToQuit) {
+        ListView listView = globalView.findViewById(R.id.listView);
+        if (selectedHabit.equals("") || !contains(listView, selectedHabit)) return;
+        
+        //otherwise quit habit
+    }
+
+
+
+
+
+
+    //HELPER FUNCTIONS BELOW
+
+    /**
+     * checks if a particular item is in a ListView's current adapter
+     * @param listView
+     * @param selectedItem
+     * @return
+     */
+    private boolean contains(ListView listView, String selectedItem) {
+        android.widget.ListAdapter adapter = listView.getAdapter();
+        for (int i = 0; i < adapter.getCount(); i++) {
+            if (selectedItem.equals(adapter.getItem(i))) return true;
         }
-        populateHabitList(globalView, habitList);
+        return false;
+    }
 
 
-        return habitList;
+    /**
+     * Computes impact level (in kg of CO2) of a particular habit
+     * @param habit the habit to compute the impact level for
+     * @return
+     */
+    private int getImpactLevel(List<String> habit) {
+        String str = habit.get(2);  //3rd index always contains impact level
+        int i = Math.abs(Integer.valueOf(str));  //we just use positive values for comparison **
+        return i;
+
+        //** in reality, all habits have a negative value for impact level, representing
+        //lowered CO2 emissions. Habits are meant to be good deeds that lower your CO2
+    }
+
+
+    /**
+     * Removes duplicates between two lists of lists of strings.
+     * Use: for removing the user's already adopted habits from the total habit list
+     * (we only give them the option to add habits they haven't already added)
+     * @param allHabits
+     * @param currentHabits
+     * @return
+     */
+    private List<List<String>> removeDuplicates(List<List<String>> allHabits,
+                                                List<List<String>> currentHabits) {
+        if (currentHabits == null || currentHabits.isEmpty()) return allHabits;
+        for (int i = 0; i < currentHabits.size(); i++) {
+            //if currentHabits.get(i) not in allHabits, does nothing
+            allHabits.remove(currentHabits.get(i));
+        }
+        return allHabits;
+    }
+
+
+    /**
+     * Clones a list of lists of string. Need this since lists of strings are mutable, so
+     * doing [List<List<String>>] = [other List<List<String>>] would cause memory issues.
+     * @param list
+     * @return
+     */
+    private List<List<String>> clone(List<List<String>> list) {
+        List<List<String>> clonedList = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            //related to mutability and deep vs shallow cloning
+            clonedList.add(new ArrayList<>(list.get(i)));
+        }
+
+        return clonedList;
     }
 
 
@@ -352,13 +540,12 @@ public class AddHabit extends Fragment {
 
 
 
-
-
-    /**
+    //commented code is deprecated.
+    /*
      * Sets the filter spinner logic (i.e. what to do when selection of spinner changed)
      * for category filter
      * @param view
-     */
+     *
     public void setCategoryFilterSpinnerListener(View view) {
         Spinner categorySpinner = view.findViewById(R.id.categorySpinner);
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -383,11 +570,11 @@ public class AddHabit extends Fragment {
         });
     }
 
-    /**
+    *
      * Sets the filter spinner logic (i.e. what to do when selection of spinner changed)
      * for impact level filter
      * @param view
-     */
+     *
     private void setImpactLevelFilterSpinnerListener(View view) {
         Spinner impactSpinner = view.findViewById(R.id.impactSpinner);
         impactSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -405,20 +592,6 @@ public class AddHabit extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
-    }
+    }*/
 
-
-    /**
-     * Computes impact level (in kg of CO2) of a particular habit
-     * @param habit the habit to compute the impact level for
-     * @return
-     */
-    private int getImpactLevel(List<String> habit) {
-        String str = habit.get(2);  //3rd index always contains impact level
-        int i = Math.abs(Integer.valueOf(str));  //we just use positive values for comparison **
-        return i;
-
-        //** in reality, all habits have a negative value for impact level, representing
-        //lowered CO2 emissions. Habits are meant to be good deeds that lower your CO2
-    }
 }
