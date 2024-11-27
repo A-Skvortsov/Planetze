@@ -1,6 +1,7 @@
 package com.example.planetze;
 
 import static utilities.Colors.PALETTE_TURQUOISE;
+import static utilities.Colors.PALETTE_TURQUOISE_TINT_100;
 import static utilities.Colors.PALETTE_TURQUOISE_TINT_200;
 import static utilities.Colors.PALETTE_TURQUOISE_TINT_400;
 import static utilities.Colors.PALETTE_TURQUOISE_TINT_500;
@@ -49,9 +50,13 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import utilities.CountryEmissionsData;
+import utilities.EmissionNode;
+import utilities.EmissionsNodeCollection;
 import utilities.UserEmissionsData;
 
 public class FirstFragment extends Fragment {
@@ -62,7 +67,6 @@ public class FirstFragment extends Fragment {
     private CountryEmissionsData countryEmissions;
     private UserEmissionsData userEmissionsData;
     private TextView emissionsOverviewTextView;
-
     private Spinner comparisonSpinner;
 
     private char timePeriod;
@@ -160,7 +164,6 @@ public class FirstFragment extends Fragment {
     }
 
     private void renderEmissionsViewText() {
-        float userEmissions = userEmissionsData.getUserEmissionsKG(timePeriod);
         emissionsOverviewTextView.setText(getUserEmissionsText());
     }
 
@@ -189,29 +192,23 @@ public class FirstFragment extends Fragment {
         }
     }
 
-    private void updateWithDailyData() {
-        Log.d("Data", "Daily!");
-        pieChart.invalidate();
-    }
-
-    private void updateWithWeeklyData() {
-        Log.d("Data", "Weekly!");
-    }
-
-    private void updateWithMonthlyData() {
-        Log.d("Data", "Monthly!");
-    }
-
-    private void updateWithOverallData() {
-        Log.d("Data", "Overall!");
-    }
-
     private void renderLineChart(LineChart lineChart) {
         ArrayList<Entry> entries = new ArrayList<>();
+        List<EmissionsNodeCollection> emissionsNodeCollections
+                = userEmissionsData.getUserEmissionsDataKG(timePeriod);
 
-        for (int i = 0; i < 25; i++) {
-                Entry entry = new Entry(i, (float) Math.round((Math.random() * 100)) / 100 * (i + 10));
-                entries.add(entry);
+        System.out.println(emissionsNodeCollections.size());
+        System.out.println(emissionsNodeCollections);
+
+        for (int i = 0; i < emissionsNodeCollections.size(); i++) {
+            EmissionsNodeCollection collection = emissionsNodeCollections.get(i);
+
+            float totalEmissions = 0;
+            for (EmissionNode node : collection.getData()) {
+                totalEmissions += node.getEmissionsAmount();
+            }
+
+            entries.add(new Entry(i, totalEmissions));
         }
 
         GradientDrawable gradientDrawable = new GradientDrawable(
@@ -256,17 +253,17 @@ public class FirstFragment extends Fragment {
         colors.add(PALETTE_TURQUOISE_TINT_500);
 
         pieDataSet.setColors(colors);
+        pieDataSet.setValueTextSize(12f);
+        pieChart.setEntryLabelTextSize(12f);
         pieChart.setData(new PieData(pieDataSet));
         pieChart.getDescription().setEnabled(false);
 
         pieChart.animateXY(2000, 2000, Easing.EaseInOutExpo);
-
     }
 
     private void renderComparisonChart(BarChart comparisonChart, String country) {
         Double countryPerCapitaEmissions = countryEmissions.getComparableEmissionsDataKG(country, timePeriod);
         float userEmissions = userEmissionsData.getUserEmissionsKG(timePeriod);
-
 
         if (countryPerCapitaEmissions == null) {
             comparisonChart.invalidate();
@@ -282,8 +279,8 @@ public class FirstFragment extends Fragment {
 
         ArrayList<Integer> colors = new ArrayList<>();
 
-        colors.add(PALETTE_TURQUOISE_TINT_200);
-        colors.add(PALETTE_TURQUOISE);
+        colors.add(PALETTE_TURQUOISE_TINT_400);
+        colors.add(PALETTE_TURQUOISE_TINT_100);
 
         barDataSet.setColors(colors);
         BarData barData = new BarData(barDataSet);
@@ -301,18 +298,30 @@ public class FirstFragment extends Fragment {
         comparisonChart.getAxisRight().setEnabled(false);
         comparisonChart.getDescription().setText("");
 
-
         comparisonChart.animateY(2000, Easing.EaseInOutExpo);
     }
 
-    private static PieDataSet getPieDataSet() {
-        ArrayList<PieEntry> pieEntries = new ArrayList<>();
-        String[] sampleCategories = {"Transportation", "Energy", "Food", "Shopping"};
+    private PieDataSet getPieDataSet() {
+        List<EmissionsNodeCollection> emissionsNodeCollections =
+                userEmissionsData.getUserEmissionsDataKG(timePeriod);
 
-        for (int i = 1; i < 5; i++) {
-            float value = (float) (i * 10.0);
-            PieEntry pieEntry = new PieEntry(value, sampleCategories[i - 1]);
+        List<PieEntry> pieEntries = new ArrayList<>();
+        Map<String, Float> categoryToEmissionsMap = new HashMap<>();
 
+        for (EmissionsNodeCollection collection : emissionsNodeCollections) {
+            for (EmissionNode node : collection.getData()) {
+                String category = node.getEmissionType();
+                float amount = node.getEmissionsAmount();
+
+                categoryToEmissionsMap.put(category,
+                        categoryToEmissionsMap.getOrDefault(category, 0f) + amount
+                );
+            }
+        }
+
+        for (String category : categoryToEmissionsMap.keySet()) {
+            float value = categoryToEmissionsMap.get(category);
+            PieEntry pieEntry = new PieEntry(value, category);
             pieEntries.add(pieEntry);
         }
 

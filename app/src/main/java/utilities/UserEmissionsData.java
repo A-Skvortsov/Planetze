@@ -30,7 +30,6 @@ public class UserEmissionsData {
     private HashMap<String, Object> data;
     private List<String> sortedDates;
     private DataReadyListener listener;
-
     private SimpleDateFormat simpleDateFormat;
 
     public interface DataReadyListener {
@@ -150,7 +149,6 @@ public class UserEmissionsData {
         return getTotalEmissions(Integer.MAX_VALUE);
     }
 
-
     private List<EmissionsNodeCollection> getDailyEmissionsData() {
         return generatedEmissionsData(2);
     }
@@ -169,35 +167,6 @@ public class UserEmissionsData {
 
     private List<EmissionsNodeCollection> getOverallEmissionsData() {
         return generatedEmissionsData(Integer.MAX_VALUE);
-    }
-
-    private float getAverageEmissionsUpTo(String date) {
-        if (data.isEmpty()) {
-            return 0;
-        }
-
-        float emissions = 0;
-
-        for (int i = sortedDates.size() - 1; i >= 0; i--) {
-            try {
-                if (date.equals(DEFAULT_DATE) && Objects.requireNonNull(sortedDates.get(i)).compareTo(date) <= 0) {
-                    continue;
-                }
-            } catch (Exception e) {
-                throw new RuntimeException("An error occurred while iterating through sorted dates." + e);
-            }
-
-
-            Object dateData = data.get(sortedDates.get(i));
-
-            List<List<Object>> activities = (List<List<Object>>) dateData;
-
-            assert activities != null;
-            for (List<Object> activity : activities) {
-                emissions += Float.parseFloat((String) activity.get(EMISSIONS_AMOUNT_INDEX));
-            }
-        }
-        return emissions / (float) (data.size() - 1);
     }
 
     private float getTotalEmissions(int days) {
@@ -303,6 +272,8 @@ public class UserEmissionsData {
                 addedDates.add(x2);
                 x2 = getTheDayBefore(x2);
                 x1 = getLastAvailableDate(x2);
+
+                i++; /* Ignore the iteration as new data was created */
             } else {
                 EmissionsNodeCollection dataForX1 = dataToEmissionsNodesCollection(x1, data.get(x1));
 
@@ -312,6 +283,8 @@ public class UserEmissionsData {
 
                 x2 = getTheDayBefore(x2);
                 x1 = getLastAvailableDate(x2);
+
+                i++; /* Ignore the iteration as new data was created */
             }
 
             if (chartData.size() == days) {
