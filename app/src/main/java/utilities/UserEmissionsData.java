@@ -35,6 +35,9 @@ public class UserEmissionsData {
     private DataReadyListener listener;
     private SimpleDateFormat simpleDateFormat;
 
+    // TODO: Make the source of this the database
+    private boolean interpolate = false;
+
     public interface DataReadyListener {
         void onDataReady();
         void onError(String errorMessage);
@@ -252,14 +255,40 @@ public class UserEmissionsData {
             return null;
         }
 
+        if (interpolate) {
+            return getInterpolatedData(days);
+        }
+        return getRawData(days);
+    }
+
+    private List<EmissionsNodeCollection> getRawData(int days) {
+        Date date = Calendar.getInstance().getTime();
+        String curr = simpleDateFormat.format(date);
+        List<EmissionsNodeCollection> chartData = new ArrayList<>();
+
+        for (int i = 0; i < days; i++) {
+            if (sortedDates.contains(curr)) {
+                EmissionsNodeCollection collection = dataToEmissionsNodesCollection(curr, data.get(curr));
+                chartData.add(0, collection);
+            }
+            curr = getTheDayBefore(curr);
+
+            if (daysBetweenDates(sortedDates.get(sortedDates.size() - 2), curr) < 0) {
+                break;
+            }
+        }
+
+        return chartData;
+    }
+
+    private List<EmissionsNodeCollection> getInterpolatedData(int days) {
         Date date = Calendar.getInstance().getTime();
         String x2 = simpleDateFormat.format(date);
         String x1 = x2;
 
-        Set<String> addedDates = new HashSet<>();
-
         List<EmissionsNodeCollection> chartData = new ArrayList<>();
 
+        Set<String> addedDates = new HashSet<>();
 
         for (int i = sortedDates.size() - 1; i >= 1; i--) {
             if (sortedDates.contains(x2) && !addedDates.contains(x2)) {
@@ -366,7 +395,6 @@ public class UserEmissionsData {
             throw new RuntimeException("An error occurred while the program was calculated the "
                                         + "number of days between to dates. " + e);
         }
-
     }
 
     public EmissionsNodeCollection dataToEmissionsNodesCollection(String date, Object data) {
