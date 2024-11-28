@@ -14,10 +14,19 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import utilities.Constants;
 
 public class SurveyFragment extends Fragment {
 
+    private FirebaseDatabase db;
     int current_cat = 0;  //0-transportation,1-food, 2-housing,3-consumption
     int current_q = 0;  //index of current question
     double[] co2PerCategory = {0.0, 0.0, 0.0, 0.0};
@@ -88,13 +97,24 @@ public class SurveyFragment extends Fragment {
                 current_q++;  //iterates to next q
                 if (current_q >= num_qs) {  //true if survey is finished
                     computeCatEmissions(current_cat);
-                    Bundle args = new Bundle();
-                    args.putDoubleArray("co2PerCategory", co2PerCategory);
+                    List<Double> list = new ArrayList<>();
+                    for (int i = 0; i < co2PerCategory.length; i++) {
+                        list.add(co2PerCategory[i]);
+                    }
 
-                    SurveyResults surveyResultsFragment = new SurveyResults();
-                    surveyResultsFragment.setArguments(args);
+                    db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+                    //String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
+                    String userId = UserData.getUserID(getContext());
+                    DatabaseReference userRef = db.getReference("user data")
+                            .child(userId);
+                    //send survey results to firebase as Map<String, List<Double>>
+                    Map<String, Object> c = new HashMap<>();
+                    c.put("survey_results", list);
+                    userRef.updateChildren(c);
 
-                    loadFragment(surveyResultsFragment);
+                    userRef.child("is_new_user").setValue(false);
+
+                    loadFragment(new SurveyResults());
                     return;
                 }
                 if (questions[current_q][0].equals("-")) {  //iter'n to next category if necessary
@@ -210,14 +230,33 @@ public class SurveyFragment extends Fragment {
      * @return double representing total annual transport emissions (in kg)
      */
     protected double transportEmissions() {
+        //firebase stuff used to store what car uses drives by default (needed for "Drive personal
+        //vehicle" activity in EcoTracker)
+        db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
+        DatabaseReference userRef = db.getReference("user data")
+                .child(userId);
+        Map<String, Object> c = new HashMap<>();
+
         double totalkg = 0.0;
         double r = 0.0;
         if (transport_ans[0] != 1) {  //true corresponds to user saying "yes" to "do u use car?"
             switch(transport_ans[1]) {  //which car they drive
-                case 0: r = 0.24; break;  //gas emissions rate
-                case 1: r = 0.27; break;  //diesel, etc.
-                case 2: r = 0.05; break;  //electric
-                default: r = 0.16; break;  //hybrid or "i don't know" (default to hybrid)
+                case 0: r = 0.24;
+                    c.put("default_car", "gasoline");
+                    break;  //gas emissions rate
+                case 1: r = 0.27;
+                    c.put("default_car", "diesel");
+                    break;  //diesel, etc.
+                case 2: r = 0.16;
+                    c.put("default_car", "hybrid");
+                    break;  //hybrid
+                case 3: r = 0.05;
+                    c.put("default_car", "electric");
+                    break;  //electric
+                default: r = 0.16;
+                    c.put("default_car", "none");
+                    break;  //"i don't know" answer (rate of emissions defaults to that of hybrid)
             }
             switch(transport_ans[2]) {  //how much they drive
                 case 0: totalkg += r * 5000; break;  //constants are distances driven
@@ -227,7 +266,8 @@ public class SurveyFragment extends Fragment {
                 case 4: totalkg += r * 25000; break;
                 default: totalkg += r * 35000; break;
             }
-        }
+        } else {c.put("default_car", "none");}
+        userRef.updateChildren(c);  //adds default car component to user data for use in EcoTracker
 
         totalkg += public_transport_emissions[transport_ans[3]][transport_ans[4]];  //see Constants.java
 
@@ -307,8 +347,11 @@ public class SurveyFragment extends Fragment {
         int[] i = housing_ans;
         if (i[3] != i[5]) totalkg += 233;
 
-        System.out.println(i[0] + " " + i[1] + " " + i[2] + " " + i[4] + " " + i[3]);
         if (i[0] == 4) i[0] = 2;  //sets "other" answer option to "townhouse" (as instructed in formula spreadsheet)
+        if (i[3] == 5) i[3] = 1;  //sets "other" answer option to "electricity" (by assumption)
+        if (i[5] == 5) i[5] = 1;  //^^ Piazza post SHOULD but has not yet clarified if this is what we are to do.
+                                //profs have not yet specified what to do in this scenario so we will assume
+                                //that it is reasonable to default "other" to electricity
         totalkg += housing_emissions[i[0]][i[1]][i[2]][i[4]][i[3]];  //home heating (i[3]; fourth question of category)
         totalkg += housing_emissions[i[0]][i[1]][i[2]][i[4]][i[5]];  //water heating (i[5]; sixth question of category)
         switch(i[6]) {  //7th question of housing category; re: renewable energy use

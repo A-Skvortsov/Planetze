@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
 }
 
-
 android {
     namespace = "com.example.planetze"
     compileSdk = 34
@@ -38,6 +37,7 @@ android {
 
 dependencies {
     implementation(libs.appcompat)
+    implementation(libs.play.services.auth)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
@@ -48,9 +48,11 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
     testImplementation(libs.junit)
+    testImplementation(libs.mockito)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(libs.firebase.auth)
+    implementation("com.github.prolificinteractive:material-calendarview:2.0.1")
     implementation(libs.mpandroidchart)
     implementation(libs.opencsv)
 }

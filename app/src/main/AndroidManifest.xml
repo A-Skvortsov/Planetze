@@ -13,11 +13,19 @@
         android:theme="@style/Theme.Planetze"
         tools:targetApi="31">
         <activity
+            android:name=".HomeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Planetze" />
+        <activity
             android:name=".EcoGauge"
             android:exported="false"
             android:theme="@style/Theme.Planetze" />
         <activity
-            android:name=".HomeActivity"
+            android:name=".EcoBalance"
+            android:exported="false"
+            android:theme="@style/Theme.Planetze" />
+        <activity
+            android:name=".BottomBar"
             android:exported="true"
             android:theme="@style/Theme.Planetze" />
         <activity

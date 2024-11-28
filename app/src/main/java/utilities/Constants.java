@@ -1,16 +1,24 @@
 package utilities;
 
-public abstract class Constants {
+import java.util.Arrays;
+import java.util.List;
+
+public class Constants {
+
+    public static final String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "June",
+            "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
     // All survey question categories
     public static final String[] categories = {"Transportation", "Food", "Housing", "Consumption"};
+    public static final String[] impacts = {"Select an impact level", "Small impact (< 25kg CO2)",
+            "Medium impact (< 50kg CO2)", "Big impact (> 50kg CO2)"};
+
 
     public static final int DAILY = 1;
     public static final int WEEKLY = 7;
     public static final int MONTHLY = 30;
     public static final int YEARLY = 365;
     public static final int OVERALL = Integer.MAX_VALUE;
-
 
     public static final int EMISSION_TYPE_INDEX = 0;
     public static final int EMISSIONS_AMOUNT_INDEX = 2;
@@ -19,7 +27,8 @@ public abstract class Constants {
     public static final int food_qs = 6;
     public static final int housing_qs = 7;
     public static final int consumption_qs = 4;
-    //all survey questions. Each sub array is a question followed by all possible answer options
+
+    // All survey questions. Each sub array is a question followed by all possible answer options
     public static final String[][] questions = {
             {"Do you own or regularly use a car?", "Yes", "No"},
             {"What type of car do you drive?", "Gasoline", "Diesel", "Hybrid", "Electric", "I don't know"},
@@ -47,8 +56,7 @@ public abstract class Constants {
             {"How often do you buy new clothes?", "Monthly", "Quarterly", "Annually", "Rarely"},
             {"Do you buy second-hand or eco-friendly products?", "Yes, regularly", "Yes, occasionally", "No"},
             {"How many electronic devices have you purchased in the past year?", "None", "1", "2", "3", "4 or more"},
-            {"How often do you recycle?", "Never", "Occasionally", "Frequently", "Always"}
-    };
+            {"How often do you recycle?", "Never", "Occasionally", "Frequently", "Always"}};
 
     public static final String[] country = {
             "Afghanistan",

@@ -1,11 +1,16 @@
 package com.example.planetze;
 
 
+import static android.app.Activity.RESULT_OK;
 import static java.lang.Character.isLetter;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -24,13 +29,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.planetze.Login.LoginView;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -59,13 +72,10 @@ public class SignUpFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private String errorMsg;
-
-    private ArrayList<String> emailArray;
     private DatabaseReference userRef;
     private FirebaseDatabase db;
-
-    private String mParam1;
-    private String mParam2;
+    ActivityResultLauncher<Intent> launcher;
+    private Button googleSignUp;
 
     public SignUpFragment() {
         // Required empty public constructor
@@ -81,19 +91,12 @@ public class SignUpFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
+
+        System.out.println("uhfeuefehufehf");
+        System.out.println(getActivity().getSupportFragmentManager().findFragmentById(R.id.SecondFragment) == null);
 
         auth = FirebaseAuth.getInstance();
         signupEmail = view.findViewById(R.id.emailInput);
@@ -105,18 +108,16 @@ public class SignUpFragment extends Fragment {
         inputError = view.findViewById(R.id.error);
 
         signinLink = view.findViewById(R.id.signInLink);
+        googleSignUp = view.findViewById(R.id.signUpWithGoogleButton);
 
 
         Activity activity = getActivity();
-
-        emailArray = new ArrayList<String>();
-
-
+        setSignUpLauncher();
 
         signinLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                loadFragment(new LogInFragment());
+                loadFragment(new LoginView());
             }
         });
 
@@ -128,6 +129,21 @@ public class SignUpFragment extends Fragment {
             public void onClick(View view) {
                 createAccount();
 
+            }
+        });
+
+        googleSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(getString(R.string.default_web_client_id))
+                        .requestEmail()
+                        .build();
+
+                GoogleSignInClient client = GoogleSignIn.getClient(activity, options);
+
+                Intent intent = client.getSignInIntent();
+                launcher.launch(intent);
             }
         });
 
@@ -198,21 +214,21 @@ public class SignUpFragment extends Fragment {
 
 
 
-    private boolean valid1(String email, String name) {
-        boolean cond1 = name.length() != 0;
-        boolean cond2 = email.length() != 0;
-        if (!cond1) {
+    private boolean notEmpty(String email, String name) {
+        boolean cond1 = name == null || name.trim().isEmpty();
+        boolean cond2 = email == null ||email.trim().isEmpty();
+        if (cond1) {
             errorMsg = "Name cannot be empty";
             return false;
         }
-        else if (!cond2) {
+        else if (cond2) {
             errorMsg = "Email cannot be empty";
             return false;
         }
         return true;
     }
 
-    private boolean valid2(String pass, String conf_pass, String name) {
+    private boolean validPass(String pass, String conf_pass, String name) {
         boolean cond4 = conf_pass.equals(pass);
         if (!validPassword(pass)) {
             return false;
@@ -236,7 +252,7 @@ public class SignUpFragment extends Fragment {
 
                 boolean equalsEmail = false;
 
-                if(valid1(email, name)) {
+                if(notEmpty(email, name)) {
                     DataSnapshot users = task.getResult();
                     for(DataSnapshot user:users.getChildren()) {
                         String currentemail = " ";
@@ -249,10 +265,10 @@ public class SignUpFragment extends Fragment {
 
                     }
                 }
-                if (equalsEmail && valid1(email, name)) {
+                if (equalsEmail && notEmpty(email, name)) {
                     errorMsg = "Email already accociated with an account";
                 }
-                else if (valid2(pass,confirm_pass, name)){
+                else if (notEmpty(email, name) && validPass(pass,confirm_pass, name)){
                     createAccountOnFirebase(email, pass, name);
                 }
                 inputError.setText(errorMsg);
@@ -285,22 +301,72 @@ public class SignUpFragment extends Fragment {
                             String id = auth.getCurrentUser().getUid();
                             userRef.child(id+"/name").setValue(name);
                             userRef.child(id+"/email").setValue(email);
+                            //userRef.child(id+"/is_new_user").setValue(true);
+                            setDefaultSettings(id);
+
                             //userRef.child(id+"/password").setValue(pass);
                             auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
 
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(activity, "Signup Successful, check email for verification.", Toast.LENGTH_LONG).show();
-                                        loadFragment(new LogInFragment());
-                                    }else{
+                                    //Toast.makeText(activity, "Signup Successful, check email for verification.", Toast.LENGTH_LONG).show();
+                                    //loadFragment(new LoginView());
+
+                                        /*
+                                        Bundle bundle = new Bundle();
+                                        bundle.putString("email", email);
+
+                                        ResendConfirmFragment frag = new ResendConfirmFragment();
+                                        frag.setArguments(bundle);
+                                        loadFragment(frag);
+
+                                         */
+
+                                    if (!task.isSuccessful()) {
                                         Toast.makeText(activity, "there was an error in sending verification email", Toast.LENGTH_LONG).show();
                                     }
+                                    loadFragment(new ResendConfirmFragment());
                                 }
                             });
 
                         } else {
                             Toast.makeText(activity, "Signup Failed please try again", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void setDefaultSettings(String userID) {
+        userRef.child(userID+"/is_new_user").setValue(true);
+        userRef.child(userID+"/Settings/stayLoggedOn").setValue(false);
+    }
+
+    public void setSignUpLauncher() {
+        launcher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == RESULT_OK) {
+                            Task<GoogleSignInAccount> accountTask = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+                            try {
+                                GoogleSignInAccount signInAccount = accountTask.getResult(ApiException.class);
+                                AuthCredential authCredential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(), null);
+                                auth.signInWithCredential(authCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (task.isSuccessful()) {
+                                            loadFragment(new HomeFragment());
+                                        }
+                                        else {
+
+                                        }
+                                    }
+                                });
+
+                            } catch (ApiException e) {
+                                e.printStackTrace();
+                            }
+
                         }
                     }
                 });

@@ -3,18 +3,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/firstFragment">
+    app:startDestination="@id/FirstFragment">
 
     <fragment
-        android:id="@+id/firstFragment"
+        android:id="@+id/FirstFragment"
         android:name="com.example.planetze.FirstFragment"
-        android:label="fragment_first"
-        tools:layout="@layout/fragment_first" />
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_first">
+
+        <action
+            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
+    </fragment>
     <fragment
-        android:id="@+id/secondFragment"
-        android:name="com.example.planetze.SecondFragment"
-        android:label="fragment_second"
-        tools:layout="@layout/fragment_second" />
+        android:id="@+id/EcoTrackerFragment"
+        android:name="com.example.planetze.EcoTrackerFragment"
+        android:label="fragment_eco_tracker"
+        tools:layout="@layout/fragment_eco_tracker" >
+        <action
+            android:id="@+id/action_EcoTrackerFragment_to_AddActivity"
+            app:destination="@id/AddActivity" />
+        <action
+            android:id="@+id/action_EcoTrackerFragment_to_AddHabit"
+            app:destination="@id/AddHabit" />
+    </fragment>
+    <fragment
+        android:id="@+id/AddActivity"
+        android:name="com.example.planetze.AddActivity"
+        android:label="fragment_add_activity"
+        tools:layout="@layout/fragment_add_activity">
+    </fragment>
+    <fragment
+        android:id="@+id/AddHabit"
+        android:name="com.example.planetze.AddHabit"
+        android:label="fragment_add_habit"
+        tools:layout="@layout/fragment_add_habit">
+    </fragment>
     <fragment
         android:id="@+id/thirdFragment"
         android:name="com.example.planetze.ThirdFragment"
@@ -25,4 +49,33 @@
         android:name="com.example.planetze.FourthFragment"
         android:label="fragment_fourth"
         tools:layout="@layout/fragment_fourth" />
+    <fragment
+        android:id="@+id/SecondFragment"
+        android:name="com.example.planetze.SecondFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_second">
+
+        <action
+            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/LoginView"
+        android:name="com.example.planetze.Login.LoginView"
+        android:label="@string/login_label"
+        tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/action_LoginView_to_EcoTrackerFragment"
+            app:destination="@id/EcoTrackerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/EcoTrackerFragment"
+        android:name="com.example.planetze.EcoTrackerFragment"
+        android:label=" Eco Tracker"
+        tools:layout="@layout/fragment_eco_tracker">
+    </fragment>
+
 </navigation>
