@@ -95,6 +95,9 @@ public class SignUpFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
 
+        System.out.println("uhfeuefehufehf");
+        System.out.println(getActivity().getSupportFragmentManager().findFragmentById(R.id.SecondFragment) == null);
+
         auth = FirebaseAuth.getInstance();
         signupEmail = view.findViewById(R.id.emailInput);
         signupPassword = view.findViewById(R.id.passwordInput);
@@ -214,11 +217,11 @@ public class SignUpFragment extends Fragment {
     private boolean notEmpty(String email, String name) {
         boolean cond1 = name == null || name.trim().isEmpty();
         boolean cond2 = email == null ||email.trim().isEmpty();
-        if (!cond1) {
+        if (cond1) {
             errorMsg = "Name cannot be empty";
             return false;
         }
-        else if (!cond2) {
+        else if (cond2) {
             errorMsg = "Email cannot be empty";
             return false;
         }
@@ -298,7 +301,9 @@ public class SignUpFragment extends Fragment {
                             String id = auth.getCurrentUser().getUid();
                             userRef.child(id+"/name").setValue(name);
                             userRef.child(id+"/email").setValue(email);
-                            userRef.child(id+"/is_new_user").setValue(true);
+                            //userRef.child(id+"/is_new_user").setValue(true);
+                            setDefaultSettings(id);
+
                             //userRef.child(id+"/password").setValue(pass);
                             auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
@@ -329,6 +334,11 @@ public class SignUpFragment extends Fragment {
                         }
                     }
                 });
+    }
+
+    private void setDefaultSettings(String userID) {
+        userRef.child(userID+"/is_new_user").setValue(true);
+        userRef.child(userID+"/Settings/stayLoggedOn").setValue(false);
     }
 
     public void setSignUpLauncher() {

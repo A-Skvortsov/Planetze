@@ -2,6 +2,7 @@ package com.example.planetze.Login;
 
 import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
 
+import android.content.Context;
 import android.content.Intent;
 
 import androidx.activity.result.ActivityResult;
@@ -44,12 +45,18 @@ public class LoginPresenter {
         view.setMessage(message);
     }
 
-    public void takeToHomePage() {
-        view.takeToHomePage();
+    public void takeToSurvey() {
+        view.takeToSurvey();
+    }
+
+    public void takeToHub() {
+        view.takeToHub();
     }
 
     public void startGoogleSignin() {
         view.startGoogleSignin();
     }
+
+    public Context getViewContext() {return view.getContext();}
 
 }
