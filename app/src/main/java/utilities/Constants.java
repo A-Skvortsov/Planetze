@@ -10,7 +10,8 @@ public class Constants {
 
     //all survey question categories
     public static final String[] categories = {"Transportation", "Food", "Housing", "Consumption"};
-
+    public static final String[] impacts = {"Select an impact level", "Small impact (< 25kg CO2)",
+            "Medium impact (< 50kg CO2)", "Big impact (> 50kg CO2)"};
 
     public static final int transport_qs = 7;  //number of qs in transport category
     public static final int food_qs = 6;
@@ -47,74 +48,13 @@ public class Constants {
 
 
     public static final String[] activityCats = {"Select a Category",
-            "Transportation", "Food", "Consumption", "Bills"};
+            "Transportation", "Food", "Consumption", "Energy"};
     public static final String[][] activities = {
             {"Select an Activity", "Drive personal vehicle", "Take public transportation",
                     "Cycling/Walking", "Flight (< 1,500km)", "Flight (> 1,500km)"},
             {"Select an Activity", "Meal"},
             {"Select an Activity", "Buy new clothes", "Buy electronics", "Other purchases"},
             {"Select an Activity", "Electricity", "Gas", "Water"}};
-    public static final String[][][][] activities1 = {
-            {  //transport category
-                    {  //drive personal vehicle
-                            {"Drive personal vehicle"},
-                            {},  //distance driven
-                            {}  //vehicle type (if not default)
-                    },
-                    {  //Take Public Transportation
-                            {"Take public transportation"},
-                            {},  //type of public transport
-                            {}  //time spent in hours
-                    },
-                    {  //Cycling or Walking
-                            {"Cycling/Walking"},
-                            {}  //distance cycled/walked
-                    },
-                    {  //Flight
-                            {"Flight"},
-                            {},  //num flights
-                            {}  //short or long haul
-                    }
-            },
-            {  //food category
-                    {
-                            {"Meal"},
-                            {},  //type of meal
-                            {}  //number of servings
-                    }
-            },
-            {  //consumption category
-                    {
-                            {"Buy new clothes"},
-                            {}  //number of clothing items purchased
-                    },
-                    {
-                            {"Buy electronics"},
-                            {},  //type of electronic device (smartphone, laptop, TV)
-                            {}  //number of devices purchased
-                    },
-                    {
-                            {"Other purchases"},
-                            {},  //type of purchase (i.e. furniture, appliance)
-                            {}  //number of purchases
-                    }
-            },
-            {  //energy bills
-                    {
-                            {"Electricity"},
-                            {}  //bill amount
-                    },
-                    {
-                            {"Gas"},
-                            {}  //bill amount
-                    },
-                    {
-                            {"Water"},
-                            {}  //bill amount
-                    }
-            }
-    };
-
 
     public static final String[] country = {
             "Afghanistan",

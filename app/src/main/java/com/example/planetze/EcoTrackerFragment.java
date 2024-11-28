@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.CheckBox;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -44,12 +45,18 @@ import utilities.Constants;
  */
 public class EcoTrackerFragment extends Fragment {
 
+    View globalView;
     final String[] months = Constants.months;
     private FirebaseDatabase db;
+    String userId = "QMCLRlEKD9h2Np1II1vrNU0vpxt2";  //this should be changed to the particular logged in user once everything works
     private static DatabaseReference calendarRef;  //this is static so that we can call fetchSnapshot()
             //from addActivity fragment when returning to ecotrackerfragment in order to update
             //ecotracker activity info upon return
-    private static ValueEventListener listener;
+    private static DatabaseReference habitsRef;  //^^same with this
+    private static ValueEventListener activitiesListener;  //^^same with this
+    private static ValueEventListener habitsListener;
+    private static View.OnClickListener addListener;
+    private static View.OnClickListener editListener;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,9 +69,11 @@ public class EcoTrackerFragment extends Fragment {
 
     HashMap<String, Object> days = new HashMap<>();  //used to store the days of a user calendar
     List<List<String>> acts = new ArrayList<>();  //used to store the activities of a day
+    List<List<String>> currentHabits = new ArrayList<>();
     List<String> activityToEdit = new ArrayList<>();  //used to store the activity selected for editing
     String date = "";
     int presetCalendar = 0;
+    boolean habitsToggled = false;
 
     public EcoTrackerFragment() {
         // Required empty public constructor
@@ -100,7 +109,10 @@ public class EcoTrackerFragment extends Fragment {
         if (args != null && args.containsKey("date")) {
             presetCalendar = 1;
             date = args.getString("date");
+            if (args.containsKey("habitsToggled"))
+                habitsToggled = args.getBoolean("habitsToggled");
         } else {presetCalendar = 0;}
+
 
     }
 
@@ -123,11 +135,13 @@ public class EcoTrackerFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_eco_tracker, container, false);
+        globalView = view;
 
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-        String userId = "QMCLRlEKD9h2Np1II1vrNU0vpxt2";  //this should be changed to the particular logged in user once everything works
         calendarRef = db.getReference("user data")
                 .child(userId).child("calendar");
+        habitsRef = db.getReference().child("user data")
+                        .child(userId).child("current_habits");
         Log.d("Firebase", "Reference Path: " + calendarRef);  //for debugging
 
         final Button calendarToggle = view.findViewById(R.id.calendarToggle);  //button to toggle calendar
@@ -137,17 +151,30 @@ public class EcoTrackerFragment extends Fragment {
         final TextView yearText = view.findViewById(R.id.yearText);
         final TextView dailyTotal = view.findViewById(R.id.dailyTotal);
 
-        final TextView noActivities = view.findViewById(R.id.noActivities);
-        final Button activitiesBtn = view.findViewById(R.id.activitiesBtn);
+        final TextView noActivities = view.findViewById(R.id.emptyMsg);
         final RadioGroup activities = view.findViewById(R.id.activitiesGroup);
-        final Button habitsBtn = view.findViewById(R.id.habitsBtn);
         final Button addBtn = view.findViewById(R.id.addBtn);
         final Button editBtn = view.findViewById(R.id.editBtn);
         final Button delBtn = view.findViewById(R.id.delBtn);
         final TextView issuePrompt1 = view.findViewById(R.id.issuePrompt1);
         final TextView issuePrompt2 = view.findViewById(R.id.issuePrompt2);
+        final Button activitiesBtn = view.findViewById(R.id.activitiesBtn);
+        final Button habitsBtn = view.findViewById(R.id.habitsBtn);
 
-        listener = new ValueEventListener() {
+        String prompt;
+        if (habitsToggled && activities.getChildCount() != 0) {
+            prompt = "Log a habit to reduce your carbon emissions!";
+            issuePrompt2.setText(prompt);
+            issuePrompt2.setVisibility(View.VISIBLE);
+        } else if (habitsToggled) {
+            prompt = "Click 'edit' to adopt a habit";
+            issuePrompt2.setText(prompt);
+            issuePrompt2.setVisibility(View.VISIBLE);
+        }
+        issuePrompt1.setVisibility(View.INVISIBLE);
+
+
+        activitiesListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 // Check if the array exists
@@ -155,7 +182,7 @@ public class EcoTrackerFragment extends Fragment {
                     // Convert the snapshot into a List
                     days = (HashMap<String, Object>) dataSnapshot.getValue();
                     Log.d("Firebase", "data loaded successfully" + days);
-                    updateDisplay(activities, noActivities, dailyTotal);
+                    updateDisplay();
                 } else {
                     Log.d("Firebase", "Array does not exist for this user.");
                 }
@@ -165,9 +192,23 @@ public class EcoTrackerFragment extends Fragment {
                 Log.e("FirebaseData", "Error: " + databaseError.getMessage());
             }
         };
+        habitsListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    currentHabits = (List<List<String>>) snapshot.getValue();
+                    Log.d("Firebase", "data loaded successfully" + currentHabits);
+                    updateDisplay();
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("FirebaseData", "Error: " + error.getMessage());
+            }
+        };
 
         //initializes everything
-        initUI(listener, dateText, yearText, activities, noActivities, dailyTotal);
+        initUI(activitiesListener, dateText, yearText, activities, noActivities, dailyTotal);
 
         //Toggles calendar view
         calendarToggle.setOnClickListener(new View.OnClickListener() {
@@ -189,6 +230,13 @@ public class EcoTrackerFragment extends Fragment {
         calendar.setOnDateChangedListener(new OnDateSelectedListener() {
             @Override
             public void onDateSelected(MaterialCalendarView view, CalendarDay day, boolean s) {
+                if (habitsToggled) {
+                    String prompt = "Log a habit to reduce your carbon emissions!";
+                    issuePrompt2.setText(prompt);
+                } else {
+                    issuePrompt2.setVisibility(View.INVISIBLE);
+                } issuePrompt1.setVisibility(View.INVISIBLE);  //don't want a red warning star regardless
+
                 int d = day.getDay(); int m = day.getMonth(); int y = day.getYear();
                 String date1 = d + " " + months[m-1];
                 dateText.setText(date1);
@@ -202,19 +250,33 @@ public class EcoTrackerFragment extends Fragment {
         activitiesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //should clear the linearlayout of any views and display activity data as stored
-                //in firebase
+                String prompt = "Please select an activity to edit/delete";
+                issuePrompt2.setText(prompt);
+                issuePrompt2.setVisibility(View.INVISIBLE);
+                issuePrompt1.setVisibility(View.INVISIBLE);
+
+                habitsToggled = false;
+                switchToActivities();
             }
         });
         //show user habits
         habitsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                habitsToggled = true;
+                switchToHabits();
 
+                String prompt;
+                if (activities.getChildCount() != 0)
+                    prompt = "Log a habit to reduce your carbon emissions!";
+                else prompt = "Click 'edit' to adopt a habit";
+                issuePrompt2.setText(prompt);
+                issuePrompt2.setVisibility(View.VISIBLE);
+                issuePrompt1.setVisibility(View.INVISIBLE);
             }
         });
         //add activities
-        addBtn.setOnClickListener(new View.OnClickListener() {
+        addListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //puts these away in case they were brought up, no need for them
@@ -227,13 +289,16 @@ public class EcoTrackerFragment extends Fragment {
                 NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
                         .findFragmentById(R.id.fragment));
                 navController.navigate(R.id.AddActivity, bundle);
-                //loadFragment(new AddActivity());
             }
-        });
+        };
+        addBtn.setOnClickListener(addListener);
         //edit activities
-        editBtn.setOnClickListener(new View.OnClickListener() {
+        editListener = new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) {  //same code as in onCreateView()
+                String prompt = "Please select an activity to edit/delete";
+                issuePrompt2.setText(prompt);
+
                 if (!activitySelected(activities, issuePrompt1, issuePrompt2)) return;
                 int id = activities.getCheckedRadioButtonId();
 
@@ -243,11 +308,14 @@ public class EcoTrackerFragment extends Fragment {
                 //Note that upon clicking "save" btn in addactivity, the activity (as stored in firebase)
                 //will be updated using updateChildren() method of firebase rtdb
             }
-        });
+        };
+        editBtn.setOnClickListener(editListener);
         //delete activities
         delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String prompt = "Please select an activity to edit/delete";
+                issuePrompt2.setText(prompt);
                 if (!activitySelected(activities, issuePrompt1, issuePrompt2)) return;
                 int id = activities.getCheckedRadioButtonId();
 
@@ -305,7 +373,8 @@ public class EcoTrackerFragment extends Fragment {
      * Used to perform a one-time ping to the firebase to retrieve most up-to-date data
      */
     public static void fetchSnapshot() {
-        calendarRef.addListenerForSingleValueEvent(listener);
+        calendarRef.addListenerForSingleValueEvent(activitiesListener);
+        habitsRef.addListenerForSingleValueEvent(habitsListener);
     }
 
     /**
@@ -337,12 +406,117 @@ public class EcoTrackerFragment extends Fragment {
         }
         //pings Firebase to show activities of current date
         fetchSnapshot();
-        updateDisplay(activities, noActivities, dailyTotal);
+        updateDisplay();
     }
 
-    public void updateDisplay(RadioGroup activities, TextView emptyMsg, TextView dailyTotal) {
+    public void updateDisplay() {
+        if (habitsToggled) {
+            switchToHabits();
+        } else {
+            switchToActivities();
+        }
+    }
+
+    public void switchToHabits() {
+        RadioGroup rg = globalView.findViewById(R.id.activitiesGroup);
+        Button logBtn = globalView.findViewById(R.id.addBtn);
+        Button delBtn = globalView.findViewById(R.id.delBtn);
+        Button editBtn = globalView.findViewById(R.id.editBtn);
+        String t = "Log";
+        logBtn.setText(t);  //don't need an edit button for habits
+        delBtn.setVisibility(View.INVISIBLE);  //don't need a delete button for habits
+        // ^^ add and delete feature of habits taken care of in "AddHabit.java"
+
+        logBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RadioGroup rg = globalView.findViewById(R.id.activitiesGroup);
+                TextView issuePrompt1 = globalView.findViewById(R.id.issuePrompt1);
+                TextView issuePrompt2 = globalView.findViewById(R.id.issuePrompt2);
+                issuePrompt1.setVisibility(View.INVISIBLE);
+                issuePrompt2.setVisibility(View.INVISIBLE);
+                int id = rg.getCheckedRadioButtonId();
+
+                if (id == -1) {
+                    issuePrompt1.setVisibility(View.VISIBLE);
+
+                    String prompt = "You must select a habit to log";
+                    issuePrompt2.setText(prompt);
+                    issuePrompt2.setVisibility(View.VISIBLE);
+                    return;
+                }
+
+                List<String> habitToLog = currentHabits.get(id);
+                AddActivity.writeToFirebase(date, habitToLog);
+                //AddHabit.logHabit(habitToLog);
+
+                fetchSnapshot();  //Update ecoTracker display
+                updateDisplay();
+            }
+        });
+
+        editBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("date", date);
+                NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
+                        .findFragmentById(R.id.fragment));
+                navController.navigate(R.id.AddHabit, bundle);
+            }
+        });
+
+        displayHabits();
+    }
+
+    public void displayHabits() {
+        RadioGroup rg = globalView.findViewById(R.id.activitiesGroup);
+        TextView emptyMsg = globalView.findViewById(R.id.emptyMsg);
+
+        rg.clearCheck(); rg.removeAllViews();
+        emptyMsg.setVisibility(View.INVISIBLE);
+        emptyMsg.setText("No habits adopted yet");
+
+        if (currentHabits.isEmpty()) {
+            //set default ("no habits adopted yet")
+            emptyMsg.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        RadioButton button;
+        for (int i = 0; i < currentHabits.size(); i++) {
+            button = new RadioButton(getContext());
+            button.setId(i);
+            String t = Double.parseDouble(currentHabits.get(i).get(2)) + "kg CO2: " +
+                    currentHabits.get(i).get(1);
+            button.setText(t);
+            rg.addView(button);
+        }
+    }
+
+    public void switchToActivities() {
+        RadioGroup rg = globalView.findViewById(R.id.activitiesGroup);
+        Button addBtn = globalView.findViewById(R.id.addBtn);
+        Button delBtn = globalView.findViewById(R.id.delBtn);
+        Button editBtn = globalView.findViewById(R.id.editBtn);
+        delBtn.setVisibility(View.VISIBLE);
+
+        String t = "Add";
+        addBtn.setText(t);
+        addBtn.setOnClickListener(addListener);
+        editBtn.setOnClickListener(editListener);
+
+        displayActivities();
+    }
+
+    public void displayActivities() {
+        RadioGroup activities = globalView.findViewById(R.id.activitiesGroup);
+        TextView emptyMsg = globalView.findViewById(R.id.emptyMsg);
+        TextView dailyTotal = globalView.findViewById(R.id.dailyTotal);
+
         activities.clearCheck(); activities.removeAllViews();
         emptyMsg.setVisibility(View.INVISIBLE);
+        emptyMsg.setText("No activities today yet");
 
         double emissions = 0.0;
         RadioButton btn;
@@ -371,9 +545,8 @@ public class EcoTrackerFragment extends Fragment {
 
     private boolean activitySelected(RadioGroup activities, TextView issuePrompt1,
                                      TextView issuePrompt2) {
-        if (activities.getChildCount() == 0) return false;  //if no activities, do nothing
         int id = activities.getCheckedRadioButtonId();
-        if (id == -1) {
+        if (activities.getChildCount() == 0 || id == -1) {
             issuePrompt1.setVisibility(View.VISIBLE);
             issuePrompt2.setVisibility(View.VISIBLE);
             return false;
@@ -403,6 +576,15 @@ public class EcoTrackerFragment extends Fragment {
                     //gets date snapshot (list of activity (lists of strings))
                     //gets the list (activity) at position id (as wanted)
                     activityToEdit = ((List<List<String>>) dataSnapshot.getValue()).get(id);
+                    if (isHabit(activityToEdit)) {  //case that activity is a logged habit
+                        TextView issueprompt1 = globalView.findViewById(R.id.issuePrompt1);
+                        TextView issueprompt2 = globalView.findViewById(R.id.issuePrompt2);
+                        String prompt = "Habit logs cannot be edited";
+                        issueprompt2.setText(prompt);
+                        issueprompt1.setVisibility(View.VISIBLE);
+                        issueprompt2.setVisibility(View.VISIBLE);
+                        return;
+                    }
                     //boot addActivity in edit mode, passing activityToEdit
                     Bundle bundle = new Bundle();
                     bundle.putString("date", date);
@@ -425,6 +607,14 @@ public class EcoTrackerFragment extends Fragment {
             }
         });
     }
+
+
+
+    private boolean isHabit(List<String> list) {
+        int emissions = Integer.parseInt(list.get(2));
+        return emissions < 0 && !list.get(1).equals("Cycling/Walking");
+    }
+
 
 
     private void loadFragment(Fragment fragment) {

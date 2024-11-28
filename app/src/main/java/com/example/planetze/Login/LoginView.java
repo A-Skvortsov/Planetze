@@ -125,6 +125,11 @@ public class LoginView extends Fragment  {
         inputError.setText(msg);
     }
 
+
+    public void takeToHomePage() {
+        Intent intent = new Intent(getActivity(), com.example.planetze.HomeActivity.class);
+        startActivity(intent);
+    }
     public Context getViewContext() {
         return getContext();
     }

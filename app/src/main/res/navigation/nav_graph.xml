@@ -23,13 +23,21 @@
         <action
             android:id="@+id/action_EcoTrackerFragment_to_AddActivity"
             app:destination="@id/AddActivity" />
+        <action
+            android:id="@+id/action_EcoTrackerFragment_to_AddHabit"
+            app:destination="@id/AddHabit" />
     </fragment>
     <fragment
         android:id="@+id/AddActivity"
         android:name="com.example.planetze.AddActivity"
         android:label="fragment_add_activity"
         tools:layout="@layout/fragment_add_activity">
-
+    </fragment>
+    <fragment
+        android:id="@+id/AddHabit"
+        android:name="com.example.planetze.AddHabit"
+        android:label="fragment_add_habit"
+        tools:layout="@layout/fragment_add_habit">
     </fragment>
     <fragment
         android:id="@+id/thirdFragment"
