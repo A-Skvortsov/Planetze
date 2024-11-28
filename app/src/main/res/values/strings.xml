@@ -53,17 +53,26 @@
     <string name="close">Close</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
-    <string name="login_label">Login</string>
     <string name="second_fragment_label">Second Fragment</string>
+    <string name="login_label">Login</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="home">Home</string>
     <string name="EcoGuage">Eco Gauge</string>
     <string name="EcoBalance">Eco Balance</string>
     <string name="EcoHub">Eco Hub</string>
-    <string name="thx">Thankyou for your patience.. we will need to add other fragments/actvities for each of the bottons</string>
+    <string name="thx">Thank you for your patience.. we will need to add other fragments/actvities for each of the bottons</string>
     <string name="_11_nov">11 Nov</string>
     <string name="transportation">Transportation</string>
     <string name="please_select_an_answer">Please select an answer</string>
     <string name="asterisk">*</string>
+    <string name="emission_breakdown_by_category">Emission breakdown by category.</string>
+    <string name="compare_with">Compare with:</string>
+    <string name="_1d">1D</string>
+    <string name="_1m">1M</string>
+    <string name="_1y">1Y</string>
+    <string name="all">ALL</string>
+    <string name="_1w">1W</string>
+    <string name="piechart">PieChart</string>
+    <string name="n_a">N/A</string>
 </resources>

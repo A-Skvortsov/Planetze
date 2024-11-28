@@ -1,4 +1,5 @@
 package com.example.planetze;
+
 import android.content.Intent;
 import static androidx.navigation.fragment.FragmentKt.findNavController;
 import static java.security.AccessController.getContext;
@@ -10,7 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.planetze.Login.LoginView;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -35,19 +39,26 @@ public class MainActivity extends AppCompatActivity {
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         userRef = db.getReference("user data");
         auth = FirebaseAuth.getInstance();
+        db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        userRef = db.getReference("user data");
+        auth = FirebaseAuth.getInstance();
 
-        /*
-        DatabaseReference myRef = db.getReference("testDemo");
 
-//        myRef.setValue("B07 Demo!");
-        myRef.child("movies").setValue("B07 Demo!");
+        // TODO: Please DON'T delete the comments below
 
+/*        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.fragment);
+
+        NavController navController = navHostFragment.getNavController();
+       NavigationUI.setupWithNavController(bottomNavigationView, navController);
+*/
         //Intent intent = new Intent(MainActivity.this, SurveyResults.class);
         //startActivity(intent);
 
-         */
 
-        initilizeData();
+        initializeData();
         //UserData.logout(getApplicationContext());
 
         if (savedInstanceState == null) {
@@ -107,13 +118,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void initilizeData() {
+    private void initializeData() {
         boolean isLoggedIn = UserData.isLoggedIn(getApplicationContext());
         boolean stayLoggedOn = UserData.stayLoggedOn(getApplicationContext());
         if (isLoggedIn && !stayLoggedOn) {
             UserData.logout(getApplicationContext());
         }
     }
-
-
 }

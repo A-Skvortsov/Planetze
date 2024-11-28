@@ -6,19 +6,31 @@ import java.util.List;
 public class Constants {
 
     public static final String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "June",
-                                            "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
+            "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
-    //all survey question categories
+    // All survey question categories
     public static final String[] categories = {"Transportation", "Food", "Housing", "Consumption"};
     public static final String[] impacts = {"Select an impact level", "Small impact (< 25kg CO2)",
             "Medium impact (< 50kg CO2)", "Big impact (> 50kg CO2)"};
+
+
+    public static final int DAILY = 1;
+    public static final int WEEKLY = 7;
+    public static final int MONTHLY = 30;
+    public static final int YEARLY = 365;
+    public static final int OVERALL = Integer.MAX_VALUE;
+
+    public static final int EMISSION_TYPE_INDEX = 0;
+    public static final int EMISSIONS_AMOUNT_INDEX = 2;
 
     public static final int transport_qs = 7;  //number of qs in transport category
     public static final int food_qs = 6;
     public static final int housing_qs = 7;
     public static final int consumption_qs = 4;
-    //all survey questions. Each sub array is a question followed by all possible answer options
-    public static final String[][] questions = {{"Do you own or regularly use a car?", "Yes", "No"},
+
+    // All survey questions. Each sub array is a question followed by all possible answer options
+    public static final String[][] questions = {
+            {"Do you own or regularly use a car?", "Yes", "No"},
             {"What type of car do you drive?", "Gasoline", "Diesel", "Hybrid", "Electric", "I don't know"},
             {"How many kilometers/miles do you drive per year?", "Up to 5,000 km", "5,000–10,000 km", "10,000–15,000 km", "15,000–20,000 km", "20,000–25,000 km", "More than 25,000 km"},
             {"How often do you use public transportation?", "Never", "Occasionally (1-2 times/week)", "Frequently (3-4 times/week)", "Always (5+ times/week)"},
@@ -45,7 +57,6 @@ public class Constants {
             {"Do you buy second-hand or eco-friendly products?", "Yes, regularly", "Yes, occasionally", "No"},
             {"How many electronic devices have you purchased in the past year?", "None", "1", "2", "3", "4 or more"},
             {"How often do you recycle?", "Never", "Occasionally", "Frequently", "Always"}};
-
 
     public static final String[] activityCats = {"Select a Category",
             "Transportation", "Food", "Consumption", "Energy"};
@@ -546,10 +557,10 @@ public class Constants {
                             108,
                             180},
                     {  //quarterly clothes, etc.
-                            0,  //calculated as monthly divided by 3
-                            18,
-                            36,
-                            60},
+                            0,
+                            15,
+                            30,
+                            50},
                     {  //note that annually and quarterly are kept same since quarterly data omitted from given excel file
                             0,
                             15,
@@ -563,25 +574,25 @@ public class Constants {
             },
             {  //1 electronic device, etc.
                     {0, 54 + 45, 108 + 60, 180 + 90},
-                    {0, 18 + 45, 36 + 60, 60 + 90},
+                    {0, 15 + 45, 30 + 60, 50 + 90},
                     {0, 15 + 45, 30 + 60, 50 + 90},
                     {0, 0.75 + 45, 1.5 + 60, 2.5 + 90}
             },
             {
                     {0, 54 + 60, 108 + 120, 180 + 180},
-                    {0, 18 + 60, 36 + 120, 60 + 180},
+                    {0, 15 + 60, 30 + 120, 50 + 180},
                     {0, 15 + 60, 30 + 120, 50 + 180},
                     {0, 0.75 + 60, 1.5 + 120, 2.5 + 180}
             },
             {
                     {0, 54 + 90, 108 + 180, 180 + 270},
-                    {0, 18 + 90, 36 + 180, 60 + 270},
+                    {0, 15 + 90, 30 + 180, 50 + 270},
                     {0, 15 + 90, 30 + 180, 50 + 270},
                     {0, 0.75 + 90, 1.5 + 180, 2.5 + 270}
             },
             {
                     {0, 54 + 120, 108 + 240, 180 + 360},
-                    {0, 18 + 120, 36 + 240, 60 + 360},
+                    {0, 15 + 120, 30 + 240, 50 + 360},
                     {0, 15 + 120, 30 + 240, 50 + 360},
                     {0, 0.75 + 120, 1.5 + 240, 2.5 + 360}
             }
@@ -682,21 +693,21 @@ public class Constants {
                                             3200,  //natural gas
                                             1800,  //electricity
                                             14000,  //oil
-                                            5800,  //propane
+                                            0,  //propane; this is missing from given database. Ask instructors
                                             4510  //wood
                                     },
                                     {  //$150-200/month
                                             3400,  //natural gas
                                             2700,  //electricity
                                             17500,  //oil
-                                            5852,  //propane
+                                            0,  //propane; missing from given data
                                             4680  //wood
                                     },
                                     {  //>$200/month
                                             3600,  //natural gas
                                             3600,  //electricity
                                             21000,  //oil
-                                            6100,  //propane
+                                            0,  //propane; missing
                                             5000  //wood
                                     }}},
                     {  //2 people
@@ -791,21 +802,21 @@ public class Constants {
                                             3400,
                                             2100,
                                             15500,
-                                            6410,
+                                            0,  //missing propane
                                             5010
                                     },
                                     {  //$150-200/month
                                             3600,
                                             3100,
                                             18100,
-                                            6560,
+                                            0,
                                             5180
                                     },
                                     {  //>$200/month
                                             3800,
                                             3800,
                                             22000,
-                                            6840,
+                                            0,
                                             5500
                                     }}},
                     {  //3-4 people
@@ -861,13 +872,13 @@ public class Constants {
                                             3500,	1500,	12500,	7240,	5640
                                     },
                                     {  //$100-150/month
-                                            3700,	2300,	16250, 7300,	5710  //missing propane
+                                            3700,	2300,	16250, 0,	5710  //missing propane
                                     },
                                     {  //$150-200/month
-                                            4100,	3400,	20000, 7600,	5980  //missing propane
+                                            4100,	3400,	20000, 0,		5980  //missing propane
                                     },
                                     {  //>$200/month
-                                            4100,	4000,	23500, 7890,	6250  //missing propane
+                                            4100,	4000,	23500, 0,		6250  //missing propane
                                     }}},
                     {  //5 people
                             {  //<1000 sqft
@@ -910,13 +921,13 @@ public class Constants {
                                             3800,	1800,	14000,	8140,	6340
                                     },
                                     {  //$100-150/month
-                                            4000,	2700,	17500, 8230,	6510  //missing propane
+                                            4000,	2700,	17500, 0,		6510  //missing propane
                                     },
                                     {  //$150-200/month
-                                            4400,	3600,	21000, 8300,	6680  //missing propane
+                                            4400,	3600,	21000, 0,		6680  //missing propane
                                     },
                                     {  //>$200/month
-                                            4400,	4200,	25000, 8710,	7000  //missing propane
+                                            4400,	4200,	25000, 0,		7000  //missing propane
                                     }}}},
             {  //semi
                     {  //1 person
