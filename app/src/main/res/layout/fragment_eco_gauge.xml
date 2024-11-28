@@ -3,8 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FirstFragment"
+    tools:context=".EcoGaugeFragment"
     android:background="@color/palette_turquoise"
+    android:fitsSystemWindows="true"
     android:fillViewport="true">
 
     <LinearLayout

@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/firstFragment"
-        android:title="Fragment1"
+        android:id="@+id/EcoGaugeFragment"
+        android:title="EcoGauge"
         android:icon="@drawable/ic_android"
     />
     <item

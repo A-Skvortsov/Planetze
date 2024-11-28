@@ -95,9 +95,6 @@ public class SignUpFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
 
-        System.out.println("uhfeuefehufehf");
-        System.out.println(getActivity().getSupportFragmentManager().findFragmentById(R.id.SecondFragment) == null);
-
         auth = FirebaseAuth.getInstance();
         signupEmail = view.findViewById(R.id.emailInput);
         signupPassword = view.findViewById(R.id.passwordInput);
