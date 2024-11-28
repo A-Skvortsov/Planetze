@@ -58,6 +58,15 @@ public class Constants {
             {"How many electronic devices have you purchased in the past year?", "None", "1", "2", "3", "4 or more"},
             {"How often do you recycle?", "Never", "Occasionally", "Frequently", "Always"}};
 
+    public static final String[] activityCats = {"Select a Category",
+            "Transportation", "Food", "Consumption", "Energy"};
+    public static final String[][] activities = {
+            {"Select an Activity", "Drive personal vehicle", "Take public transportation",
+                    "Cycling/Walking", "Flight (< 1,500km)", "Flight (> 1,500km)"},
+            {"Select an Activity", "Meal"},
+            {"Select an Activity", "Buy new clothes", "Buy electronics", "Other purchases"},
+            {"Select an Activity", "Electricity", "Gas", "Water"}};
+
     public static final String[] country = {
             "Afghanistan",
             "Africa",
