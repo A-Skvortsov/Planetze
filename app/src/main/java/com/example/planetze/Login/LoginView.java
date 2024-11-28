@@ -27,7 +27,9 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.planetze.EcoTrackerFragment;
 import com.example.planetze.ForgotPasswordFragment;
+import com.example.planetze.HomeActivity;
 import com.example.planetze.HomeFragment;
+import com.example.planetze.MainActivity;
 import com.example.planetze.R;
 import com.example.planetze.SignUpFragment;
 import com.example.planetze.SurveyFragment;
@@ -147,7 +149,11 @@ public class LoginView extends Fragment  {
         //NavController navController = NavHostFragment.findNavController(f);
         //navController.navigate(R.id.EcoTrackerFragment);
 
-        loadFragment(new EcoTrackerFragment());
+        Intent intent = new Intent(getContext(), HomeActivity.class);
+
+        // Prevent the user from being able to navigate back the login page using the return action.
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     private void loadFragment(Fragment fragment) {

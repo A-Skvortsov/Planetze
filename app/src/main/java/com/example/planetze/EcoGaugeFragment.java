@@ -61,7 +61,7 @@ import customDataStructures.EmissionNode;
 import customDataStructures.EmissionNodeCollection;
 import utilities.UserEmissionsData;
 
-public class FirstFragment extends Fragment {
+public class EcoGaugeFragment extends Fragment {
 
     private LineChart emissionsTrendGraph;
     private PieChart categoryBreakdownChart;
@@ -85,7 +85,7 @@ public class FirstFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_first, container, false);
+        View view = inflater.inflate(R.layout.fragment_eco_gauge, container, false);
 
         this.emissionsTrendGraph = view.findViewById(R.id.line_chart);
         this.categoryBreakdownChart = view.findViewById(R.id.pie_chart);

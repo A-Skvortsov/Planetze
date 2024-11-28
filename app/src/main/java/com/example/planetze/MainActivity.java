@@ -86,27 +86,30 @@ public class MainActivity extends AppCompatActivity {
         //change this later
         String userID = UserData.getUserID(getApplicationContext());
 
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                DataSnapshot users = task.getResult();
-                for(DataSnapshot user:users.getChildren()) {
-                    boolean cond1 = user.getKey().toString().trim().equals(userID);
-                    boolean cond2 = user.child("is_new_user").getValue().toString().equals("true");
-                    //System.out.println(user.child("is_new_user").getValue().toString());
-                    if (cond1 && cond2) {
-                        loadFragment(new SurveyFragment());
-                        break;
-                    }
-                    else if (cond1) {
-                        loadFragment(new EcoTrackerFragment());
-                        break;
-                    }
-
+        userRef.get().addOnCompleteListener(task -> {
+            DataSnapshot users = task.getResult();
+            for(DataSnapshot user:users.getChildren()) {
+                boolean cond1 = user.getKey().toString().trim().equals(userID);
+                boolean cond2 = user.child("is_new_user").getValue().toString().equals("true");
+                //System.out.println(user.child("is_new_user").getValue().toString());
+                if (cond1 && cond2) {
+                    loadFragment(new SurveyFragment());
+                    break;
                 }
-                //loadFragment(new EcoTrackerFragment());
+                else if (cond1) {
+                    navigateToHomeActivity();
+                    break;
+                }
+
             }
+            //loadFragment(new EcoTrackerFragment());
         });
+    }
+
+    private void navigateToHomeActivity() {
+        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     private void onOpenApp() {
