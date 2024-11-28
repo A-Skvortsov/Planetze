@@ -103,13 +103,16 @@ public class SurveyFragment extends Fragment {
                     }
 
                     db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-                    String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
+                    //String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
+                    String userId = UserData.getUserID(getContext());
                     DatabaseReference userRef = db.getReference("user data")
                             .child(userId);
                     //send survey results to firebase as Map<String, List<Double>>
                     Map<String, Object> c = new HashMap<>();
                     c.put("survey_results", list);
                     userRef.updateChildren(c);
+
+                    userRef.child("is_new_user").setValue(false);
 
                     loadFragment(new SurveyResults());
                     return;
