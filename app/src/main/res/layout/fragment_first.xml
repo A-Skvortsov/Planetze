@@ -29,6 +29,7 @@
 
         <!-- Trend Graph Card -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/trend_graph_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="5dp"
@@ -51,8 +52,9 @@
             </com.github.mikephil.charting.charts.LineChart>
         </androidx.cardview.widget.CardView>
 
-        <!-- Emissions breakdown PieChart Card -->
+        <!-- Emissions breakdown Card -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/emissions_breakdown_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="5dp"
@@ -76,6 +78,7 @@
 
         <!-- Comparison Chart Card -->
         <androidx.cardview.widget.CardView
+            android:id="@+id/comparison_chart_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="5dp"

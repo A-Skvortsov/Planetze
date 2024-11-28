@@ -1,14 +1,8 @@
 package utilities;
 
-import static utilities.Constants.DAILY;
-import static utilities.Constants.DEFAULT_DATE;
 import static utilities.Constants.EMISSIONS_AMOUNT_INDEX;
 import static utilities.Constants.EMISSION_TYPE_INDEX;
-import static utilities.Constants.MONTHLY;
-import static utilities.Constants.WEEKLY;
-import static utilities.Constants.YEARLY;
 
-import com.example.planetze.Database;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 
@@ -26,31 +20,55 @@ import java.util.Objects;
 import java.util.Set;
 
 import customDataStructures.EmissionNode;
-import customDataStructures.EmissionsNodeCollection;
+import customDataStructures.EmissionNodeCollection;
 
+
+/**
+ * The UserEmissionsData class manages and processes user emissions data.
+ *
+ * @see EmissionNodeCollection
+ * @see EmissionNode
+ * @see Database
+ */
 public class UserEmissionsData {
-    private String userId;
+    private final String userId;
+    private final DataReadyListener listener;
+    private final SimpleDateFormat simpleDateFormat;
     private HashMap<String, Object> data;
     private List<String> sortedDates;
-    private DataReadyListener listener;
-    private SimpleDateFormat simpleDateFormat;
 
-    // TODO: Make the source of this the database
+    // TODO: Source this from the database
     private boolean interpolate = false;
 
+    /**
+     * Interface for handling database events.
+     */
     public interface DataReadyListener {
+        void start();
         void onDataReady();
         void onError(String errorMessage);
     }
 
+    /**
+     * This class fetches user emissions data and activity data.
+     */
     public UserEmissionsData(String userId, DataReadyListener listener) {
         this.userId = userId;
         this.listener = listener;
+
+        // Format the data in the form yyyy-mm-dd
         this.simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
-        fetchData(); // Fetch data when the object is created
+        // Fetch data when the object is created
+        fetchData();
     }
 
+    /**
+     * Fetches user data from the database and initializes the local data structures.
+     *
+     * @throws AssertionError If the fetched data is null.
+     * @see Database#mReadDataOnce(String, Database.OnGetDataListener)
+     */
     private void fetchData() {
         Database db = new Database();
         String path = "user data/" + userId + "/calendar";
@@ -58,28 +76,19 @@ public class UserEmissionsData {
         db.mReadDataOnce(path, new Database.OnGetDataListener() {
             @Override
             public void onStart() {
-                // TODO: Show progress dialog
-                System.out.println("START");
+
             }
 
             @Override
             public void onSuccess(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     data = (HashMap<String, Object>) dataSnapshot.getValue();
-                    System.out.println("SUCCESS");
-                    System.out.println(data);
 
+                    assert data != null;
                     sortedDates = new ArrayList<>(data.keySet());
 
                     // Sort dates in descending order i.e. 1/1/2024 comes before 1/1/2023
-                    sortedDates.sort((date1, date2) -> {
-                        try {
-                            // Compare the dates
-                            return Objects.requireNonNull(simpleDateFormat.parse(date2)).compareTo(simpleDateFormat.parse(date1));
-                        } catch (ParseException e) {
-                            throw new RuntimeException("An error occurred while sorting the keys in the data HashMap. " + e);
-                        }
-                    });
+                    sortedDates.sort((date1, date2) -> daysBetweenDates(date1, date2));
 
                     if (listener != null) {
                         listener.onDataReady();
@@ -92,126 +101,144 @@ public class UserEmissionsData {
             }
             @Override
             public void onFailed(DatabaseError databaseError) {
-                System.out.println("FAIL");
-                if (listener != null) listener.onError("Error fetching data: " + databaseError.getMessage());
+                if (listener != null) {
+                    listener.onError("Error fetching data: " + databaseError.getMessage());
+                }
             }
         });
     }
 
-    public float getUserEmissionsKG(char timePeriod) {
-        if (data == null) {
+    /**
+     * Checks whether the user has any tracked activity data.
+     *
+     * @return Returns true if the sortedDates list is not null and contains more than one entry.
+     */
+    public boolean userHasData() {
+        // We check for > 1 entry because of the default entry 0000-00-00
+        return sortedDates != null && sortedDates.size() > 1;
+    }
+
+
+    /**
+     * Retrieves the first time an activity was tracked by the user.
+     *
+     * @return The date of the first tracked activity as a string in the yyyy-mm-dd format,
+     * or null if no activity data is available.
+     */
+    public String getFirstTrackedDay() {
+        if (!userHasData()) {
+            return null;
+        }
+
+        /*
+            Get the second last item in sorted dates as it is sorted in descending order and
+            last item is the default date 0000-00-00
+        */
+        return sortedDates.get(sortedDates.size() - 2);
+    }
+
+    /**
+     * Calculates the total number of days since the user first tracked an activity.
+     *
+     * @return the total number of days since the user first tracked an activity,
+     * or 0 if no activity data is available.
+     *
+     */
+    public int totalDaysAsUser() {
+        if (!userHasData()) {
             return 0;
         }
 
-        switch(timePeriod) {
-            case DAILY:
-                return getDailyEmissions();
-            case MONTHLY:
-                return getMonthlyEmissions();
-            case WEEKLY:
-                return getWeeklyEmissions();
-            case YEARLY:
-                return getYearlyEmissions();
-            default:
-                return getOverallEmissions();
-        }
+        /*
+            Calculate and return the number of days between the first tracked activity date
+            and the current date.
+        */
+        return daysBetweenDates(getFirstTrackedDay(), getCurrentDate());
     }
 
-    public List<EmissionsNodeCollection> getUserEmissionsDataKG(char timePeriod) {
+    /**
+     * Retrieves the total emissions in kilograms of CO2e for the user over the given
+     * number of days.
+     *
+     * @param days The number of days over which the emissions should be calculated.
+     * @return the total emissions in kilograms of CO2e over the given number of days, or 0 
+     * if no activity data is available.
+     * @see #getTotalEmissions(int)
+     * @see #generateEmissionsData(int)
+     */
+    public float getUserEmissions(int days) {
+        if (!userHasData()) {
+            return 0;
+        }
+        return getTotalEmissions(days);
+    }
+
+    /**
+     * Retrieves the emissions data for the user in kilograms of CO2e over the given
+     * number of days.
+     * <p>
+     * This method returns a list of {@link EmissionNodeCollection} objects, where each
+     * collection contains emissions data for the given days.
+     * </p>
+     *
+     * @param days The number of days over which the emissions data should be retrieved.
+     * @return a list of {@link EmissionNodeCollection} objects, or null if no data is available.
+     * @see #generateEmissionsData(int)
+     */
+    public List<EmissionNodeCollection> getUserEmissionsData(int days) {
         if (data == null)
             return null;
-
-        switch(timePeriod) {
-            case DAILY:
-                return getDailyEmissionsData();
-            case MONTHLY:
-                return getMonthlyEmissionsData();
-            case WEEKLY:
-                return getWeeklyEmissionsData();
-            case YEARLY:
-                return getYearlyEmissionsData();
-            default:
-                return getOverallEmissionsData();
-        }
+        return generateEmissionsData(days);
     }
 
-    private float getDailyEmissions() {
-        return getTotalEmissions(1);
-    }
-
-    private float getWeeklyEmissions() {
-        return getTotalEmissions(7);
-    }
-
-    private float getMonthlyEmissions() {
-        return getTotalEmissions(31);
-    }
-
-    private float getYearlyEmissions() {
-        return getTotalEmissions(365);
-    }
-
-    private float getOverallEmissions() {
-        return getTotalEmissions(Integer.MAX_VALUE);
-    }
-
-    private List<EmissionsNodeCollection> getDailyEmissionsData() {
-        return generatedEmissionsData(2);
-    }
-
-    private List<EmissionsNodeCollection> getWeeklyEmissionsData() {
-        return generatedEmissionsData(7);
-    }
-
-    private List<EmissionsNodeCollection> getMonthlyEmissionsData() {
-        return generatedEmissionsData(31);
-    }
-
-    private List<EmissionsNodeCollection> getYearlyEmissionsData() {
-        return generatedEmissionsData(365);
-    }
-
-    private List<EmissionsNodeCollection> getOverallEmissionsData() {
-        return generatedEmissionsData(Integer.MAX_VALUE);
-    }
-
+    /**
+     * Retrieves the total emissions in kilograms of CO2e by summing up all the data
+     * based the number of given days.
+     *
+     * @param days The number of days over which the emissions should be summed.
+     * @return the total emissions in kilograms of CO2e for the specified days, or 0 if no data is available.
+     * @see #generateEmissionsData(int)
+     */
     private float getTotalEmissions(int days) {
-        List<EmissionsNodeCollection> emissionsData = generatedEmissionsData(days);
+        List<EmissionNodeCollection> emissionsData = generateEmissionsData(days);
+        float totalEmissions = 0;
 
         if (emissionsData == null || emissionsData.isEmpty()) {
-            return 0;
+            return totalEmissions;
         }
 
-        float totalEmissions = 0;
-        for (EmissionsNodeCollection emissionsNodeCollection : emissionsData) {
-            for (EmissionNode node : emissionsNodeCollection.getData()) {
+        // Sum all the emission data
+        for (EmissionNodeCollection emissionNodeCollection : emissionsData) {
+            for (EmissionNode node : emissionNodeCollection.getData()) {
                 totalEmissions += node.getEmissionsAmount();
             }
         }
-
         return totalEmissions;
     }
 
+    /**
+     * Retrieves the current date in the format yyyy-mm-dd.
+     *
+     * @return A string representing the current date in the format yyyy-mm-dd.
+     */
+    private String getCurrentDate() {
+        // Get the current date
+        Date date = Calendar.getInstance().getTime();
 
-    private float sumEmissions(String date) {
-        if (data == null || !data.containsKey(date) || date.equals(DEFAULT_DATE)) {
-            return 0;
-        }
-
-        float emissions = 0;
-
-        Object dateData = data.get(date);
-        List<List<Object>> activities = (List<List<Object>>) dateData;
-
-        assert activities != null;
-        for (List<Object> activity : activities) {
-            emissions += Float.parseFloat((String) activity.get(EMISSIONS_AMOUNT_INDEX));
-        }
-
-        return emissions;
+        // Format and return the current date in the format yyyy-mm-dd
+        return simpleDateFormat.format(date);
     }
 
-    private String getLastAvailableDate(String date) {
+    /**
+     * Retrieves the last date before the given date when an activity was tracked
+     * in the yyyy-mm-dd format.
+     *
+     * @param date The date to search before, formatted as yyyy-mm-dd (pre-supposed).
+     * @return the last date before the given date when an activity was tracked,
+     * or null if no valid date is found.
+     * @throws RuntimeException if an error occurs while parsing the dates.
+     */
+    private String getLastTrackedDate(String date) {
         if (date == null) {
             return null;
         }
@@ -229,6 +256,13 @@ public class UserEmissionsData {
         return null;
     }
 
+    /**
+     * Retrieves the date before the given date.
+     *
+     * @param date The date from which the previous day should be calculated,
+     *             formatted as yyyy-mm-dd (pre-supposed).
+     * @return The date before the given date, in the yyyy-mm-dd format.
+     */
     private String getTheDayBefore(String date) {
         String[] dateSegments = date.split("-");
 
@@ -239,140 +273,31 @@ public class UserEmissionsData {
 
         Calendar calendar = Calendar.getInstance();
 
-        // note here that months in Calendar class go from 0-11, but we have them set from 1-12. So subtract 1 from ours.
+        /*
+            note here that months in Calendar class go from 0-11, but we have them set from 1-12.
+            So subtract 1 from ours.
+         */
         calendar.set(ymdInts[0], ymdInts[1] - 1, ymdInts[2]);
 
         calendar.add(Calendar.DAY_OF_MONTH, -1);  // Stores the previous day
 
-        // Add one to the month since months in Calendar class go from 0-11 and return the day before in the yyyy-mm-dd format.
+        /*
+            Add one to the month since months in Calendar class go from 0-11 and return the day
+            before in the yyyy-mm-dd format.
+         */
         return calendar.get(Calendar.YEAR) +"-"+(calendar.get(Calendar.MONTH)+1)+"-"
                 +calendar.get(Calendar.DAY_OF_MONTH);
     }
 
-    public List<EmissionsNodeCollection> generatedEmissionsData(int days) {
-        // Make sure there is enough data to use to interpolate
-        if (data == null || data.size() < 2) {
-            return null;
-        }
-
-        if (interpolate) {
-            return getInterpolatedData(days);
-        }
-        return getRawData(days);
-    }
-
-    private List<EmissionsNodeCollection> getRawData(int days) {
-        Date date = Calendar.getInstance().getTime();
-        String curr = simpleDateFormat.format(date);
-        List<EmissionsNodeCollection> chartData = new ArrayList<>();
-
-        for (int i = 0; i < days; i++) {
-            if (sortedDates.contains(curr)) {
-                EmissionsNodeCollection collection = dataToEmissionsNodesCollection(curr, data.get(curr));
-                chartData.add(0, collection);
-            }
-            curr = getTheDayBefore(curr);
-
-            if (daysBetweenDates(sortedDates.get(sortedDates.size() - 2), curr) < 0) {
-                break;
-            }
-        }
-
-        return chartData;
-    }
-
-    private List<EmissionsNodeCollection> getInterpolatedData(int days) {
-        Date date = Calendar.getInstance().getTime();
-        String x2 = simpleDateFormat.format(date);
-        String x1 = x2;
-
-        List<EmissionsNodeCollection> chartData = new ArrayList<>();
-
-        Set<String> addedDates = new HashSet<>();
-
-        for (int i = sortedDates.size() - 1; i >= 1; i--) {
-            if (sortedDates.contains(x2) && !addedDates.contains(x2)) {
-                EmissionsNodeCollection collection = dataToEmissionsNodesCollection(x2, data.get(x2));
-                chartData.add(0, collection);
-                addedDates.add(x2);
-                x2 = getTheDayBefore(x2);
-                x1 = getLastAvailableDate(x2);
-            } else if (chartData.isEmpty()) {
-                x1 = getLastAvailableDate(x2);
-                EmissionsNodeCollection collection = dataToEmissionsNodesCollection(x2, data.get(x1));
-                chartData.add(0, collection);
-                addedDates.add(x2);
-                x2 = getTheDayBefore(x2);
-                x1 = getLastAvailableDate(x2);
-
-                i++; /* Ignore the iteration as new data was created */
-            } else {
-                EmissionsNodeCollection dataForX1 = dataToEmissionsNodesCollection(x1, data.get(x1));
-
-                EmissionsNodeCollection interpolatedCollection = interpolateData(dataForX1, chartData.get(0), x2);
-                chartData.add(0, interpolatedCollection);
-                addedDates.add(x2);
-
-                x2 = getTheDayBefore(x2);
-                x1 = getLastAvailableDate(x2);
-
-                i++; /* Ignore the iteration as new data was created */
-            }
-
-            if (chartData.size() == days) {
-                break;
-            }
-        }
-
-        return chartData;
-    }
-
-    private EmissionsNodeCollection interpolateData(EmissionsNodeCollection data1, EmissionsNodeCollection data2, String newDate) {
-        if (daysBetweenDates(data1.getDate(), data2.getDate()) < 0
-                && daysBetweenDates(data1.getDate(), newDate) <= 0
-                && daysBetweenDates(newDate, data2.getDate()) >= 0) {
-            return null;
-        }
-
-        EmissionsNodeCollection interpolatedCollection = new EmissionsNodeCollection(newDate);
-
-        ArrayList<EmissionNode> nodes1 = data1.getData();
-        ArrayList<EmissionNode> nodes2 = data2.getData();
-
-        Map<String, Float> emissionMap1 = new HashMap<>();
-        Map<String, Float> emissionMap2 = new HashMap<>();
-
-        for (EmissionNode node : nodes1) {
-            emissionMap1.put(node.getEmissionType(), node.getEmissionsAmount());
-        }
-
-        for (EmissionNode node : nodes2) {
-            emissionMap2.put(node.getEmissionType(), node.getEmissionsAmount());
-        }
-
-        Set<String> allEmissionTypes = new HashSet<>(emissionMap1.keySet());
-        allEmissionTypes.addAll(emissionMap2.keySet());
-
-        for (String emissionType : allEmissionTypes) {
-            float value1 = emissionMap1.getOrDefault(emissionType, 0f);
-            float value2 = emissionMap2.getOrDefault(emissionType, 0f);
-
-            int daysBetweenData1AndNewDate = daysBetweenDates(data1.getDate(), newDate);
-            int daysBetweenData1AndData2 = daysBetweenDates(data1.getDate(), data2.getDate());
-
-            // Apply the linear interpolation formula to estimate the emissions value
-            float interpolatedEmissionsValue = value1 + ((value2 - value1) * daysBetweenData1AndNewDate) / daysBetweenData1AndData2;
-
-            EmissionNode interpolatedNode = new EmissionNode(emissionType, interpolatedEmissionsValue);
-
-            interpolatedCollection.addData(interpolatedNode);
-        }
-
-        return interpolatedCollection;
-    }
-
-
-
+    /**
+     * Calculates the number of days between two dates.
+     *
+     * @param date1 The first date, formatted as yyyy-mm-dd (pre-supposed).
+     * @param date2 The second date, formatted as yyyy-mm-dd (pre-supposed).
+     * @return the number of days between the two dates
+     * or -1 if any of the dates is invalid or null.
+     * @throws RuntimeException if an error occurs while parsing the dates.
+     */
     private int daysBetweenDates(String date1, String date2) {
         if (date1 == null || date2 == null) {
             return -1;
@@ -392,29 +317,217 @@ public class UserEmissionsData {
             // Convert the time difference in milliseconds to days
             return (int) (diffInMillis / (1000 * 60 * 60 * 24));
         } catch(ParseException e) {
-            throw new RuntimeException("An error occurred while the program was calculated the "
-                                        + "number of days between to dates. " + e);
+            throw new RuntimeException(e);
         }
     }
 
-    public EmissionsNodeCollection dataToEmissionsNodesCollection(String date, Object data) {
+    /**
+     * Generates emissions data for the user, either using raw data or interpolated data.
+     *
+     * @param days The number of days for which the emissions data should be generated.
+     * @return A list of {@link EmissionNodeCollection} representing the emissions data for the
+     *         given number of days, or null if there is no user data.
+     * @see #getRawData(int)
+     * @see #getInterpolatedData(int)
+     */
+    private List<EmissionNodeCollection> generateEmissionsData(int days) {
+        if (!userHasData())
+            return null;
+        return interpolate? getInterpolatedData(days) : getRawData(days);
+    }
+
+    /**
+     * Retrieves the raw emissions data for the given number of days.
+     *
+     * @param days The number of days for which interpolated emissions data should be calculated
+     *             and retrieved.
+     * @return A list of {@link EmissionNodeCollection} objects representing the raw emissions data.
+     * @see #dataToEmissionsNodesCollection(String, Object)
+     */
+    private List<EmissionNodeCollection> getRawData(int days) {
+        // Get the current date in the format yyyy-mm-dd
+        String current = getCurrentDate();
+
+        List<EmissionNodeCollection> chartData = new ArrayList<>();
+
+        for (int i = 0; i < days; i++) {
+            // Check the date exists in the data.
+            if (data.containsKey(current)) {
+                // Convert the data into an EmissionsNodesCollection before storing the list
+                EmissionNodeCollection collection = dataToEmissionsNodesCollection(current, data.get(current));
+                chartData.add(0, collection);
+            }
+            // Go back one day
+            current = getTheDayBefore(current);
+
+            // Check the search has gone past the first day an activity was tracked.
+            if (daysBetweenDates(getFirstTrackedDay(), current) < 0) {
+                break;
+            }
+        }
+        return chartData;
+    }
+
+    /**
+     * Retrieves interpolated emissions data for the given number of days.
+     *
+     * @param days The number of days for which interpolated emissions data should be calculated
+     *            and retrieved.
+     * @return  A list of {@link EmissionNodeCollection} representing interpolated emissions data.
+     */
+    private List<EmissionNodeCollection> getInterpolatedData(int days) {
+        // Get the current date in the format yyyy-mm-dd
+        String current = getCurrentDate();
+
+        String x1 = current;
+
+        List<EmissionNodeCollection> chartData = new ArrayList<>();
+
+        Set<String> addedDates = new HashSet<>();
+
+        for (int i = sortedDates.size() - 1; i >= 1; i--) {
+            if (data.containsKey(current) && !addedDates.contains(current)) {
+                EmissionNodeCollection collection = dataToEmissionsNodesCollection(current, data.get(current));
+                chartData.add(0, collection);
+                addedDates.add(current);
+                current = getTheDayBefore(current);
+                x1 = getLastTrackedDate(current);
+            } else if (chartData.isEmpty()) {
+                x1 = getLastTrackedDate(current);
+                EmissionNodeCollection collection = dataToEmissionsNodesCollection(current, data.get(x1));
+                chartData.add(0, collection);
+                addedDates.add(current);
+                current = getTheDayBefore(current);
+                x1 = getLastTrackedDate(current);
+
+                i++;  //Ignore the iteration as new data was created.
+            } else {
+                EmissionNodeCollection dataForX1 = dataToEmissionsNodesCollection(x1, data.get(x1));
+
+                assert dataForX1 != null;
+                EmissionNodeCollection interpolatedCollection = interpolateData(dataForX1, chartData.get(0), current);
+                chartData.add(0, interpolatedCollection);
+                addedDates.add(current);
+
+                current = getTheDayBefore(current);
+                x1 = getLastTrackedDate(current);
+
+                i++; // Ignore the iteration as new data was created.
+            }
+
+            if (chartData.size() == days) {
+                break;
+            }
+        }
+
+        return chartData;
+    }
+
+    /**
+     * Interpolates emissions data between two existing data points for a specific date.
+     *
+     * @param data1 The emissions data in form of a {@link EmissionNodeCollection}
+     *             for the first known date (x1).
+     * @param data2 The emissions data in form of a {@link EmissionNodeCollection}
+     *              for the second known date (x2).
+     * @param newDate The date for which emissions data needs to be interpolated (x1 <= x <= x2) .
+     * @return An {@link EmissionNodeCollection} containing the interpolated emissions data.
+     */
+    private EmissionNodeCollection interpolateData(EmissionNodeCollection data1,
+                                                   EmissionNodeCollection data2, String newDate) {
+        // Make sure the newDate is between the two dates.
+        if (daysBetweenDates(data1.getDate(), data2.getDate()) < 0
+                && daysBetweenDates(data1.getDate(), newDate) <= 0
+                && daysBetweenDates(newDate, data2.getDate()) >= 0) {
+            return null;
+        }
+
+        // EmissionsNodeCollection representing the interpolated emissions data. (y)
+        EmissionNodeCollection interpolatedCollection = new EmissionNodeCollection(newDate);
+
+        // Store the data to be used for interpolation from the two EmissionsNodeCollections
+        ArrayList<EmissionNode> nodes1 = data1.getData();
+        ArrayList<EmissionNode> nodes2 = data2.getData();
+
+
+        Map<String, Float> emissionMap1 = new HashMap<>();
+        Map<String, Float> emissionMap2 = new HashMap<>();
+
+        // Store the individual emissions type alongside their amount
+        for (EmissionNode node : nodes1) {
+            emissionMap1.put(node.getEmissionType(), node.getEmissionsAmount());
+        }
+
+        for (EmissionNode node : nodes2) {
+            emissionMap2.put(node.getEmissionType(), node.getEmissionsAmount());
+        }
+
+        Set<String> allEmissionTypes = new HashSet<>();
+
+        // Store emissions type from both Nodes
+        allEmissionTypes.addAll(emissionMap1.keySet());
+        allEmissionTypes.addAll(emissionMap2.keySet());
+
+        // Create the interpolated data
+        for (String emissionType : allEmissionTypes) {
+            /*
+                Determine the Emission amount from each Category and default 0 if that category
+                doesn't exist in the other EmissionsNodeCollection
+             */
+            float value1 = emissionMap1.getOrDefault(emissionType, 0f);
+            float value2 = emissionMap2.getOrDefault(emissionType, 0f);
+
+            // Represents x - x1 in the interpolation formula
+            int daysBetweenDate1AndNewDate = daysBetweenDates(data1.getDate(), newDate);
+
+            // Represents x2 - x1 in the interpolation formula
+            int daysBetweenDate1AndDate2 = daysBetweenDates(data1.getDate(), data2.getDate());
+
+            // Apply the linear interpolation formula to estimate the emissions value
+            float interpolatedEmissionsValue = value1 + ((value2 - value1)
+                    * daysBetweenDate1AndNewDate) / daysBetweenDate1AndDate2;
+
+            // Create an Emission node to represent the interpolated data for a single category
+            EmissionNode interpolatedNode = new EmissionNode(emissionType, interpolatedEmissionsValue);
+
+            // Add all interpolated categories
+            interpolatedCollection.addData(interpolatedNode);
+        }
+
+        return interpolatedCollection;
+    }
+
+    /**
+     * Converts raw Firebase data for a given date into a {@link EmissionNodeCollection}.
+     *
+     * @param date The date for the Firebase data.
+     * @param data The Firebase data to be converted.
+     * @return An {@link EmissionNodeCollection} representing the emissions data for the given date.
+     * @see EmissionNodeCollection#addData(EmissionNode)
+     */
+    private EmissionNodeCollection dataToEmissionsNodesCollection(String date, Object data) {
         if (data == null) {
             return null;
         }
 
-        EmissionsNodeCollection collection = new EmissionsNodeCollection(date);
+        EmissionNodeCollection collection = new EmissionNodeCollection(date);
 
         List<List<Object>> dataList = (List<List<Object>>) data;
 
+        // Breakup the data into different emission categories and sum the amount for each category.
         for (List<Object> row : dataList) {
             String emissionType = (String) row.get(EMISSION_TYPE_INDEX);
             float emissionAmount = Float.parseFloat(row.get(EMISSIONS_AMOUNT_INDEX).toString());
 
             EmissionNode node = new EmissionNode(emissionType, emissionAmount);
+
+            /*
+                Either sums into an existing Node
+                or creates new node if the categories doesn't already exists
+             */
             collection.addData(node);
         }
 
         return collection;
     }
-
 }

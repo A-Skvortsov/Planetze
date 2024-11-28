@@ -1,17 +1,15 @@
 package utilities;
 
-public class Constants {
+public abstract class Constants {
 
-    //all survey question categories
+    // All survey question categories
     public static final String[] categories = {"Transportation", "Food", "Housing", "Consumption"};
 
-    public static final String DEFAULT_DATE = "0000-00-00";
-
-    public static final char DAILY = 'D';
-    public static final char WEEKLY = 'W';
-    public static final char MONTHLY = 'M';
-    public static final char YEARLY = 'Y';
-    public static final char OVERALL = 'O';
+    public static final int DAILY = 1;
+    public static final int WEEKLY = 7;
+    public static final int MONTHLY = 30;
+    public static final int YEARLY = 365;
+    public static final int OVERALL = Integer.MAX_VALUE;
 
 
     public static final int EMISSION_TYPE_INDEX = 0;

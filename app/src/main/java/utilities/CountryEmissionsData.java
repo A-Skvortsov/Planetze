@@ -56,34 +56,16 @@ public class CountryEmissionsData {
 
     /**
      * Public method to retrieve 'comparable' emissions data of a given country.
-     *<p>
-     * Comparable emissions data is created based on the time period.
-     *
+     * Comparable emissions data is created based on the number of days provided.
      *
      * @param country The name of the country.
-     * @param timePeriod Time period for emissions data in the following form
-     *                   ('D': Daily, 'W': Weekly, 'M': Monthly 'Y': Yearly, 'O' Overall)
-     * @return The the comparable emissions data based on the country and time period provided
+     * @param days The number of days over which the emissions should be calculated.
+     * @return The the comparable emissions data based on the country and number of days provided
      * or null if the country data is not found.
      */
-    public Double getComparableEmissionsDataKG(String country, char timePeriod) {
+    public Double getComparableEmissionsDataKG(String country, int days) {
         Double emissions = getCountryPerCapitaEmissionsKG(country);
-
-        switch(timePeriod) {
-            case DAILY:
-                return emissions / 356.0;
-            case WEEKLY:
-                return emissions * 7 / 356.0;
-            case MONTHLY:
-                return emissions * 30 / 356.0;
-            case YEARLY:
-                return emissions;
-            case OVERALL:
-                // TODO: Find a comparable overall emission
-                return emissions;
-            default:
-                return null;
-        }
+        return emissions == null? null : emissions * days / 365.0;
     }
 
     /**
