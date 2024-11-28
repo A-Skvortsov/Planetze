@@ -1,15 +1,18 @@
 package com.example.planetze;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.PopupMenu;
 
 import com.example.planetze.Login.LoginView;
 import com.google.firebase.database.DatabaseReference;
@@ -99,7 +102,7 @@ public class UserOptions extends Fragment {
             @Override
             public void onClick(View view) {
                 //logout();
-                popup();
+                popup2(view);
 
             }
         });
@@ -119,10 +122,40 @@ public class UserOptions extends Fragment {
         dialog.show();
     }
 
+    private void popup2(View view) {
+        PopupMenu popupMenu = new PopupMenu(getContext(), view);
+        popupMenu.inflate(R.menu.menu);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                return onMenuClick(item);
+            }
+        });
+        popupMenu.show();
+    }
+
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
+    private boolean onMenuClick(MenuItem item) {
+        //android.nonFinalResIds=false
+        if (item.getItemId() == R.id.logout) {
+            loadFragment(new LoginView());
+        }
+
+        return false;
+    }
+
+    /*
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        return false;
+    }
+
+     */
 }

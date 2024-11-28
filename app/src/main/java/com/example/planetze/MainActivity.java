@@ -51,7 +51,8 @@ public class MainActivity extends AppCompatActivity {
         //UserData.logout(getApplicationContext());
 
         if (savedInstanceState == null) {
-            onOpenApp();
+            //onOpenApp();
+            loadFragment(new TopBar());
         }
     }
 
