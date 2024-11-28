@@ -27,6 +27,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import utilities.Constants;
@@ -50,6 +51,7 @@ public class AddHabit extends Fragment {
     private final String[] impacts = Constants.impacts;
     FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
     private String userId = "QMCLRlEKD9h2Np1II1vrNU0vpxt2";
+    private HashMap<String, Object> calendar;
     List<List<String>> allHabits;
     List<List<String>> currentHabits;
     List<List<String>> recommendedHabits;
@@ -87,6 +89,19 @@ public class AddHabit extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        //sets user's calendar right away
+        DatabaseReference calendarRef = db.getReference().child("user data")
+                .child(userId).child("calendar");
+        calendarRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                calendar = (HashMap<String, Object>) snapshot.getValue();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 
     @Override
@@ -368,7 +383,7 @@ public class AddHabit extends Fragment {
         Spinner categorySpinner = globalView.findViewById(R.id.categorySpinner);
         Spinner impactSpinner = globalView.findViewById(R.id.impactSpinner);
         String[] orderOfHighestEmissions = {""};
-                //should be getOrderOfHighestEmissions();
+                //should be getOrderOfHighestEmissions(); or getOrderOfActivityFrequency();
 
         recommendedHabits = null;
         for (int i = 0; i < orderOfHighestEmissions.length; i++) {
@@ -582,17 +597,26 @@ public class AddHabit extends Fragment {
 
     //HELPER/MISCELLANEOUS FUNCTIONS BELOW
 
-    /*
-    private String[] getOrderOfHighestEmissions() {
-        String[] order = new String[4];
+
+    /*private String[] getOrderOfActivityFrequency() {
+        int transportation = 0, food = 0, housing = 0, consumption = 0;
         List<String> past29days = AddActivity.getPast29Days(date);
         for (int i = 0; i < past29days.size(); i++) {
-
-
-
-
-
+            if (calendar.containsKey(past29days.get(i))) {
+                List<List<String>> activities = (List<List<String>>) calendar.get(past29days.get(i));
+                for (int j = 0; j < activities.size(); j++) {
+                    switch (activities.get(j).get(0)) {
+                        case "Transportation": transportation++; break;
+                        case "Food": food++; break;
+                        case "Housing": housing++; break;
+                        default: consumption++; break;
+                    }
+                }
+            }
         }
+
+        //List<String>
+
     }*/
 
 
