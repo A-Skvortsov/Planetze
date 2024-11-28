@@ -448,6 +448,7 @@ public class EcoTrackerFragment extends Fragment {
 
                 List<String> habitToLog = currentHabits.get(id);
                 AddActivity.writeToFirebase(date, habitToLog);
+                //AddHabit.logHabit(habitToLog);
 
                 fetchSnapshot();  //Update ecoTracker display
                 updateDisplay();
@@ -575,7 +576,7 @@ public class EcoTrackerFragment extends Fragment {
                     //gets date snapshot (list of activity (lists of strings))
                     //gets the list (activity) at position id (as wanted)
                     activityToEdit = ((List<List<String>>) dataSnapshot.getValue()).get(id);
-                    if (activityToEdit.size() == 3) {  //case that activity is a logged habit
+                    if (isHabit(activityToEdit)) {  //case that activity is a logged habit
                         TextView issueprompt1 = globalView.findViewById(R.id.issuePrompt1);
                         TextView issueprompt2 = globalView.findViewById(R.id.issuePrompt2);
                         String prompt = "Habit logs cannot be edited";
@@ -606,6 +607,14 @@ public class EcoTrackerFragment extends Fragment {
             }
         });
     }
+
+
+
+    private boolean isHabit(List<String> list) {
+        int emissions = Integer.parseInt(list.get(2));
+        return emissions < 0 && !list.get(1).equals("Cycling/Walking");
+    }
+
 
 
     private void loadFragment(Fragment fragment) {

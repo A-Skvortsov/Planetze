@@ -17,6 +17,8 @@ import android.widget.ListView;
 import android.widget.Button;
 import android.widget.SearchView;
 import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -50,6 +52,7 @@ public class AddHabit extends Fragment {
     private String userId = "QMCLRlEKD9h2Np1II1vrNU0vpxt2";
     List<List<String>> allHabits;
     List<List<String>> currentHabits;
+    List<List<String>> recommendedHabits;
     List<List<List<String>>> habitsByCategory;
     List<List<List<String>>> habitsByImpact;
     String selectedHabit = "";
@@ -275,6 +278,7 @@ public class AddHabit extends Fragment {
         setActionBtnListener(view);
         Button allHabitsBtn = view.findViewById(R.id.allHabitsBtn);
         Button yourHabitsBtn = view.findViewById(R.id.yourHabitsBtn);
+        Button recommendedBtn = view.findViewById(R.id.recommendedBtn);
         Button backBtn = view.findViewById(R.id.backBtn);
 
         allHabitsBtn.setOnClickListener(new View.OnClickListener() {
@@ -282,11 +286,14 @@ public class AddHabit extends Fragment {
             public void onClick(View v) {
                 Button allHabitsBtn = globalView.findViewById(R.id.allHabitsBtn);
                 Button yourHabitsBtn = globalView.findViewById(R.id.yourHabitsBtn);
+                Button recommendedBtn = globalView.findViewById(R.id.recommendedBtn);
                 Button actionBtn = globalView.findViewById(R.id.actionBtn);
                 allHabitsBtn.setSelected(true);
                 yourHabitsBtn.setSelected(false);
+                recommendedBtn.setSelected(false);
                 String s = "Adopt";
                 actionBtn.setText(s);
+                displayRecommendedHabitsTexts(false);
 
                 //resets filter
                 Spinner categorySpinner = globalView.findViewById(R.id.categorySpinner);
@@ -304,11 +311,14 @@ public class AddHabit extends Fragment {
             public void onClick(View v) {
                 Button allHabitsBtn = globalView.findViewById(R.id.allHabitsBtn);
                 Button yourHabitsBtn = globalView.findViewById(R.id.yourHabitsBtn);
+                Button recommendedBtn = globalView.findViewById(R.id.recommendedBtn);
                 Button actionBtn = globalView.findViewById(R.id.actionBtn);
                 yourHabitsBtn.setSelected(true);
                 allHabitsBtn.setSelected(false);
+                recommendedBtn.setSelected(false);
                 String s = "Quit";
                 actionBtn.setText(s);
+                displayRecommendedHabitsTexts(false);
 
                 Spinner categorySpinner = globalView.findViewById(R.id.categorySpinner);
                 categorySpinner.setSelection(0);
@@ -320,6 +330,31 @@ public class AddHabit extends Fragment {
             }
         });
 
+        recommendedBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Button allHabitsBtn = globalView.findViewById(R.id.allHabitsBtn);
+                Button yourHabitsBtn = globalView.findViewById(R.id.yourHabitsBtn);
+                Button recommendedBtn = globalView.findViewById(R.id.recommendedBtn);
+                Button actionBtn = globalView.findViewById(R.id.actionBtn);
+                recommendedBtn.setSelected(true);
+                yourHabitsBtn.setSelected(false);
+                allHabitsBtn.setSelected(false);
+                String s = "Adopt";
+                actionBtn.setText(s);
+                displayRecommendedHabitsTexts(true);
+
+                Spinner categorySpinner = globalView.findViewById(R.id.categorySpinner);
+                categorySpinner.setSelection(0);
+                Spinner impactSpinner = globalView.findViewById(R.id.impactSpinner);
+                impactSpinner.setSelection(0);
+
+                //resets displayed habits list to recommended habits
+                computeRecommendedHabits();
+                populateHabitList(globalView, recommendedHabits);
+            }
+        });
+
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -327,6 +362,22 @@ public class AddHabit extends Fragment {
             }
         });
 
+    }
+
+    private void computeRecommendedHabits() {
+        Spinner categorySpinner = globalView.findViewById(R.id.categorySpinner);
+        Spinner impactSpinner = globalView.findViewById(R.id.impactSpinner);
+        String[] orderOfHighestEmissions = {""};
+                //should be getOrderOfHighestEmissions();
+
+        recommendedHabits = null;
+        for (int i = 0; i < orderOfHighestEmissions.length; i++) {
+            if (hasCategory(allHabits, orderOfHighestEmissions[i])) {
+                categorySpinner.setSelection(i);
+                recommendedHabits = setDisplayHabits(categorySpinner, impactSpinner);
+                return;
+            }
+        }
     }
 
 
@@ -362,8 +413,6 @@ public class AddHabit extends Fragment {
         impactSpinner.setSelection(i);
 
         setApplyFilterBtnListener(view);
-        //setCategoryFilterSpinnerListener(view);
-        //setImpactLevelFilterSpinnerListener(view);
     }
 
 
@@ -474,6 +523,7 @@ public class AddHabit extends Fragment {
         }
 
         writeUsersHabitsToFirebase();
+        Toast.makeText(getContext(), "New Habit Adopted", Toast.LENGTH_SHORT).show();
         returnToEcoTracker();
     }
 
@@ -496,6 +546,7 @@ public class AddHabit extends Fragment {
         }
 
         writeUsersHabitsToFirebase();
+        Toast.makeText(getContext(), "Habit Quit", Toast.LENGTH_SHORT).show();
         returnToEcoTracker();
     }
 
@@ -529,7 +580,45 @@ public class AddHabit extends Fragment {
 
 
 
-    //HELPER FUNCTIONS BELOW
+    //HELPER/MISCELLANEOUS FUNCTIONS BELOW
+
+    /*
+    private String[] getOrderOfHighestEmissions() {
+        String[] order = new String[4];
+        List<String> past29days = AddActivity.getPast29Days(date);
+        for (int i = 0; i < past29days.size(); i++) {
+
+
+
+
+
+        }
+    }*/
+
+
+    private boolean hasCategory(List<List<String>> habits, String category) {
+        for (int i = 0; i < habits.size(); i++) {
+            if (habits.get(i).get(0).equals(category)) return true;
+        }
+        return false;
+    }
+
+    private void displayRecommendedHabitsTexts(boolean b) {
+        TextView recommended = globalView.findViewById(R.id.recommendedDescription);
+        TextView noRecs = globalView.findViewById(R.id.noRecs);
+
+        if (!b) {
+            recommended.setVisibility(View.INVISIBLE);
+            noRecs.setVisibility(View.INVISIBLE);
+            return;
+        }
+        recommended.setVisibility(View.VISIBLE);
+        noRecs.setVisibility(View.INVISIBLE);
+        if (recommendedHabits == null) {
+            noRecs.setVisibility(View.VISIBLE);
+        }
+    }
+
 
     /**
      * checks if a particular item is in a ListView's current adapter

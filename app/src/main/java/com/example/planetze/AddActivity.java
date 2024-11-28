@@ -685,7 +685,7 @@ public class AddActivity extends Fragment {
      * @param input2
      */
     public void logPast29Days(String cat, String act, double e, int input1, int input2) {
-        List<String> past29Days = getPast29Days();
+        List<String> past29Days = getPast29Days(date);
         List<String> activity = new ArrayList();
         activity.add(cat);activity.add(act);
         activity.add(String.valueOf(e));
@@ -698,10 +698,11 @@ public class AddActivity extends Fragment {
 
 
     /**
-     * Gets the past 29 days of the calendar.
+     * Gets the past 29 days of the calendar.'
+     * Need this to be static for use in AddHabit
      * @return
      */
-    public List<String> getPast29Days() {
+    public static List<String> getPast29Days(String date) {
         List<String> past29Days = new ArrayList<>();
 
         //convert date string to year, month, day integers
