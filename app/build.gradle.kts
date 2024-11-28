@@ -54,6 +54,8 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation(libs.firebase.auth)
     implementation("com.stripe:stripe-android:21.2.0")
+    implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.1")
+
 
 
 
