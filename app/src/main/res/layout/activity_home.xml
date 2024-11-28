@@ -6,6 +6,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:content=".HomeActivity">
 
+    <Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/palette_turquoise"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        >
+
+        <!-- wrap_content-->
+
+        <Button
+            android:id="@+id/usersetting_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@android:color/transparent"
+            android:drawableTop="@drawable/icon_random"
+            android:drawablePadding="4dp"
+            android:layout_weight="1"
+
+            android:text="@string/home"
+            android:textColor="@color/black"
+            android:textSize="9sp" />
+
+        <TextView
+            android:id="@+id/page_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:text="Planetze"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="15dp"
+            android:textColor="@color/palette_black"
+            android:textSize="25sp" />
+
+
+    </Toolbar>
+
     <!-- Bottom Navigation Bar -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigationView"

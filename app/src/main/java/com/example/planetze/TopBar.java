@@ -102,6 +102,7 @@ public class TopBar extends Fragment {
 
     private boolean onMenuClick(MenuItem item) {
         if (item.getItemId() == R.id.logout) {
+            UserData.logout(getContext());
             loadFragment(new LoginView());
         }
         else if (item.getItemId() == R.id.settings) {

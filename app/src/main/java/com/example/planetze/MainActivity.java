@@ -48,11 +48,11 @@ public class MainActivity extends AppCompatActivity {
          */
 
         initilizeData();
-        //UserData.logout(getApplicationContext());
 
         if (savedInstanceState == null) {
             //onOpenApp();
-            loadFragment(new TopBar());
+            Intent j = new Intent(getApplicationContext(), HomeActivity.class);
+            startActivity(j);
         }
     }
 
@@ -104,7 +104,9 @@ public class MainActivity extends AppCompatActivity {
             loadFragment(new LoginView());
         }
         else {
-            takeToHomePage();
+            //takeToHomePage();
+            Intent j = new Intent(getApplicationContext(), HomeActivity.class);
+            startActivity(j);
         }
     }
 

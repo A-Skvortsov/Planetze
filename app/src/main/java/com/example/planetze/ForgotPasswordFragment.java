@@ -140,7 +140,7 @@ public class ForgotPasswordFragment extends Fragment {
                     message.setText(messagetext);
                 }
             }
-        });;
+        });
 
     }
 

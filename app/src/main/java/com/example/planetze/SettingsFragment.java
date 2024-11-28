@@ -1,13 +1,20 @@
 package com.example.planetze;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Switch;
+
+import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,7 +32,11 @@ public class SettingsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private Switch stayLoggedOn;
+    private SwitchMaterial stayLoggedOn;
+    private Button returnButton;
+
+    private DatabaseReference userRef;
+    private FirebaseDatabase db;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -64,8 +75,53 @@ public class SettingsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
         stayLoggedOn = view.findViewById(R.id.stay_logged_on_switch);
-        stayLoggedOn.setChecked(true);
+        returnButton = view.findViewById(R.id.returnButton);
+
+        initialize();
+
+        returnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //logout();
+                //loadFragment(new TopBar());
+                Intent j = new Intent(getContext(), HomeActivity.class);
+                startActivity(j);
+
+            }
+        });
+
+        stayLoggedOn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //logout();
+                String userID = UserData.getUserID(getContext());
+
+                db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+                userRef = db.getReference("user data");
+                if (stayLoggedOn.isChecked()) {
+                    userRef.child(userID+"/Settings/stayLoggedOn").setValue(true);
+                    UserData.set_stayLoggedOn(getContext(),true);
+                }
+                else {
+                    userRef.child(userID+"/Settings/stayLoggedOn").setValue(false);
+                    UserData.set_stayLoggedOn(getContext(),false);
+                }
+
+
+            }
+        });
 
         return view;
+    }
+
+    private void initialize() {
+        stayLoggedOn.setChecked(UserData.stayLoggedOn(getContext()));
+    }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }

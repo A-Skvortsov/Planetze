@@ -27,10 +27,12 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.planetze.EcoTrackerFragment;
 import com.example.planetze.ForgotPasswordFragment;
+import com.example.planetze.HomeActivity;
 import com.example.planetze.HomeFragment;
 import com.example.planetze.R;
 import com.example.planetze.SignUpFragment;
 import com.example.planetze.SurveyFragment;
+import com.example.planetze.TopBar;
 import com.example.planetze.UserData;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -134,15 +136,8 @@ public class LoginView extends Fragment  {
     }
 
     public void takeToHub() {
-
-        //Bundle bundle = new Bundle();
-        //System.out.println(getActivity().getSupportFragmentManager().findFragmentById(R.id.LoginView) == null);
-        //requireActivity().getSupportFragmentManager().executePendingTransactions();
-        //Fragment f = requireActivity().getSupportFragmentManager().findFragmentById(R.id.fragment);
-        //NavController navController = NavHostFragment.findNavController(f);
-        //navController.navigate(R.id.EcoTrackerFragment);
-
-        loadFragment(new EcoTrackerFragment());
+        Intent j = new Intent(getViewContext(), HomeActivity.class);
+        startActivity(j);
     }
 
     private void loadFragment(Fragment fragment) {
@@ -178,6 +173,10 @@ public class LoginView extends Fragment  {
 
         Intent intent = client.getSignInIntent();
         launcher.launch(intent);
+    }
+
+    public boolean testIsLoggedIn() {
+        return UserData.isLoggedIn(getViewContext());
     }
 
 
