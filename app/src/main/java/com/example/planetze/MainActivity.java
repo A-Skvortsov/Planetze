@@ -51,10 +51,7 @@ public class MainActivity extends AppCompatActivity {
         //UserData.logout(getApplicationContext());
 
         if (savedInstanceState == null) {
-            //onOpenApp();
-            //loadFragment(new EcoTrackerFragment());
-            //loadFragment(new UserOptions());
-            loadFragment(new SignUpFragment());
+            onOpenApp();
         }
     }
 
