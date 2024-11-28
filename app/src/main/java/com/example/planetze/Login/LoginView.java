@@ -136,13 +136,13 @@ public class LoginView extends Fragment  {
     public void takeToHub() {
 
         //Bundle bundle = new Bundle();
-        System.out.println(getActivity().getSupportFragmentManager().findFragmentById(R.id.LoginView) == null);
+        //System.out.println(getActivity().getSupportFragmentManager().findFragmentById(R.id.LoginView) == null);
         //requireActivity().getSupportFragmentManager().executePendingTransactions();
-        Fragment f = requireActivity().getSupportFragmentManager().findFragmentById(R.id.fragment);
-        NavController navController = NavHostFragment.findNavController(f);
-        navController.navigate(R.id.EcoTrackerFragment);
+        //Fragment f = requireActivity().getSupportFragmentManager().findFragmentById(R.id.fragment);
+        //NavController navController = NavHostFragment.findNavController(f);
+        //navController.navigate(R.id.EcoTrackerFragment);
 
-        //loadFragment(new EcoTrackerFragment());
+        loadFragment(new EcoTrackerFragment());
     }
 
     private void loadFragment(Fragment fragment) {
