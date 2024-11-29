@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/nati"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".EcoHub_Entry">
+
+
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/learning_resourc"
+        android:layout_width="380dp"
+        android:layout_height="260dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="200dp"
+        app:cardBackgroundColor="@color/palette_turquoise"
+        android:layout_marginTop="105dp"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="25dp"
+        >
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imglearning"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="65dp"
+                android:src="@mipmap/happy" />
+
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="70dp"
+                android:layout_toEndOf="@+id/imglearning"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="Learning Resources"
+                android:textAllCaps="false"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="170dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="110dp"
+                android:layout_toEndOf="@+id/imglearning"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="Valuable learning resources to stay informed toward your journey of sustainability"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+
+
+        </RelativeLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/market_trends"
+        android:layout_width="380dp"
+        android:layout_height="260dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="200dp"
+        android:layout_marginTop="20dp"
+        app:cardBackgroundColor="@color/palette_turquoise"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="25dp">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/imgmarket"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="65dp"
+                android:src="@mipmap/idea" />
+
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="70dp"
+                android:layout_toEndOf="@+id/imgmarket"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="Market Trends "
+                android:textAllCaps="false"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="170dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="110dp"
+                android:layout_toEndOf="@+id/imgmarket"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="Recommendation and introduction to eco-friendly products and services."
+                android:textColor="#FFFFFF"
+                android:textSize="14sp" />
+
+
+        </RelativeLayout>
+
+
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>
+</FrameLayout>
+
+

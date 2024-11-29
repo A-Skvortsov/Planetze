@@ -144,6 +144,9 @@ public class SurveyFragment extends Fragment {
                 }
                 updateSurvey(options, question, category, current_q, current_cat);
             }
+
+
+
         });
 
         return view;

@@ -55,4 +55,16 @@ dependencies {
     implementation("com.github.prolificinteractive:material-calendarview:2.0.1")
     implementation(libs.mpandroidchart)
     implementation(libs.opencsv)
+    testImplementation(libs.mockito)
+    implementation(libs.play.services.auth)
+    implementation(libs.volley)
+    implementation(libs.media3.common)
+    implementation("com.stripe:stripe-android:21.2.0")
+    implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.1")
+    implementation(libs.volley)
+    implementation(libs.media3.common)
+    implementation(libs.play.services.auth)
+    testImplementation(libs.mockito)
+    implementation("com.stripe:stripe-android:21.2.0")
+
 }

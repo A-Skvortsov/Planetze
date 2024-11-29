@@ -14,6 +14,7 @@
         <action
             android:id="@+id/action_FirstFragment_to_Second2Fragment"
             app:destination="@id/Second2Fragment" />
+
     </fragment>
     <fragment
         android:id="@+id/Second2Fragment"
@@ -26,3 +27,4 @@
             app:destination="@id/FirstFragment" />
     </fragment>
 </navigation>
+

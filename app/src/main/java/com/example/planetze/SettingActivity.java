@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.example.planetze.Login.LoginView;
 import com.google.android.material.snackbar.Snackbar;
 
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -102,6 +103,7 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
     }
+
     private void initialize() {
         stayLoggedOn.setChecked(UserData.stayLoggedOn(getApplicationContext()));
         interpolateEmissionsData.setChecked(UserData.interpolateEmissionsData(getApplicationContext()));
