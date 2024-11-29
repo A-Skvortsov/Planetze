@@ -69,10 +69,6 @@
 
         <!-- Form -->
 
-
-
-
-
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/stay_logged_on_switch"
             android:layout_width="wrap_content"

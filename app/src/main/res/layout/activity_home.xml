@@ -41,7 +41,7 @@
             android:insetLeft="1dp"
             android:insetRight="5dp"
             android:layout_marginEnd="5dp"
-            app:icon="@drawable/ic_person" />
+            app:icon="@drawable/ic_setting" />
     </Toolbar>
 
     <!-- Fragment -->
