@@ -29,6 +29,7 @@ public class SettingActivity extends AppCompatActivity {
     private ActivitySettingBinding binding;
 
     private SwitchMaterial stayLoggedOn;
+    private SwitchMaterial interpolateEmissionsData;
     private Button returnButton;
     private Button logoutButton;
 
@@ -45,6 +46,7 @@ public class SettingActivity extends AppCompatActivity {
         stayLoggedOn = findViewById(R.id.stay_logged_on_switch);
         returnButton = findViewById(R.id.returnButton);
         logoutButton = findViewById(R.id.logoutButton);
+        interpolateEmissionsData = findViewById(R.id.ied_switch);
 
         initialize();
 
@@ -65,21 +67,39 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
+        interpolateEmissionsData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String userID = UserData.getUserID(getApplicationContext());
+
+                db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+                userRef = db.getReference("user data");
+                if (stayLoggedOn.isChecked()) {
+                    userRef.child(userID+"/settings/interpolate_emissions_data").setValue(true);
+                    UserData.set_stayLoggedOn(getApplicationContext(),true);
+                }
+                else {
+                    userRef.child(userID+"/settings/interpolate_emissions_data").setValue(false);
+                    UserData.set_stayLoggedOn(getApplicationContext(),false);
+                }
+
+            }
+        });
+
         stayLoggedOn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //logout();
                 String userID = UserData.getUserID(getApplicationContext());
 
                 db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
                 userRef = db.getReference("user data");
                 if (stayLoggedOn.isChecked()) {
                     userRef.child(userID+"/settings/stay_logged_on").setValue(true);
-                    UserData.set_stayLoggedOn(getApplicationContext(),true);
+                    UserData.set_interpolateEmissionsData(getApplicationContext(),true);
                 }
                 else {
                     userRef.child(userID+"/settings/stay_logged_on").setValue(false);
-                    UserData.set_stayLoggedOn(getApplicationContext(),false);
+                    UserData.set_interpolateEmissionsData(getApplicationContext(),false);
                 }
 
             }
@@ -88,6 +108,7 @@ public class SettingActivity extends AppCompatActivity {
 
     private void initialize() {
         stayLoggedOn.setChecked(UserData.stayLoggedOn(getApplicationContext()));
+        interpolateEmissionsData.setChecked(UserData.interpolateEmissionsData(getApplicationContext()));
     }
 
     private void loadFragment(Fragment fragment) {
@@ -97,10 +118,4 @@ public class SettingActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_setting);
-        return NavigationUI.navigateUp(navController, appBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
 }

@@ -82,16 +82,17 @@ public class UserData {
         });
     }
 
-    public static boolean stayLoggedOn(Context context) {
-        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-        return p.getBoolean("stayLoggedOn", false);
-    }
-
     private static void set_is_new_user(Context context, boolean is_new_user) {
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
         SharedPreferences.Editor e = p.edit();
         e.putBoolean("isNewUser", is_new_user);
         e.commit();
+    }
+
+    public static boolean stayLoggedOn(Context context) {
+        get_stayLoggedOn(context);
+        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
+        return p.getBoolean("stayLoggedOn", false);
     }
 
     private static void get_stayLoggedOn(Context context) {
@@ -123,6 +124,44 @@ public class UserData {
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
         SharedPreferences.Editor e = p.edit();
         e.putBoolean("stayLoggedOn", stayLoggedOn);
+        e.commit();
+    }
+
+    public static boolean interpolateEmissionsData(Context context) {
+        get_interpolateEmissionsData(context);
+        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
+        return p.getBoolean("interpolateEmissionsData", false);
+    }
+
+    private static void get_interpolateEmissionsData(Context context) {
+        FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        DatabaseReference userRef = db.getReference("user data");
+
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                DataSnapshot users = task.getResult();
+                String userID = UserData.getUserID(context);
+                for(DataSnapshot user:users.getChildren()) {
+                    boolean cond1 = user.getKey().toString().trim().equals(userID);
+                    boolean cond2 = user.child("settings/interpolate_emissions_data").getValue().toString().equals("true");
+                    if (cond1 && cond2) {
+                        set_stayLoggedOn(context, true);
+                        break;
+                    }
+                    else if (cond1) {
+                        set_stayLoggedOn(context,false);
+                        break;
+                    }
+                }
+            }
+        });
+    }
+
+    public static void set_interpolateEmissionsData(Context context, boolean stayLoggedOn) {
+        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
+        SharedPreferences.Editor e = p.edit();
+        e.putBoolean("interpolateEmissionsData", stayLoggedOn);
         e.commit();
     }
 
