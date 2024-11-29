@@ -50,9 +50,7 @@ public class MainActivity extends AppCompatActivity {
         initilizeData();
 
         if (savedInstanceState == null) {
-            //onOpenApp();
-            Intent j = new Intent(getApplicationContext(), HomeActivity.class);
-            startActivity(j);
+            onOpenApp();
         }
     }
 
