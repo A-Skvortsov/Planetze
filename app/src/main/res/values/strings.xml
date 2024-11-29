@@ -60,7 +60,19 @@
     <string name="EcoGuage">Eco Gauge</string>
     <string name="EcoBalance">Eco Balance</string>
     <string name="EcoHub">Eco Hub</string>
-    <string name="thx">Thank you for your patience.. we will need to add other fragments/activities for each of the bottons</string>
+    <string name="thx">Thank you for your patience.. we will need to add other fragments/actvities for each of the bottons</string>
+
+    <string name="intro">You Carbon Emission is:</string>
+    <string name="idk">.?.</string>
+    <string name="title">Eco Balance</string>
+    <string name="para1">Rergardless of how your carbon emission, we can all contribute to helping reduce carbonmissoin.
+    We understand it is at times difficult to neutrilize emmiision, that we cannot control through sustainable behaviors habits.
+
+We have provided offset emission  projects, which can help offset you carbon emission. Through purchasing carbon credits.
+    </string>
+    <string name="reducebutn">CLICK HERE TO REDUCE YOUR CARBON EMISSION</string>
+    <string name="p1">Tester Paragraph</string>
+
     <string name="_11_nov">11 Nov</string>
     <string name="transportation">Transportation</string>
     <string name="please_select_an_answer">Please select an answer</string>
