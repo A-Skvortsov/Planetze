@@ -41,6 +41,7 @@
     </string>
     <string name="resend">Resend confirmation email</string>
     <string name="goLogin">Go to login page</string>
+
     <string name="sign_in"><u>Sign in</u></string>
     <string name="sign_up"><u>Sign up</u></string>
     <string name="login_label">Login</string>
@@ -60,13 +61,16 @@
     <string name="EcoGuage">Eco Gauge</string>
     <string name="EcoBalance">Eco Balance</string>
     <string name="EcoHub">Eco Hub</string>
+    <string name="thx">Thank you for your patience.. we will need to add other fragments/actvities for each of the bottons</string>
 
     <string name="intro">You Carbon Emission is:</string>
     <string name="idk">.?.</string>
     <string name="title">Eco Balance</string>
+    <string name="para1">Rergardless of how your carbon emission, we can all contribute to helping reduce carbonmissoin.
+    We understand it is at times difficult to neutrilize emmiision, that we cannot control through sustainable behaviors habits.
 
-
-
+We have provided offset emission  projects, which can help offset you carbon emission. Through purchasing carbon credits.
+    </string>
     <string name="reducebutn">CLICK HERE TO REDUCE YOUR CARBON EMISSION</string>
     <string name="p1">Tester Paragraph</string>
 
@@ -121,32 +125,7 @@
         libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
         vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
     </string>
-    <string name="thx">Thankyou for your patience.. we will need to add other fragments/actvities for each of the bottons</string>
-    <string name="para1">Rergardless of how your carbon emission, we can all contribute to helping reduce carbonmissoin.
-    We understand it is at times difficult to neutrilize emmiision, that we cannot control through sustainable behaviors habits.
+    <string name="second2_fragment_label">second2_fragment_label</string>
 
-We have provided offset emission  projects, which can help offset you carbon emission. Through purchasing carbon credits.
-    </string>
-    <string name="hlink1">  - <a href="https://natural-resources.canada.ca/energy-efficiency/products/appliances-for-residential-use/air-purifiers/14001">Air Purifiers \n</a>
-    - <a href="https://natural-resources.canada.ca/energy-efficiency/products/appliances-for-residential-use/clothes-dryers/13696">Clothes Dryer \n</a>
-        - <a href="https://natural-resources.canada.ca/energy-efficiency/products/office-equipment/computers/14051">Computer \n</a>
-            - <a href="https://natural-resources.canada.ca/energy-efficiency/products/lighting/light-bulbs-or-lamps/13918">Light Bulbs \n</a>
-         - <a href="https://natural-resources.canada.ca/energy-efficiency/products/appliances-for-commercial-use/commercial-steam-cookers/14083">Cookers \n</a>
-         - <a href="https://natural-resources.canada.ca/energy-efficiency/products/water-heaters/solar/14562">Solar \n</a>
-         - <a href="https://natural-resources.canada.ca/energy/products/categories/other/20100">Electric vehicle  chargers\n</a>
-
-
-    </string>
-    <string name="hlink2">  - <a href="https://www.eileenfisher.com/?utm_source=The+Good+Trade&amp;utm_medium=affiliate&amp;utm_content=1&amp;utm_campaign=acquisition_s_m4&amp;ranMID=42820&amp;ranEAID=DkqcY%2Fd68c0&amp;ranSiteID=DkqcY_d68c0-ZeVPHnTeOUuyKCbV478RCw">Eileen Fisher \n</a>
-    - <a href="https://www.patagonia.com/shop/womens?irclickid=Uj%3AScNWaUxyKTfzR62zwD29ZUkCQ7u2hrXSGQw0&amp;sharedid=&amp;irpid=274622&amp;iradid=1948563&amp;utm_source=The%20Good%20Trade%E2%80%8A&amp;utm_medium=affiliate&amp;utm_content=%22Content%22&amp;irgwc=1">Patagonia \n</a>
-        - <a href="https://www.tentree.com/?irclickid=Uj%3AScNWaUxyKTfzR62zwD29ZUkCQ7uT9rXSGQw0&amp;irgwc=1&amp;utm_source=impact&amp;utm_medium=affiliate&amp;utm_campaign=The%20Good%20Trade%E2%80%8A">Tentree \n</a>
-            - <a href="https://www.outerknown.com/?avad=194478_c3db9cb55&amp;utm_source=155966&amp;utm_medium=affiliate">Outerknown \n</a>
-         - <a href="https://jungmaven.com/">Jungmaven \n</a>
-         - <a href="https://kotn.com/?sscid=b1k8_15amon&amp;utm_source=shareasale&amp;utm_medium=affiliate&amp;utm_campaign=1147855">Kotn \n</a>
-         - <a href="https://harvestandmill.com/?sscid=b1k8_15aou7&amp;">Harvest &amp; Mill \n</a>
-             - <a href="https://allbirds.ca/">Allbirds \n</a>
-
-
-    </string>
 
 </resources>
