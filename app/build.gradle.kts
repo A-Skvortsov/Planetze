@@ -68,4 +68,3 @@ dependencies {
     implementation("com.stripe:stripe-android:21.2.0")
 
 }
-}
