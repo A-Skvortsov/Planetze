@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link Clean_Air_Fragment#newInstance} factory method to
+ * Use the {@link FarmersFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class Clean_Air_Fragment extends Fragment {
+public class FarmersFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -24,7 +24,7 @@ public class Clean_Air_Fragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public Clean_Air_Fragment() {
+    public FarmersFragment() {
         // Required empty public constructor
     }
 
@@ -34,11 +34,11 @@ public class Clean_Air_Fragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment Clean_Air_Fragment.
+     * @return A new instance of fragment Farmers_fragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static Clean_Air_Fragment newInstance(String param1, String param2) {
-        Clean_Air_Fragment fragment = new Clean_Air_Fragment();
+    public static FarmersFragment newInstance(String param1, String param2) {
+        FarmersFragment fragment = new FarmersFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -59,6 +59,6 @@ public class Clean_Air_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_clean__air_, container, false);
+        return inflater.inflate(R.layout.fragment_farmers_fragment, container, false);
     }
 }

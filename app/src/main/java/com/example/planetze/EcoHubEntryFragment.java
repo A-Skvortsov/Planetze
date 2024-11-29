@@ -34,7 +34,7 @@ public class EcoHubEntryFragment extends Fragment {
         crd1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Learning_Resources_Fragment learningResourcesFragment = new Learning_Resources_Fragment();
+                LearningResourcesFragment learningResourcesFragment = new LearningResourcesFragment();
                 FragmentManager fragmentManager = getChildFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.nati, learningResourcesFragment, "tag");

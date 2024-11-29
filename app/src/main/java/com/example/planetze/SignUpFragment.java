@@ -355,7 +355,9 @@ public class SignUpFragment extends Fragment {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
                                         if (task.isSuccessful()) {
-                                            loadFragment(new HomeFragment());
+                                            //loadFragment(new HomeFragment());
+                                            Intent intent = new Intent(getActivity(), com.example.planetze.HomeActivity.class);
+                                            startActivity(intent);
                                         }
                                         else {
 

@@ -17,56 +17,8 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="tiramisu">
         <activity
-            android:name=".Entry_eco_balance_Activity"
-            android:exported="true"
-            android:theme="@style/Theme.Planetze" />
-        <activity
             android:name=".Payment"
             android:exported="true"
-            android:theme="@style/Theme.Planetze" />
-        <activity
-            android:name=".Details"
-            android:exported="true"
-            android:theme="@style/Theme.Planetze" />
-        <activity
-            android:name=".EcoBalanceDestination"
-            android:exported="true"
-            android:theme="@style/Theme.Planetze" />
-        <activity
-            android:name=".EcoBalanceEntry"
-            android:exported="true"
-            android:theme="@style/Theme.Planetze" />
-        <activity
-            android:name=".EcoHub_ACTIVITY"
-            android:exported="true"
-            android:theme="@style/Theme.Planetze" />
-        <activity
-            android:name=".MarketTrends"
-            android:exported="true"
-            android:theme="@style/Theme.Planetze" />
-        <activity
-            android:name=".LearningResource"
-            android:exported="false"
-            android:theme="@style/Theme.Planetze" />
-        <activity
-            android:name=".Payment"
-            android:exported="true"
-            android:theme="@style/Theme.Planetze" />
-        <activity
-            android:name=".Details"
-            android:exported="true"
-            android:theme="@style/Theme.Planetze" />
-        <activity
-            android:name=".EcoBalanceDestination"
-            android:exported="true"
-            android:theme="@style/Theme.Planetze" />
-        <activity
-            android:name=".EcoBalanceEntry"
-            android:exported="true"
-            android:theme="@style/Theme.Planetze" />
-        <activity
-            android:name=".SettingActivity"
-            android:exported="false"
             android:theme="@style/Theme.Planetze" />
         <activity
             android:name=".SettingActivity"
@@ -75,18 +27,6 @@
         <activity
             android:name=".HomeActivity"
             android:exported="false"
-            android:theme="@style/Theme.Planetze" />
-        <activity
-            android:name=".EcoHub_Entry"
-            android:exported="true"
-            android:theme="@style/Theme.Planetze" />
-        <activity
-            android:name=".EcoBalance"
-            android:exported="true"
-            android:theme="@style/Theme.Planetze" />
-        <activity
-            android:name=".BottomBar"
-            android:exported="true"
             android:theme="@style/Theme.Planetze" />
         <activity
             android:name=".MainActivity"

@@ -36,7 +36,7 @@ public class EcoBalanceFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                EcoBalanceDestination_Fragment ecoBalanceDestinationFragment = new EcoBalanceDestination_Fragment();
+                EcoBalanceDestinationFragment ecoBalanceDestinationFragment = new EcoBalanceDestinationFragment();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.replace(R.id.balance_entry, ecoBalanceDestinationFragment);
                 transaction.addToBackStack(null);

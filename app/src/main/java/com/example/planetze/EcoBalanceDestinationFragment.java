@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class EcoBalanceDestination_Fragment extends Fragment {
+public class EcoBalanceDestinationFragment extends Fragment {
 
     View view;
 
@@ -30,7 +30,7 @@ public class EcoBalanceDestination_Fragment extends Fragment {
         crd1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Clean_Air_Fragment cleanAirFragment = new Clean_Air_Fragment();
+                CleanAirFragment cleanAirFragment = new CleanAirFragment();
                 FragmentManager fragmentManager = getChildFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.eco_balance_destination, cleanAirFragment);
@@ -45,7 +45,7 @@ public class EcoBalanceDestination_Fragment extends Fragment {
         crd2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Plant_A_Tree_Fragment plantATreeFragment = new Plant_A_Tree_Fragment();
+                PlantTreeFragment plantATreeFragment = new PlantTreeFragment();
                 FragmentManager fragmentManager = getChildFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.eco_balance_destination, plantATreeFragment);
@@ -59,7 +59,7 @@ public class EcoBalanceDestination_Fragment extends Fragment {
         crd3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Technology_fragment technologyFragment = new Technology_fragment();
+                TechnologyFragment technologyFragment = new TechnologyFragment();
                 FragmentManager fragmentManager = getChildFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.eco_balance_destination, technologyFragment);
@@ -74,10 +74,10 @@ public class EcoBalanceDestination_Fragment extends Fragment {
         crd4.setOnClickListener(new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-           Waste_fragment Waste_fragment = new Waste_fragment();
+           WasteFragment wasteFragment = new WasteFragment();
             FragmentManager fragmentManager = getChildFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.eco_balance_destination, Waste_fragment);
+            fragmentTransaction.replace(R.id.eco_balance_destination, wasteFragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
 
@@ -89,7 +89,7 @@ public class EcoBalanceDestination_Fragment extends Fragment {
         crd5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Farmers_fragment farmersFragment = new Farmers_fragment();
+                FarmersFragment farmersFragment = new FarmersFragment();
                 FragmentManager fragmentManager = getChildFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.eco_balance_destination, farmersFragment);
@@ -104,7 +104,7 @@ public class EcoBalanceDestination_Fragment extends Fragment {
         crd6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Fuels_fragment fuelsFragment = new Fuels_fragment();
+                FuelsFragment fuelsFragment = new FuelsFragment();
                 FragmentManager fragmentManager = getChildFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.eco_balance_destination, fuelsFragment);

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Technology_fragment">
+    tools:context=".WasteFragment">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -32,7 +32,7 @@
                 android:id="@+id/detailImage"
                 android:layout_width="320dp"
                 android:layout_height="200dp"
-                android:src="@mipmap/solar" />
+                android:src="@mipmap/waste" />
 
         </androidx.cardview.widget.CardView>
 
@@ -45,7 +45,7 @@
             android:layout_marginTop="20dp"
             android:paddingStart="50dp"
             android:padding="10dp"
-            android:text="Sustainable Technology"
+            android:text="Waste Management"
             android:textColor="@color/clean_air_background"
 
             android:textSize="34sp"
@@ -65,8 +65,8 @@
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
                 android:fontFamily="sans-serif-condensed-medium"
-                android:text="GivePower Foundation is a foundation that supplies eco-friendly equipment like solar panels, to developing regions who need it the most. Using Solar technology helps stop using other technologies that rely on fossil fuels, which are responsible for 40% of the carbon dioxide emitted in the world."
-                android:textColor="@color/clean_air_background"
+                android:text= "TEA's goal is to create a waste-free future for Toronto. Through reducing, reusing, and recycling, individuals can use fewer natural resources, generate less greenhouse gas emissions, and create good green jobs. These are all methods that can significantly help reduce one's carbon footprint. Through donating to TEA users can help TEA accomplish its goals, of a more eco-friendly environment, while at the same time helping to reduce their carbon footprint."
+            android:textColor="@color/clean_air_background"
                 android:textStyle="bold" />
         </RelativeLayout>
 
@@ -80,9 +80,6 @@
             android:bottomLeftRadius="30dp"
             android:topLeftRadius="30dp"
             android:topRightRadius="30dp"
-
-
-
             android:background="@color/red"/>
     </LinearLayout>
 
