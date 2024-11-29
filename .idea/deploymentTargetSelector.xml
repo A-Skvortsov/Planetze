@@ -2,27 +2,13 @@
 <project version="4">
   <component name="deploymentTargetSelector">
     <selectionStates>
-      <SelectionState runConfigName="Payment">
-        <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2024-11-26T01:24:51.307030800Z">
-          <Target type="DEFAULT_BOOT">
-            <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\netha\.android\avd\Medium_Phone_API_35.avd" />
-            </handle>
-          </Target>
-        </DropdownSelection>
-        <DialogSelection />
-      </SelectionState>
-      <SelectionState runConfigName="EcoHhub">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
-      <SelectionState runConfigName="EcoHub">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="EcoHub_Entry">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
       <SelectionState runConfigName="MarketTrends">
+        <option name="selectionMode" value="DROPDOWN" />
+      </SelectionState>
+      <SelectionState runConfigName="EcoHub_ACTIVITY">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>
