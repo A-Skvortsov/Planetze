@@ -76,11 +76,9 @@ public class SettingActivity extends AppCompatActivity {
                 userRef = db.getReference("user data");
                 if (stayLoggedOn.isChecked()) {
                     userRef.child(userID+"/settings/interpolate_emissions_data").setValue(true);
-                    UserData.set_stayLoggedOn(getApplicationContext(),true);
                 }
                 else {
                     userRef.child(userID+"/settings/interpolate_emissions_data").setValue(false);
-                    UserData.set_stayLoggedOn(getApplicationContext(),false);
                 }
 
             }
@@ -95,11 +93,9 @@ public class SettingActivity extends AppCompatActivity {
                 userRef = db.getReference("user data");
                 if (stayLoggedOn.isChecked()) {
                     userRef.child(userID+"/settings/stay_logged_on").setValue(true);
-                    UserData.set_interpolateEmissionsData(getApplicationContext(),true);
                 }
                 else {
                     userRef.child(userID+"/settings/stay_logged_on").setValue(false);
-                    UserData.set_interpolateEmissionsData(getApplicationContext(),false);
                 }
 
             }
