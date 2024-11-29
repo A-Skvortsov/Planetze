@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Farmers_fragment">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        android:background="#E1F1F1"
+        tools:context=".Details">
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="320dp"
+            android:layout_height="200dp"
+            android:layout_marginStart="45dp"
+            android:layout_marginEnd="30dp"
+            app:cardBackgroundColor="@color/palette_turquoise"
+
+
+            android:layout_marginTop="30dp"
+            app:cardElevation="30dp"
+            app:cardCornerRadius="20dp">
+
+
+            <ImageView
+                android:id="@+id/detailImage"
+                android:layout_width="320dp"
+                android:layout_height="200dp"
+                android:src="@mipmap/farmers" />
+
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/detailDescription"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:background="@color/palette_turquoise"
+            android:layout_marginStart="45dp"
+            android:layout_marginTop="20dp"
+            android:paddingStart="50dp"
+            android:padding="10dp"
+            android:text="Support Farmers"
+            android:textColor="@color/clean_air_background"
+
+            android:textSize="34sp"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:background="@color/palette_turquoise"
+            android:layout_width="350dp"
+            android:layout_marginStart="35dp"
+            android:layout_marginTop="10dp"
+            android:layout_height="200dp">
+
+            <TextView
+                android:id="@+id/detailsParapgraph"
+                android:layout_width="250dp"
+                android:layout_height="220dp"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="20dp"
+                android:fontFamily="sans-serif-condensed-medium"
+                android:text="Trees for the Future is a registered 501(c)(3) nonprofit organization, that provides hands-on agroforestry training and resources to farming communities. Thorugh through training Trees for the Future helps fight climate change, reduce poverty,  and develop economic growth within communities."
+                android:textColor="@color/clean_air_background"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+
+        <Button
+            android:layout_width="200dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="100dp"
+            android:layout_marginTop="20dp"
+            android:text="Click here to Donate"
+            android:bottomRightRadius="30dp"
+            android:bottomLeftRadius="30dp"
+            android:topLeftRadius="30dp"
+            android:topRightRadius="30dp"
+
+
+
+            android:background="@color/red"/>
+    </LinearLayout>
+
+</FrameLayout>

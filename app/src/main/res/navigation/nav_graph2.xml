@@ -2,7 +2,6 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/nav_graph2"
     app:startDestination="@id/FirstFragment">
 
     <fragment
@@ -12,13 +11,29 @@
         tools:layout="@layout/fragment_first">
 
         <action
+            android:id="@+id/action_FirstFragment_to_SecondFragment"
+            app:destination="@id/SecondFragment" />
+
+        <action
             android:id="@+id/action_FirstFragment_to_Second2Fragment"
             app:destination="@id/Second2Fragment" />
     </fragment>
+
+    <fragment
+        android:id="@+id/SecondFragment"
+        android:name="com.example.planetze.SecondFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_second">
+
+        <action
+            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+    </fragment>
+
     <fragment
         android:id="@+id/Second2Fragment"
         android:name="com.example.planetze.Second2Fragment"
-        android:label="@string/second_fragment_label"
+        android:label="@string/second2_fragment_label"
         tools:layout="@layout/fragment_second2">
 
         <action
