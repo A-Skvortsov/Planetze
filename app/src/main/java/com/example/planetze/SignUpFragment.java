@@ -95,6 +95,9 @@ public class SignUpFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
 
+        System.out.println("uhfeuefehufehf");
+        System.out.println(getActivity().getSupportFragmentManager().findFragmentById(R.id.SecondFragment) == null);
+
         auth = FirebaseAuth.getInstance();
         signupEmail = view.findViewById(R.id.emailInput);
         signupPassword = view.findViewById(R.id.passwordInput);
@@ -336,6 +339,7 @@ public class SignUpFragment extends Fragment {
     private void setDefaultSettings(String userID) {
         userRef.child(userID+"/is_new_user").setValue(true);
         userRef.child(userID+"/Settings/stayLoggedOn").setValue(false);
+        userRef.child(userID+"/calender/0000-00-00/0").setValue(0);
     }
 
     public void setSignUpLauncher() {

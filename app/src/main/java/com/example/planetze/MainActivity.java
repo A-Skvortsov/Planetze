@@ -39,9 +39,14 @@ public class MainActivity extends AppCompatActivity {
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         userRef = db.getReference("user data");
         auth = FirebaseAuth.getInstance();
+
+        /*
+        DatabaseReference myRef = db.getReference("testDemo");
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         userRef = db.getReference("user data");
         auth = FirebaseAuth.getInstance();
+        
+        */
 
 
         // TODO: Please DON'T delete the comments below
@@ -57,9 +62,8 @@ public class MainActivity extends AppCompatActivity {
         //Intent intent = new Intent(MainActivity.this, SurveyResults.class);
         //startActivity(intent);
 
+        initilizeData();
 
-        initializeData();
-        //UserData.logout(getApplicationContext());
 
         if (savedInstanceState == null) {
             onOpenApp();
@@ -91,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
             for(DataSnapshot user:users.getChildren()) {
                 boolean cond1 = user.getKey().toString().trim().equals(userID);
                 boolean cond2 = user.child("is_new_user").getValue().toString().equals("true");
-                //System.out.println(user.child("is_new_user").getValue().toString());
+  
                 if (cond1 && cond2) {
                     loadFragment(new SurveyFragment());
                     break;
@@ -102,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-            //loadFragment(new EcoTrackerFragment());
         });
     }
 
@@ -112,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+
     private void onOpenApp() {
         if (!UserData.isLoggedIn(getApplicationContext())) {
             loadFragment(new LoginView());
@@ -120,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
             takeToHomePage();
         }
     }
+
 
     private void initializeData() {
         boolean isLoggedIn = UserData.isLoggedIn(getApplicationContext());

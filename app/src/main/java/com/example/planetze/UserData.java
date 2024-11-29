@@ -119,7 +119,7 @@ public class UserData {
         });
     }
 
-    private static void set_stayLoggedOn(Context context, boolean stayLoggedOn) {
+    public static void set_stayLoggedOn(Context context, boolean stayLoggedOn) {
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
         SharedPreferences.Editor e = p.edit();
         e.putBoolean("stayLoggedOn", stayLoggedOn);

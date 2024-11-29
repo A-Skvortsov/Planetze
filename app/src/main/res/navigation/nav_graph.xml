@@ -57,6 +57,17 @@
     </fragment>
 
     <fragment
+        android:id="@+id/LoginView"
+        android:name="com.example.planetze.Login.LoginView"
+        android:label="@string/login_label"
+        tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/action_LoginView_to_EcoTrackerFragment"
+            app:destination="@id/EcoTrackerFragment" />
+    </fragment>
+
+    <fragment
         android:id="@+id/EcoTrackerFragment"
         android:name="com.example.planetze.EcoTrackerFragment"
         android:label=" Eco Tracker"
