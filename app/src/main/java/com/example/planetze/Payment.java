@@ -24,7 +24,7 @@ import androidx.media3.common.util.Log;
 import androidx.media3.common.util.UnstableApi;
 import androidx.navigation.ui.AppBarConfiguration;
 
-import com.example.planetze.databinding.ActivityEcoBalanceDestinationBinding;
+//import com.example.planetze.databinding.ActivityEcoBalanceDestinationBinding;
 import com.example.planetze.databinding.ActivityPaymentBinding;
 import com.stripe.android.PaymentConfiguration;
 import com.stripe.android.paymentsheet.PaymentSheet;
