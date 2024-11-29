@@ -26,5 +26,5 @@
             android:id="@+id/action_Second2Fragment_to_FirstFragment"
             app:destination="@id/FirstFragment" />
     </fragment>
-
 </navigation>
+

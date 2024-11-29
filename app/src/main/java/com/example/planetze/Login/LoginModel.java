@@ -68,6 +68,15 @@ public class LoginModel {
 
     private void takeToHomePage(LoginPresenter presenter) {
 
+        if (UserData.is_new_user(presenter.getViewContext())) {
+            presenter.takeToSurvey();
+        }
+        else {
+            presenter.takeToHub();
+        }
+
+        /*
+
         userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -88,6 +97,8 @@ public class LoginModel {
                 }
             }
         });
+
+         */
 
 
     }
