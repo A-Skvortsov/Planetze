@@ -6,9 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 
 public class LoginPresenter {
 
@@ -23,6 +21,7 @@ public class LoginPresenter {
     }
 
     public void loginUser(String email, String password) {
+        //UserData.logout(getViewContext());
         if (email == null || email.trim().isEmpty()) {
             setMessage("Email cannot be empty");
         }
@@ -58,5 +57,6 @@ public class LoginPresenter {
     }
 
     public Context getViewContext() {return view.getContext();}
+
 
 }

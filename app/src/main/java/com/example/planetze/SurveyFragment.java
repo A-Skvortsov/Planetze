@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 
 import utilities.Constants;
+import utilities.UserData;
 
 public class SurveyFragment extends Fragment {
 
@@ -143,6 +144,9 @@ public class SurveyFragment extends Fragment {
                 }
                 updateSurvey(options, question, category, current_q, current_cat);
             }
+
+
+
         });
 
         return view;

@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FourthFragment">
+    tools:context=".FourthFragment"
+    android:background="@color/default_background_white">
 
     <!-- TODO: Update blank fragment layout -->
     <TextView

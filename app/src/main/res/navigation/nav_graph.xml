@@ -8,13 +8,13 @@
     <fragment
         android:id="@+id/EcoGaugeFragment"
         android:name="com.example.planetze.EcoGaugeFragment"
-        android:label="fragment_eco_gauge"
+        android:label="@string/EcoGuage"
         tools:layout="@layout/fragment_eco_gauge">
     </fragment>
     <fragment
         android:id="@+id/EcoTrackerFragment"
         android:name="com.example.planetze.EcoTrackerFragment"
-        android:label="fragment_eco_tracker"
+        android:label="Eco Tracker"
         tools:layout="@layout/fragment_eco_tracker" >
         <action
             android:id="@+id/action_EcoTrackerFragment_to_AddActivity"
@@ -38,12 +38,12 @@
     <fragment
         android:id="@+id/thirdFragment"
         android:name="com.example.planetze.ThirdFragment"
-        android:label="fragment_third"
+        android:label="Third Fragment"
         tools:layout="@layout/fragment_third" />
     <fragment
         android:id="@+id/fourthFragment"
         android:name="com.example.planetze.FourthFragment"
-        android:label="fragment_fourth"
+        android:label="Fourth Fragment"
         tools:layout="@layout/fragment_fourth" />
     <fragment
         android:id="@+id/LoginView"
@@ -56,11 +56,8 @@
             app:destination="@id/EcoTrackerFragment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/EcoTrackerFragment"
-        android:name="com.example.planetze.EcoTrackerFragment"
-        android:label=" Eco Tracker"
-        tools:layout="@layout/fragment_eco_tracker">
-    </fragment>
+    ]
+
+
 
 </navigation>

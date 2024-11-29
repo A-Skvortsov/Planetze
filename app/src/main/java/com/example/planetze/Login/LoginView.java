@@ -4,14 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -20,38 +18,19 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.planetze.EcoTrackerFragment;
 import com.example.planetze.ForgotPasswordFragment;
 import com.example.planetze.HomeActivity;
-import com.example.planetze.HomeFragment;
-import com.example.planetze.MainActivity;
 import com.example.planetze.R;
 import com.example.planetze.SignUpFragment;
 import com.example.planetze.SurveyFragment;
-import com.example.planetze.UserData;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
-
-
-import java.util.ArrayList;
+import utilities.UserData;
 
 public class LoginView extends Fragment  {
 
@@ -127,11 +106,11 @@ public class LoginView extends Fragment  {
         inputError.setText(msg);
     }
 
-
     public void takeToHomePage() {
         Intent intent = new Intent(getActivity(), com.example.planetze.HomeActivity.class);
         startActivity(intent);
     }
+
     public Context getViewContext() {
         return getContext();
     }
@@ -141,14 +120,6 @@ public class LoginView extends Fragment  {
     }
 
     public void takeToHub() {
-
-        //Bundle bundle = new Bundle();
-        //System.out.println(getActivity().getSupportFragmentManager().findFragmentById(R.id.LoginView) == null);
-        //requireActivity().getSupportFragmentManager().executePendingTransactions();
-        //Fragment f = requireActivity().getSupportFragmentManager().findFragmentById(R.id.fragment);
-        //NavController navController = NavHostFragment.findNavController(f);
-        //navController.navigate(R.id.EcoTrackerFragment);
-
         Intent intent = new Intent(getContext(), HomeActivity.class);
 
         // Prevent the user from being able to navigate back the login page using the return action.
@@ -191,6 +162,8 @@ public class LoginView extends Fragment  {
         launcher.launch(intent);
     }
 
-
+    public boolean testIsLoggedIn() {
+        return UserData.isLoggedIn(getViewContext());
+    }
 
 }

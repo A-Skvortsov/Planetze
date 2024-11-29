@@ -23,6 +23,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -48,6 +49,10 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import java.util.ArrayList;
@@ -61,7 +66,12 @@ import customDataStructures.EmissionNode;
 import customDataStructures.EmissionNodeCollection;
 import utilities.UserEmissionsData;
 
-public class EcoGaugeFragment extends Fragment {
+
+/**
+ * EcoGauge fragment subclass.
+ */
+public class EcoGaugeFragment extends Fragment
+        implements OnChartGestureListener, OnChartValueSelectedListener {
 
     private LineChart emissionsTrendGraph;
     private PieChart categoryBreakdownChart;
@@ -80,7 +90,6 @@ public class EcoGaugeFragment extends Fragment {
     private CountryEmissionsData countryEmissions;
     private UserEmissionsData userEmissionsData;
     private int timePeriod;
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -333,15 +342,16 @@ public class EcoGaugeFragment extends Fragment {
         emissionsTrendGraph.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         emissionsTrendGraph.getDescription().setEnabled(false);
         emissionsTrendGraph.getAxisRight().setEnabled(false);
-        emissionsTrendGraph.setDrawGridBackground(false);
         emissionsTrendGraph.setTouchEnabled(true);
-        emissionsTrendGraph.setDragEnabled(true);
         emissionsTrendGraph.setScaleEnabled(true);
+        emissionsTrendGraph.setDragEnabled(true);
         emissionsTrendGraph.setData(lineData);
 
         // To solve issue where x-axis labels are repeated.
         emissionsTrendGraph.getXAxis().setGranularityEnabled(true);
 
+        emissionsTrendGraph.setOnChartGestureListener(this);
+        emissionsTrendGraph.setOnChartValueSelectedListener(this);
     }
 
     /**
@@ -371,6 +381,7 @@ public class EcoGaugeFragment extends Fragment {
         categoryBreakdownChart.getDescription().setEnabled(false);
         categoryBreakdownChart.setData(new PieData(pieDataSet));
         categoryBreakdownChart.setEntryLabelTextSize(12f);
+        categoryBreakdownChart.setEntryLabelColor(Color.BLACK);
     }
 
     /**
@@ -512,4 +523,108 @@ public class EcoGaugeFragment extends Fragment {
             comparisonPercentageText.setTextColor(Color.GRAY);
         }
     }
+
+    /**
+     * Callbacks when a touch-gesture has ended on the chart (ACTION_UP, ACTION_CANCEL)
+     *
+     * @param me
+     * @param lastPerformedGesture
+     */
+    @Override
+    public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+        /*
+            Render the default emissions text that simply displays the emissions data over
+            the selected time period.
+        */
+        renderEmissionsViewText();
+    }
+
+    /**
+     * Called when a value has been selected inside the chart.
+     *
+     * @param e The selected Entry
+     * @param h The corresponding highlight object that contains information
+     *          about the highlighted position such as dataSetIndex, ...
+     */
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+        // Update the TextView with the emissions value of the selected point on the chart
+        String emissionsText = Math.round(e.getY() * 100) / 100.0 + " kg CO2e";
+        emissionsOverviewTextView.setText(emissionsText);
+    }
+
+    /*
+     * Ignore un-utilized methods from the OnChartGestureListener and OnChartValueSelectedListener
+     * interface
+     */
+
+    /**
+     * Callbacks when a touch-gesture has started on the chart (ACTION_DOWN)
+     *
+     * @param me
+     * @param lastPerformedGesture
+     */
+    @Override
+    public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {}
+
+    /**
+     * Callbacks when the chart is long pressed.
+     *
+     * @param me
+     */
+    @Override
+    public void onChartLongPressed(MotionEvent me) {}
+
+    /**
+     * Callbacks when the chart is double-tapped.
+     *
+     * @param me
+     */
+    @Override
+    public void onChartDoubleTapped(MotionEvent me) {}
+
+    /**
+     * Callbacks when the chart is single-tapped.
+     *
+     * @param me
+     */
+    @Override
+    public void onChartSingleTapped(MotionEvent me) {}
+
+    /**
+     * Callbacks then a fling gesture is made on the chart.
+     *
+     * @param me1
+     * @param me2
+     * @param velocityX
+     * @param velocityY
+     */
+    @Override
+    public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {}
+
+    /**
+     * Callbacks when the chart is scaled / zoomed via pinch zoom gesture.
+     *
+     * @param me
+     * @param scaleX scale factor on the x-axis
+     * @param scaleY scale factor on the y-axis
+     */
+    @Override
+    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {}
+
+    /**
+     * Callbacks when the chart is moved / translated via drag gesture.
+     *
+     * @param me
+     * @param dX translation distance on the x-axis
+     * @param dY translation distance on the y-axis
+     */
+    @Override
+    public void onChartTranslate(MotionEvent me, float dX, float dY) {}
+
+    /**
+     * Called when nothing has been selected or an "un-select" has been made.
+     */
+    @Override
+    public void onNothingSelected() {}
 }
