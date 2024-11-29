@@ -28,7 +28,7 @@ public class BottomBar extends AppCompatActivity {
             btn[i].setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
 
-                    Intent j = new Intent(getApplicationContext(), EcoGauge.class);
+                    Intent j = new Intent(getApplicationContext(), EcoGaugeFragment.class);
                     startActivity(j);
                 }
             });

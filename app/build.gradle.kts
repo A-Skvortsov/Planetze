@@ -36,7 +36,6 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.play.services.auth)
     implementation(libs.material)
@@ -54,4 +53,6 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation(libs.firebase.auth)
     implementation("com.github.prolificinteractive:material-calendarview:2.0.1")
+    implementation(libs.mpandroidchart)
+    implementation(libs.opencsv)
 }

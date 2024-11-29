@@ -63,5 +63,4 @@ public class LoginPresenter {
     public Context getViewContext() {return view.getContext();}
 
 
-
 }

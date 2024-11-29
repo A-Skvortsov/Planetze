@@ -82,7 +82,7 @@ public class UserData {
 
     public static boolean stayLoggedOn(Context context) {
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-        return p.getBoolean("stayLoggedOn", true);
+        return p.getBoolean("stayLoggedOn", false);
     }
 
     private static void set_is_new_user(Context context, boolean is_new_user) {
