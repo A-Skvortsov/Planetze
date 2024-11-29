@@ -105,8 +105,9 @@ public class UserData {
                 DataSnapshot users = task.getResult();
                 String userID = UserData.getUserID(context);
                 for(DataSnapshot user:users.getChildren()) {
+                    Object slo = user.child("settings/stay_logged_on").getValue();
                     boolean cond1 = user.getKey().toString().trim().equals(userID);
-                    boolean cond2 = user.child("settings/stay_logged_on").getValue().toString().equals("true");
+                    boolean cond2 = slo != null && slo.toString().equals("true");
                     if (cond1 && cond2) {
                         set_stayLoggedOn(context, true);
                         break;
@@ -143,14 +144,15 @@ public class UserData {
                 DataSnapshot users = task.getResult();
                 String userID = UserData.getUserID(context);
                 for(DataSnapshot user:users.getChildren()) {
+                    Object ied = user.child("settings/interpolate_emissions_data").getValue();
                     boolean cond1 = user.getKey().toString().trim().equals(userID);
-                    boolean cond2 = user.child("settings/interpolate_emissions_data").getValue().toString().equals("true");
+                    boolean cond2 = ied != null && ied.toString().equals("true");
                     if (cond1 && cond2) {
-                        set_stayLoggedOn(context, true);
+                        set_interpolateEmissionsData(context, true);
                         break;
                     }
                     else if (cond1) {
-                        set_stayLoggedOn(context,false);
+                        set_interpolateEmissionsData(context,false);
                         break;
                     }
                 }
