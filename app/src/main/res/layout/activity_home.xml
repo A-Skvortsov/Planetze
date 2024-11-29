@@ -21,15 +21,11 @@
             android:id="@+id/usersetting_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
             android:background="@android:color/transparent"
-            android:drawableTop="@drawable/icon_random"
-            android:drawablePadding="4dp"
+            android:drawableTop="@drawable/user_icon"
+            android:drawablePadding="1dp"
             android:layout_weight="1"
-
-            android:text="@string/home"
-            android:textColor="@color/black"
-            android:textSize="9sp" />
+            />
 
         <TextView
             android:id="@+id/page_title"

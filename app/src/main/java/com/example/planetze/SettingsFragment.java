@@ -107,7 +107,6 @@ public class SettingsFragment extends Fragment {
                     UserData.set_stayLoggedOn(getContext(),false);
                 }
 
-
             }
         });
 

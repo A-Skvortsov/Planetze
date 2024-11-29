@@ -80,11 +80,7 @@ public class LoginModel {
     }
 
     private void takeToHomePage(LoginPresenter presenter) {
-        //change this later
 
-        presenter.takeToHub();
-
-        /*
         userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
@@ -105,8 +101,6 @@ public class LoginModel {
                 }
             }
         });
-
-         */
 
 
     }
