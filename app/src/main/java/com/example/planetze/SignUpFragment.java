@@ -335,7 +335,7 @@ public class SignUpFragment extends Fragment {
 
     private void setDefaultSettings(String userID) {
         userRef.child(userID+"/is_new_user").setValue(true);
-        userRef.child(userID+"/Settings/stayLoggedOn").setValue(false);
+        userRef.child(userID+"/settings/stay_logged_on").setValue(false);
         userRef.child(userID+"/calender/0000-00-00/0").setValue(0);
     }
 

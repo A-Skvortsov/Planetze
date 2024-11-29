@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import com.example.planetze.Login.LoginView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -36,6 +37,9 @@ public class UserData {
     }
 
     public static void logout(Context context) {
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.signOut();
+
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
         SharedPreferences.Editor e = p.edit();
         e.putBoolean("isLoggedIn", false);
@@ -65,7 +69,6 @@ public class UserData {
                 for(DataSnapshot user:users.getChildren()) {
                     boolean cond1 = user.getKey().toString().trim().equals(userID);
                     boolean cond2 = user.child("is_new_user").getValue().toString().equals("true");
-                    //System.out.println(user.getKey().toString().trim() + "       " +userID);
                     if (cond1 && cond2) {
                         set_is_new_user(context, true);
                         break;
@@ -75,7 +78,6 @@ public class UserData {
                         break;
                     }
                 }
-                //presenter.takeToHub();
             }
         });
     }
@@ -103,8 +105,7 @@ public class UserData {
                 String userID = UserData.getUserID(context);
                 for(DataSnapshot user:users.getChildren()) {
                     boolean cond1 = user.getKey().toString().trim().equals(userID);
-                    boolean cond2 = user.child("Settings/stayLoggedOn").getValue().toString().equals("true");
-                    //System.out.println(user.getKey().toString().trim() + "       " +userID);
+                    boolean cond2 = user.child("settings/stay_logged_on").getValue().toString().equals("true");
                     if (cond1 && cond2) {
                         set_stayLoggedOn(context, true);
                         break;
@@ -114,7 +115,6 @@ public class UserData {
                         break;
                     }
                 }
-                //presenter.takeToHub();
             }
         });
     }
@@ -125,14 +125,6 @@ public class UserData {
         e.putBoolean("stayLoggedOn", stayLoggedOn);
         e.commit();
     }
-
-    /*
-    public void logout() {
-        UserData.logout(getContext());
-        loadFragment(new LoginView());
-    }
-
-     */
 
 
 

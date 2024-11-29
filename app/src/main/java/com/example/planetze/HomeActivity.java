@@ -1,5 +1,6 @@
 package com.example.planetze;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,22 +58,11 @@ public class HomeActivity extends AppCompatActivity {
         userSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                popup(view);
+                Intent j = new Intent(getApplicationContext(), SettingActivity.class);
+                startActivity(j);
 
             }
         });
-    }
-
-    private void popup(View view) {
-        PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
-        popupMenu.inflate(R.menu.menu);
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                return onMenuClick(item);
-            }
-        });
-        popupMenu.show();
     }
 
     private void loadFragment(Fragment fragment) {
@@ -82,15 +72,4 @@ public class HomeActivity extends AppCompatActivity {
         transaction.commit();
     }
 
-    private boolean onMenuClick(MenuItem item) {
-        if (item.getItemId() == R.id.logout) {
-            UserData.logout(getApplicationContext());
-            loadFragment(new LoginView());
-        }
-        else if (item.getItemId() == R.id.settings) {
-            loadFragment(new SettingsFragment());
-        }
-
-        return false;
-    }
 }
