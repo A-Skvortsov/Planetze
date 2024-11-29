@@ -127,12 +127,13 @@ public class LoginView extends Fragment  {
         startActivity(intent);
     }
 
-    private void loadFragment(Fragment fragment) {
+    public void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
+
 
     private Activity getViewActivity() {
         return getActivity();

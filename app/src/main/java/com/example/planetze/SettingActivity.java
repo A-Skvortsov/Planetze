@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.example.planetze.Login.LoginView;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.view.View;
@@ -41,9 +42,7 @@ public class SettingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        binding = ActivitySettingBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setContentView(R.layout.activity_setting);
 
         stayLoggedOn = findViewById(R.id.stay_logged_on_switch);
         returnButton = findViewById(R.id.returnButton);
@@ -103,7 +102,6 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
     }
-
     private void initialize() {
         stayLoggedOn.setChecked(UserData.stayLoggedOn(getApplicationContext()));
         interpolateEmissionsData.setChecked(UserData.interpolateEmissionsData(getApplicationContext()));

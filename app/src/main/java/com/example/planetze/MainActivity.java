@@ -66,13 +66,12 @@ public class MainActivity extends AppCompatActivity {
 
         initializeData();
 
-
         if (savedInstanceState == null) {
             onOpenApp();
         }
     }
 
-    private void loadFragment(Fragment fragment) {
+    public void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
