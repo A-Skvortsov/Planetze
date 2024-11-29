@@ -30,13 +30,15 @@ public class Details extends AppCompatActivity {
 
         if (intent !=null){
 
-            String loc =intent.getStringExtra("locations");
             String des =intent.getStringExtra("descriptions");
+            String par =intent.getStringExtra("paragraphs");
             int img =intent.getIntExtra("images", -2);
 
             binding.detailImage.setImageResource(img);
-            binding.detailLocatoin.setText(loc);
             binding.detailDescription.setText(des);
+            binding.detailsParapgraph.setText(par);
+
+
 
         }
 
