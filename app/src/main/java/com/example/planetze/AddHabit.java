@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import utilities.Constants;
+import utilities.UserData;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,7 +51,7 @@ public class AddHabit extends Fragment {
     private final String[] categories = Constants.categories;
     private final String[] impacts = Constants.impacts;
     FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-    private String userId = "QMCLRlEKD9h2Np1II1vrNU0vpxt2";
+    private String userId;
     private HashMap<String, Object> calendar;
     List<List<String>> allHabits;
     List<List<String>> currentHabits;
@@ -109,6 +110,8 @@ public class AddHabit extends Fragment {
                              Bundle savedInstanceState) {
         Bundle args = getArguments();  //needed solely for when returning to EcoTracker
         date = args.getString("date");
+
+        userId = UserData.getUserID(getContext());
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_add_habit, container, false);

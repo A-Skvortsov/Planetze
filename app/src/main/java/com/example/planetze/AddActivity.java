@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 import utilities.Constants;
+import utilities.UserData;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -66,7 +67,7 @@ public class AddActivity extends Fragment {
     private int id = 0;
     private String default_car = "none";
     static FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-    static String userId = "QMCLRlEKD9h2Np1II1vrNU0vpxt2";  //this should be changed to the particular logged in user once everything works
+    static String userId;  //this should be changed to the particular logged in user once everything works
     int recursionLimiter = 0;
 
     public AddActivity() {
@@ -125,6 +126,8 @@ public class AddActivity extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_add_activity, container, false);
+
+        userId = UserData.getUserID(getContext());
 
         Bundle args = getArguments();
         date = args.getString("date");

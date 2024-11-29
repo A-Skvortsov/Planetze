@@ -28,6 +28,7 @@ import utilities.UserData;
 public class SurveyFragment extends Fragment {
 
     private FirebaseDatabase db;
+    private String userId;
     int current_cat = 0;  //0-transportation,1-food, 2-housing,3-consumption
     int current_q = 0;  //index of current question
     double[] co2PerCategory = {0.0, 0.0, 0.0, 0.0};
@@ -104,8 +105,7 @@ public class SurveyFragment extends Fragment {
                     }
 
                     db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-                    //String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
-                    String userId = UserData.getUserID(getContext());
+                    userId = UserData.getUserID(getContext());
                     DatabaseReference userRef = db.getReference("user data")
                             .child(userId);
                     //send survey results to firebase as Map<String, List<Double>>
@@ -237,7 +237,6 @@ public class SurveyFragment extends Fragment {
         //firebase stuff used to store what car uses drives by default (needed for "Drive personal
         //vehicle" activity in EcoTracker)
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-        String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
         DatabaseReference userRef = db.getReference("user data")
                 .child(userId);
         Map<String, Object> c = new HashMap<>();

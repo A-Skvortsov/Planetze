@@ -337,7 +337,7 @@ public class SignUpFragment extends Fragment {
         userRef.child(userID+"/is_new_user").setValue(true);
         userRef.child(userID+"/settings/stay_logged_on").setValue(false);
         userRef.child(userID+"/settings/interpolate_emissions_data").setValue(false);
-        userRef.child(userID+"/calender/0000-00-00/0").setValue(0);
+        userRef.child(userID+"/calendar/0000-00-00/0").setValue(0);
 
     }
 

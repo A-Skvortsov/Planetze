@@ -37,6 +37,7 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 
 import utilities.Constants;
+import utilities.UserData;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -48,7 +49,8 @@ public class EcoTrackerFragment extends Fragment {
     View globalView;
     final String[] months = Constants.months;
     private FirebaseDatabase db;
-    String userId = "QMCLRlEKD9h2Np1II1vrNU0vpxt2";  //this should be changed to the particular logged in user once everything works
+    //String userId = "QMCLRlEKD9h2Np1II1vrNU0vpxt2";  //this should be changed to the particular logged in user once everything works
+    String userId;
     private static DatabaseReference calendarRef;  //this is static so that we can call fetchSnapshot()
             //from addActivity fragment when returning to ecotrackerfragment in order to update
             //ecotracker activity info upon return
@@ -136,6 +138,8 @@ public class EcoTrackerFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_eco_tracker, container, false);
         globalView = view;
+
+        userId = UserData.getUserID(getContext());
 
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         calendarRef = db.getReference("user data")
@@ -524,7 +528,7 @@ public class EcoTrackerFragment extends Fragment {
             //stores a list containing lists representing the logged activities of the day
             List<List<Object>> day = (List<List<Object>>) days.get(date);
             for (int i = 0; i < day.size(); i++) {
-                btn = new RadioButton(getContext());
+                btn = new RadioButton(requireContext());
                 btn.setId(i);  //this is used for delete and edit activity features
                 String t = (Math.round(Double.parseDouble((String) day.get(i).get(2)) * 10) / 10.0)
                         + "kg CO2: " + day.get(i).get(1);  //the rounding prevents weird floating point stuff

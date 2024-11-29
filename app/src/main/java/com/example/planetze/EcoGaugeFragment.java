@@ -64,6 +64,7 @@ import java.util.Map;
 import utilities.CountryEmissionsData;
 import customDataStructures.EmissionNode;
 import customDataStructures.EmissionNodeCollection;
+import utilities.UserData;
 import utilities.UserEmissionsData;
 
 
@@ -90,10 +91,12 @@ public class EcoGaugeFragment extends Fragment
     private CountryEmissionsData countryEmissions;
     private UserEmissionsData userEmissionsData;
     private int timePeriod;
+    private String userId;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        userId = UserData.getUserID(getContext());
         View view = inflater.inflate(R.layout.fragment_eco_gauge, container, false);
 
         this.emissionsTrendGraph = view.findViewById(R.id.line_chart);
@@ -111,7 +114,7 @@ public class EcoGaugeFragment extends Fragment
         this.comparisonChartCard = view.findViewById(R.id.comparison_chart_card);
 
         // TODO: THE SOURCE OF THE ID BELOW SHOULD BE CHANGED TO ACCURATELY REFLECT THE CURRENT USER
-        this.userEmissionsData = new UserEmissionsData("QMCLRlEKD9h2Np1II1vrNU0vpxt2", new UserEmissionsData.DataReadyListener() {
+        this.userEmissionsData = new UserEmissionsData(userId, new UserEmissionsData.DataReadyListener() {
             @Override
             public void start() {
                 // TODO: Show progress dialog
