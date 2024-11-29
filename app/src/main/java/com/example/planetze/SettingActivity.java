@@ -23,6 +23,8 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import utilities.UserData;
+
 public class SettingActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
