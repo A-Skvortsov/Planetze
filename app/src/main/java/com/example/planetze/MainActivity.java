@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         //Intent intent = new Intent(MainActivity.this, SurveyResults.class);
         //startActivity(intent);
 
-        initilizeData();
+        initializeData();
 
 
         if (savedInstanceState == null) {
