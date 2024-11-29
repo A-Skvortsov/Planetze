@@ -3,6 +3,7 @@ package com.example.planetze;
 import android.os.AsyncTask;
 import android.os.Bundle;
 
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,12 +20,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
 import androidx.media3.common.util.Log;
+import com.example.planetze.databinding.ActivityEcoBalanceDestinationBinding;
+import com.example.planetze.databinding.ActivityEcoBalanceDestinationBinding;
+
+
+
+
 import androidx.media3.common.util.UnstableApi;
 import androidx.navigation.ui.AppBarConfiguration;
 
-//import com.example.planetze.databinding.ActivityEcoBalanceDestinationBinding;
 import com.example.planetze.databinding.ActivityPaymentBinding;
 import com.stripe.android.PaymentConfiguration;
 import com.stripe.android.paymentsheet.PaymentSheet;
@@ -76,7 +81,6 @@ public class Payment extends AppCompatActivity {
 
 
         String url = "https://api.stripe.com/v1/customers";
-
 
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
@@ -210,14 +214,18 @@ public class Payment extends AppCompatActivity {
     }
 
     private void paymentflow() {
-        paymentSheet.presentWithPaymentIntent(ClientSecret, new PaymentSheet.Configuration("Plantze", new PaymentSheet.CustomerConfiguration(clientid, Ephermalkey)));
+        // if (Ephermalkey != null)
+        paymentSheet.presentWithPaymentIntent(ClientSecret, new PaymentSheet.Configuration("Plantze",
+                new PaymentSheet.CustomerConfiguration(clientid, Ephermalkey)));
     }
-
     private void onPaymentResult(PaymentSheetResult paymentSheetResult) {
         if (paymentSheetResult instanceof PaymentSheetResult.Completed){
             Toast.makeText(this,"DONE", Toast.LENGTH_SHORT).show();
     }
+        else
+            Toast.makeText(this,"LOOK not working", Toast.LENGTH_SHORT).show();
 
-}
+
+    }
 }
 
