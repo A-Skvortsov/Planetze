@@ -36,15 +36,15 @@
         tools:layout="@layout/fragment_add_habit">
     </fragment>
     <fragment
-        android:id="@+id/thirdFragment"
-        android:name="com.example.planetze.ThirdFragment"
-        android:label="Third Fragment"
-        tools:layout="@layout/fragment_third" />
+        android:id="@+id/EcoBalanceFragment"
+        android:name="com.example.planetze.EcoBalanceFragment"
+        android:label="EcoBalance"
+        tools:layout="@layout/fragment_eco_balance_fragment" />
     <fragment
-        android:id="@+id/fourthFragment"
-        android:name="com.example.planetze.FourthFragment"
-        android:label="Fourth Fragment"
-        tools:layout="@layout/fragment_fourth" />
+        android:id="@+id/EcoHubEntryFragment"
+        android:name="com.example.planetze.EcoHubEntryFragment"
+        android:label="EcoHub"
+        tools:layout="@layout/fragment_eco_hub_entry_" />
     <fragment
         android:id="@+id/LoginView"
         android:name="com.example.planetze.Login.LoginView"

@@ -11,10 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.Objects;
 
-
-public class EcoHub_entry_Fragment extends Fragment {
+public class EcoHubEntryFragment extends Fragment {
 
 
     @Override

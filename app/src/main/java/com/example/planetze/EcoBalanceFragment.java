@@ -11,9 +11,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 
-public class EcoBalance_fragment extends Fragment {
+public class EcoBalanceFragment extends Fragment {
 
-    public EcoBalance_fragment() {
+    public EcoBalanceFragment() {
         // Required empty public constructor
     }
 
