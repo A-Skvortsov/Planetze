@@ -39,7 +39,9 @@ public class EcoHub_ACTIVITY extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.nati1, new EcoHub_entry_Fragment()).commit();
+                transaction.replace(R.id.nati1, new EcoHub_entry_Fragment());
+                transaction.addToBackStack(null);
+                transaction.commit();
 
             }
         });
