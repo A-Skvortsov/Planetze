@@ -31,13 +31,11 @@ public class ListAdapter extends ArrayAdapter<ListData> {
         }
 
         TextView descriptionview = view.findViewById(R.id.description);
-        TextView locationview2 = view.findViewById(R.id.location);
         ImageView imageView = view.findViewById(R.id.imageView);
 
 
         // set the various ids to the provided
         descriptionview.setText(listData.description);
-        locationview2.setText(listData.location);
         imageView.setImageResource(listData.images);
 
         return view;

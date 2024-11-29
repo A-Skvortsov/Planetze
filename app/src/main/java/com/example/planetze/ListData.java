@@ -4,21 +4,16 @@ public class ListData {
 
     int images;
     String description;
-    String location;
 
-    public ListData(int img, String des, String loc){
+    public ListData(int img, String desc){
         this.images = img;
-        this.description = des;
-        this.location = loc;
+        this.description = desc;
     }
 
     public int getImages() {
         return images;
     }
 
-    public String getLocation() {
-        return location;
-    }
 
     public String getDescription() {
         return description;
