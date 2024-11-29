@@ -1,26 +1,33 @@
 package com.example.planetze;
 
-import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
-import java.util.stream.IntStream;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import utilities.Constants;
+import utilities.UserData;
 
-public class Init_Survey extends AppCompatActivity {
+public class SurveyFragment extends Fragment {
+
+    private FirebaseDatabase db;
     int current_cat = 0;  //0-transportation,1-food, 2-housing,3-consumption
     int current_q = 0;  //index of current question
     double[] co2PerCategory = {0.0, 0.0, 0.0, 0.0};
@@ -38,39 +45,42 @@ public class Init_Survey extends AppCompatActivity {
     //elements of arrays below specify which answer option
     //(represented as int) is selected for a particular question
     int[] transport_ans = new int[num_transport_qs];  //7 qs in transportation category
-    int[] food_ans = new int [num_food_qs];
+    int[] food_ans = new int[num_food_qs];
     int[] housing_ans = new int[num_housing_qs];
     int[] consumption_ans = new int[num_consumption_qs];
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_init_survey);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });  //end of default onCreate() code
+    private TextView please_answer1;
+    private TextView please_answer2;
+    private Button next_btn;
+    private Button back_btn;
+    private TextView category;
+    private TextView question;
+    private RadioGroup options;
 
-        //final vars correspond to UI components
-        final TextView please_answer1 = findViewById(R.id.please_answer1);
-        final TextView please_answer2 = findViewById(R.id.please_answer2);
-        final Button next_btn = findViewById(R.id.next_btn);
-        Button back_btn = findViewById(R.id.back_btn);
-        final TextView category = findViewById(R.id.category);
-        final TextView question = findViewById(R.id.question);
-        final RadioGroup options = findViewById(R.id.options);
-            //nested code initializes survey at first question
-            back_btn.setVisibility(View.INVISIBLE);
-            category.setText(categories[current_cat]);
-            question.setText(questions[current_q][0]);
-            for (int i = 1; i < questions[current_q].length; i++) {
-                RadioButton btn = new RadioButton(Init_Survey.this);
-                btn.setId(i - 1);
-                btn.setText(questions[current_q][i]);
-                options.addView(btn);
-            }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_init_survey, container, false);
+
+        please_answer1 = view.findViewById(R.id.please_answer1);
+        please_answer2 = view.findViewById(R.id.please_answer2);
+        next_btn = view.findViewById(R.id.next_btn);
+        back_btn = view.findViewById(R.id.back_btn);
+        category = view.findViewById(R.id.category);
+        question = view.findViewById(R.id.question);
+        options = view.findViewById(R.id.options);
+
+        //nested code initializes survey at first question
+        back_btn.setVisibility(View.INVISIBLE);
+        category.setText(categories[current_cat]);
+        question.setText(questions[current_q][0]);
+        for (int i = 1; i < questions[current_q].length; i++) {
+            RadioButton btn = new RadioButton(getContext());
+            btn.setId(i - 1);
+            btn.setText(questions[current_q][i]);
+            btn.setTextColor(Color.BLACK);
+            btn.setTextSize(16);
+            options.addView(btn);
+        }
 
         next_btn.setOnClickListener(new View.OnClickListener() {
             /**
@@ -88,10 +98,24 @@ public class Init_Survey extends AppCompatActivity {
                 current_q++;  //iterates to next q
                 if (current_q >= num_qs) {  //true if survey is finished
                     computeCatEmissions(current_cat);
-                    //code below stats next activity (show survey results)
-                    Intent intent = new Intent(Init_Survey.this, SurveyResults.class);
-                    intent.putExtra("co2PerCategory", co2PerCategory);
-                    startActivity(intent);
+                    List<Double> list = new ArrayList<>();
+                    for (int i = 0; i < co2PerCategory.length; i++) {
+                        list.add(co2PerCategory[i]);
+                    }
+
+                    db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+                    //String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
+                    String userId = UserData.getUserID(getContext());
+                    DatabaseReference userRef = db.getReference("user data")
+                            .child(userId);
+                    //send survey results to firebase as Map<String, List<Double>>
+                    Map<String, Object> c = new HashMap<>();
+                    c.put("survey_results", list);
+                    userRef.updateChildren(c);
+
+                    userRef.child("is_new_user").setValue(false);
+
+                    loadFragment(new SurveyResults());
                     return;
                 }
                 if (questions[current_q][0].equals("-")) {  //iter'n to next category if necessary
@@ -124,6 +148,8 @@ public class Init_Survey extends AppCompatActivity {
 
 
         });
+
+        return view;
     }
 
 
@@ -142,13 +168,14 @@ public class Init_Survey extends AppCompatActivity {
 
         options.removeAllViews(); options.clearCheck();  //remove previous answer options
         for (int i = 1; i < questions[q].length; i++) { //loading answer options for the new q
-            RadioButton btn = new RadioButton(Init_Survey.this);
+            RadioButton btn = new RadioButton(getContext());
             btn.setId(i - 1);  //standard btn configurations
             btn.setText(questions[q][i]);
+            btn.setTextColor(Color.BLACK);
+            btn.setTextSize(16);
             options.addView(btn);  //adds btn to the RadioGroup (btn container)
         }
     }
-
 
     /**
      * Updates the global arrays containing user answers for each category
@@ -207,14 +234,33 @@ public class Init_Survey extends AppCompatActivity {
      * @return double representing total annual transport emissions (in kg)
      */
     protected double transportEmissions() {
+        //firebase stuff used to store what car uses drives by default (needed for "Drive personal
+        //vehicle" activity in EcoTracker)
+        db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user once everything works
+        DatabaseReference userRef = db.getReference("user data")
+                .child(userId);
+        Map<String, Object> c = new HashMap<>();
+
         double totalkg = 0.0;
         double r = 0.0;
         if (transport_ans[0] != 1) {  //true corresponds to user saying "yes" to "do u use car?"
             switch(transport_ans[1]) {  //which car they drive
-                case 0: r = 0.24; break;  //gas emissions rate
-                case 1: r = 0.27; break;  //diesel, etc.
-                case 2: r = 0.05; break;  //electric
-                default: r = 0.16; break;  //hybrid or "i don't know" (default to hybrid)
+                case 0: r = 0.24;
+                    c.put("default_car", "gasoline");
+                    break;  //gas emissions rate
+                case 1: r = 0.27;
+                    c.put("default_car", "diesel");
+                    break;  //diesel, etc.
+                case 2: r = 0.16;
+                    c.put("default_car", "hybrid");
+                    break;  //hybrid
+                case 3: r = 0.05;
+                    c.put("default_car", "electric");
+                    break;  //electric
+                default: r = 0.16;
+                    c.put("default_car", "none");
+                    break;  //"i don't know" answer (rate of emissions defaults to that of hybrid)
             }
             switch(transport_ans[2]) {  //how much they drive
                 case 0: totalkg += r * 5000; break;  //constants are distances driven
@@ -224,7 +270,8 @@ public class Init_Survey extends AppCompatActivity {
                 case 4: totalkg += r * 25000; break;
                 default: totalkg += r * 35000; break;
             }
-        }
+        } else {c.put("default_car", "none");}
+        userRef.updateChildren(c);  //adds default car component to user data for use in EcoTracker
 
         totalkg += public_transport_emissions[transport_ans[3]][transport_ans[4]];  //see Constants.java
 
@@ -304,8 +351,11 @@ public class Init_Survey extends AppCompatActivity {
         int[] i = housing_ans;
         if (i[3] != i[5]) totalkg += 233;
 
-        System.out.println(i[0] + " " + i[1] + " " + i[2] + " " + i[4] + " " + i[3]);
         if (i[0] == 4) i[0] = 2;  //sets "other" answer option to "townhouse" (as instructed in formula spreadsheet)
+        if (i[3] == 5) i[3] = 1;  //sets "other" answer option to "electricity" (by assumption)
+        if (i[5] == 5) i[5] = 1;  //^^ Piazza post SHOULD but has not yet clarified if this is what we are to do.
+                                //profs have not yet specified what to do in this scenario so we will assume
+                                //that it is reasonable to default "other" to electricity
         totalkg += housing_emissions[i[0]][i[1]][i[2]][i[4]][i[3]];  //home heating (i[3]; fourth question of category)
         totalkg += housing_emissions[i[0]][i[1]][i[2]][i[4]][i[5]];  //water heating (i[5]; sixth question of category)
         switch(i[6]) {  //7th question of housing category; re: renewable energy use
@@ -370,4 +420,9 @@ public class Init_Survey extends AppCompatActivity {
         return s;
     }
 
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragment);
+        transaction.commit();
+    }
 }

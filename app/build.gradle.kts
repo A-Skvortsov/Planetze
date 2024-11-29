@@ -47,16 +47,16 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
-    implementation(libs.volley)
-    implementation(libs.media3.common)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(libs.firebase.auth)
     implementation("com.stripe:stripe-android:21.2.0")
-
-
-
-
-
+    implementation("com.github.prolificinteractive:material-calendarview:2.0.1")
+    implementation(libs.mpandroidchart)
+    implementation(libs.opencsv)
+    testImplementation(libs.mockito)
+    implementation(libs.play.services.auth)
+    implementation(libs.volley)
+    implementation(libs.media3.common)
 }

@@ -1,17 +1,36 @@
 package utilities;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class Constants {
 
-    //all survey question categories
-    public static final String[] categories = {"Transportation", "Food", "Housing", "Consumption"};
+    public static final String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "June",
+            "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
+    // All survey question categories
+    public static final String[] categories = {"Transportation", "Food", "Housing", "Consumption"};
+    public static final String[] impacts = {"Select an impact level", "Small impact (< 25kg CO2)",
+            "Medium impact (< 50kg CO2)", "Big impact (> 50kg CO2)"};
+
+
+    public static final int DAILY = 1;
+    public static final int WEEKLY = 7;
+    public static final int MONTHLY = 30;
+    public static final int YEARLY = 365;
+    public static final int OVERALL = Integer.MAX_VALUE;
+
+    public static final int EMISSION_TYPE_INDEX = 0;
+    public static final int EMISSIONS_AMOUNT_INDEX = 2;
 
     public static final int transport_qs = 7;  //number of qs in transport category
     public static final int food_qs = 6;
     public static final int housing_qs = 7;
     public static final int consumption_qs = 4;
-    //all survey questions. Each sub array is a question followed by all possible answer options
-    public static final String[][] questions = {{"Do you own or regularly use a car?", "Yes", "No"},
+
+    // All survey questions. Each sub array is a question followed by all possible answer options
+    public static final String[][] questions = {
+            {"Do you own or regularly use a car?", "Yes", "No"},
             {"What type of car do you drive?", "Gasoline", "Diesel", "Hybrid", "Electric", "I don't know"},
             {"How many kilometers/miles do you drive per year?", "Up to 5,000 km", "5,000–10,000 km", "10,000–15,000 km", "15,000–20,000 km", "20,000–25,000 km", "More than 25,000 km"},
             {"How often do you use public transportation?", "Never", "Occasionally (1-2 times/week)", "Frequently (3-4 times/week)", "Always (5+ times/week)"},
@@ -38,6 +57,15 @@ public class Constants {
             {"Do you buy second-hand or eco-friendly products?", "Yes, regularly", "Yes, occasionally", "No"},
             {"How many electronic devices have you purchased in the past year?", "None", "1", "2", "3", "4 or more"},
             {"How often do you recycle?", "Never", "Occasionally", "Frequently", "Always"}};
+
+    public static final String[] activityCats = {"Select a Category",
+            "Transportation", "Food", "Consumption", "Energy"};
+    public static final String[][] activities = {
+            {"Select an Activity", "Drive personal vehicle", "Take public transportation",
+                    "Cycling/Walking", "Flight (< 1,500km)", "Flight (> 1,500km)"},
+            {"Select an Activity", "Meal"},
+            {"Select an Activity", "Buy new clothes", "Buy electronics", "Other purchases"},
+            {"Select an Activity", "Electricity", "Gas", "Water"}};
 
     public static final String[] country = {
             "Afghanistan",

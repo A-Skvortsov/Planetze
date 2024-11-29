@@ -37,7 +37,11 @@
             android:exported="true"
             android:theme="@style/Theme.Planetze" />
         <activity
-            android:name=".EcoGauge"
+            android:name=".SettingActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Planetze" />
+        <activity
+            android:name=".HomeActivity"
             android:exported="false"
             android:theme="@style/Theme.Planetze" />
         <activity
@@ -48,12 +52,6 @@
             android:name=".BottomBar"
             android:exported="true"
             android:theme="@style/Theme.Planetze" />
-        <activity
-            android:name=".SurveyResults"
-            android:exported="false" />
-        <activity
-            android:name=".Init_Survey"
-            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="true">
