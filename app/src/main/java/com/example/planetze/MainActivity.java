@@ -25,6 +25,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import utilities.UserData;
+
 public class MainActivity extends AppCompatActivity {
 
     FirebaseDatabase db;
@@ -90,23 +92,13 @@ public class MainActivity extends AppCompatActivity {
         //change this later
         String userID = UserData.getUserID(getApplicationContext());
 
-        userRef.get().addOnCompleteListener(task -> {
-            DataSnapshot users = task.getResult();
-            for(DataSnapshot user:users.getChildren()) {
-                boolean cond1 = user.getKey().toString().trim().equals(userID);
-                boolean cond2 = user.child("is_new_user").getValue().toString().equals("true");
-  
-                if (cond1 && cond2) {
-                    loadFragment(new SurveyFragment());
-                    break;
-                }
-                else if (cond1) {
-                    navigateToHomeActivity();
-                    break;
-                }
+        if (UserData.is_new_user(getApplicationContext())) {
+            loadFragment(new SurveyFragment());
+        }
+        else {
+            navigateToHomeActivity();
+        }
 
-            }
-        });
     }
 
     private void navigateToHomeActivity() {

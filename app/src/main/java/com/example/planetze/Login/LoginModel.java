@@ -1,29 +1,14 @@
 package com.example.planetze.Login;
 
 import static android.app.Activity.RESULT_OK;
-import static android.provider.Settings.System.getString;
 
 import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
 
-import android.content.Intent;
-
 import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
 
-import com.example.planetze.EcoTrackerFragment;
-import com.example.planetze.HomeFragment;
-import com.example.planetze.R;
-import com.example.planetze.SurveyFragment;
-import com.example.planetze.UserData;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -35,6 +20,8 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import utilities.UserData;
 
 public class LoginModel {
 
