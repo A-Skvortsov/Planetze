@@ -8,22 +8,16 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
 
-import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.CheckBox;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -41,7 +35,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Semaphore;
 
 import utilities.Constants;
 import utilities.UserData;
@@ -104,6 +97,13 @@ public class EcoTrackerFragment extends Fragment {
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        final Button activitiesBtn = globalView.findViewById(R.id.activitiesBtn);
+        activitiesBtn.performClick();  //by default, loads activities & not habits
     }
 
     @Override
@@ -171,6 +171,7 @@ public class EcoTrackerFragment extends Fragment {
         final TextView issuePrompt2 = view.findViewById(R.id.issuePrompt2);
         final Button activitiesBtn = view.findViewById(R.id.activitiesBtn);
         final Button habitsBtn = view.findViewById(R.id.habitsBtn);
+        activitiesBtn.performClick();  //by default, loads activities & not habits
 
         String prompt;
         if (habitsToggled && activities.getChildCount() != 0) {
@@ -295,13 +296,6 @@ public class EcoTrackerFragment extends Fragment {
                 issuePrompt2.setVisibility(View.INVISIBLE);
 
                 //passes date parameter so activity is added to current date
-                /*Bundle bundle = new Bundle();
-                bundle.putString("date", date);
-                NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment));
-                navController.navigate(R.id.AddActivity, bundle);
-                */
-                //loadFragment(new AddActivity(date));
                 AddActivity addActivity = new AddActivity(date);
                 FragmentManager fragmentManager = getChildFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -477,14 +471,7 @@ public class EcoTrackerFragment extends Fragment {
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*Bundle bundle = new Bundle();
-                bundle.putString("date", date);
-                NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment));
-                navController.navigate(R.id.AddHabit, bundle);
-                 */
-                //loadFragment(new AddActivity(date));
-                AddHabit addHabit = new AddHabit();
+                AddHabit addHabit = new AddHabit(false);  //"false" prevents immediate return to ecotracker
                 FragmentManager fragmentManager = getChildFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.eco_tracker, addHabit);
@@ -612,16 +599,7 @@ public class EcoTrackerFragment extends Fragment {
                         issueprompt2.setVisibility(View.VISIBLE);
                         return;
                     }
-                    //boot addActivity in edit mode, passing activityToEdit
-                    /*Bundle bundle = new Bundle();
-                    bundle.putString("date", date);
-                    bundle.putStringArrayList("activityToEdit", (ArrayList<String>) activityToEdit);
-                    bundle.putInt("id", id);
-                    NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
-                            .findFragmentById(R.id.fragment));
-                    navController.navigate(R.id.AddActivity, bundle);
-                    */
-                    //loadFragment(new AddActivity(date, activityToEdit, id));
+                    //boots addActivity in edit mode, passing activityToEdit
                     AddActivity addActivity = new AddActivity(date, activityToEdit, id);
                     FragmentManager fragmentManager = getChildFragmentManager();
                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

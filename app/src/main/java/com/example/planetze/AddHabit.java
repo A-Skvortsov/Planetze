@@ -4,8 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,7 +44,7 @@ public class AddHabit extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private String mParam1;
     private String mParam2;
-    private String date;
+    private boolean returnToEcoTracker = true;
     private View globalView;
     private final String[] categories = Constants.categories;
     private final String[] impacts = Constants.impacts;
@@ -63,6 +61,9 @@ public class AddHabit extends Fragment {
 
     public AddHabit() {
         // Required empty public constructor
+    }
+    public AddHabit(boolean b) {
+        returnToEcoTracker = b;
     }
 
     /**
@@ -86,10 +87,7 @@ public class AddHabit extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        if (returnToEcoTracker) getParentFragmentManager().popBackStack();
 
         userId = UserData.getUserID(getContext());
         //sets user's calendar right away
@@ -109,8 +107,8 @@ public class AddHabit extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        //Bundle args = getArguments();  //needed solely for when returning to EcoTracker
-        //date = args.getString("date");
+        //returns to ecotracker if we just did some navigation through the app
+        if (returnToEcoTracker) getParentFragmentManager().popBackStack();
 
         userId = UserData.getUserID(getContext());
 
@@ -585,13 +583,6 @@ public class AddHabit extends Fragment {
 
     private void returnToEcoTracker() {
         EcoTrackerFragment.fetchSnapshot();
-        /*Bundle bundle = new Bundle();
-        bundle.putString("date", date);
-        bundle.putBoolean("habitsToggled", true);
-
-        NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
-                .findFragmentById(R.id.fragment));
-        navController.navigate(R.id.EcoTrackerFragment, bundle);*/
         getParentFragmentManager().popBackStack();
     }
 

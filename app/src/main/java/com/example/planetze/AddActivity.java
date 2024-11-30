@@ -4,8 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -184,11 +182,6 @@ public class AddActivity extends Fragment {
                     updateFirebase(date, activity, id);  //update firebase (for edit mode)
                 } else {writeToFirebase(date, activity, userId);}  //write list to firebase
                 EcoTrackerFragment.fetchSnapshot();  //update ecotracker info
-                /*Bundle bundle = new Bundle();
-                bundle.putString("date", date);
-                NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment));
-                navController.navigate(R.id.EcoTrackerFragment, bundle);*/
                 getParentFragmentManager().popBackStack();
             }
         });

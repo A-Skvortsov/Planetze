@@ -119,13 +119,14 @@
 
         <!-- activities and habits stuff below -->
         <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/toggleButton"
+            android:id="@+id/toggleBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="@+id/scrollView2"
             app:layout_constraintEnd_toEndOf="@+id/scrollView2"
             app:layout_constraintBottom_toTopOf="@+id/scrollView2"
-            app:singleSelection="true">
+            app:singleSelection="true"
+            app:selectionRequired="true">
 
             <Button
                 android:id="@+id/activitiesBtn"
