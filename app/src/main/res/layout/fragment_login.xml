@@ -145,6 +145,14 @@
                     />
                 </RelativeLayout>
 
+                <TextView
+                    android:id="@+id/error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textColor="#FF0000"
+                    android:textSize="0sp" />
+
 
                 <!-- Login Button -->
                 <com.google.android.material.button.MaterialButton
@@ -158,15 +166,7 @@
                     android:textSize="18sp"
                     app:cornerRadius="16dp" />
 
-                <TextView
-                    android:id="@+id/error"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_marginEnd="15dp"
-                    android:text=""
-                    android:textColor="#FF0000"
-                    android:textSize="14sp" />
+
 
                 <!-- Divider -->
                 <LinearLayout

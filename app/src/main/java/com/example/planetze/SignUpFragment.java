@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,11 +56,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SignUpFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 
 public class SignUpFragment extends Fragment {
 
@@ -71,7 +68,6 @@ public class SignUpFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private String errorMsg;
     private DatabaseReference userRef;
     private FirebaseDatabase db;
     ActivityResultLauncher<Intent> launcher;
@@ -81,14 +77,6 @@ public class SignUpFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static SignUpFragment newInstance(String param1, String param2) {
-        SignUpFragment fragment = new SignUpFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -148,6 +136,17 @@ public class SignUpFragment extends Fragment {
 
     }
 
+    private void setMessage(String msg) {
+        inputError.setText(msg);
+        if (!msg.trim().isEmpty()) {
+            inputError.setTextSize(18);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(50,20,20,20);
+            inputError.setLayoutParams(params);
+        }
+    }
+
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
@@ -161,15 +160,15 @@ public class SignUpFragment extends Fragment {
         boolean cond3 = hasSpace(password);
 
         if (!cond1) {
-            errorMsg = "Password has to be at least 7 character long";
+            setMessage("Password has to be at least 7 character long");
             return false;
         }
         else if (!cond2) {
-            errorMsg = "Password has to contains numbers";
+            setMessage("Password has to contains numbers");
             return false;
         }
         else if (cond3) {
-            errorMsg = "Password cannot contain a space";
+            setMessage("Password cannot contain a space");
             return false;
         }
 
@@ -215,11 +214,11 @@ public class SignUpFragment extends Fragment {
         boolean cond1 = name == null || name.trim().isEmpty();
         boolean cond2 = email == null ||email.trim().isEmpty();
         if (cond1) {
-            errorMsg = "Name cannot be empty";
+            setMessage("Name cannot be empty");
             return false;
         }
         else if (cond2) {
-            errorMsg = "Email cannot be empty";
+            setMessage("Email cannot be empty");
             return false;
         }
         return true;
@@ -231,7 +230,7 @@ public class SignUpFragment extends Fragment {
             return false;
         }
         else if (!cond4) {
-            errorMsg = "Confirm Password has to match with password";
+            setMessage("Confirm Password has to match with password");
             return false;
         }
         return true;
@@ -263,12 +262,12 @@ public class SignUpFragment extends Fragment {
                     }
                 }
                 if (equalsEmail && notEmpty(email, name)) {
-                    errorMsg = "Email already accociated with an account";
+                    setMessage("Email already accociated with an account");
                 }
                 else if (notEmpty(email, name) && validPass(pass,confirm_pass, name)){
                     createAccountOnFirebase(email, pass, name);
                 }
-                inputError.setText(errorMsg);
+                //inputError.setText(errorMsg);
 
 
             }
@@ -287,7 +286,6 @@ public class SignUpFragment extends Fragment {
 
     private void createAccountOnFirebase(String email, String pass, String name) {
         Activity activity = getActivity();
-        errorMsg = " ";
         auth.createUserWithEmailAndPassword(email, pass)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -298,26 +296,11 @@ public class SignUpFragment extends Fragment {
                             String id = auth.getCurrentUser().getUid();
                             userRef.child(id+"/name").setValue(name);
                             userRef.child(id+"/email").setValue(email);
-                            //userRef.child(id+"/is_new_user").setValue(true);
                             setDefaultSettings(id);
 
-                            //userRef.child(id+"/password").setValue(pass);
                             auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-
-                                    //Toast.makeText(activity, "Signup Successful, check email for verification.", Toast.LENGTH_LONG).show();
-                                    //loadFragment(new LoginView());
-
-                                        /*
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("email", email);
-
-                                        ResendConfirmFragment frag = new ResendConfirmFragment();
-                                        frag.setArguments(bundle);
-                                        loadFragment(frag);
-
-                                         */
 
                                     if (!task.isSuccessful()) {
                                         Toast.makeText(activity, "there was an error in sending verification email", Toast.LENGTH_LONG).show();
