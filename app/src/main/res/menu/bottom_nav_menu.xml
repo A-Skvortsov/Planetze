@@ -9,7 +9,7 @@
     <item
         android:id="@+id/EcoTrackerFragment"
         android:title="EcoTracker"
-        android:icon="@drawable/ic_android"
+        android:icon="@drawable/eco_tracker_nav_img"
     />
     <item
         android:id="@+id/EcoBalanceFragment"

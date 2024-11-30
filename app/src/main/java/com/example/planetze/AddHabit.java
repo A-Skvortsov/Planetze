@@ -91,6 +91,7 @@ public class AddHabit extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        userId = UserData.getUserID(getContext());
         //sets user's calendar right away
         DatabaseReference calendarRef = db.getReference().child("user data")
                 .child(userId).child("calendar");

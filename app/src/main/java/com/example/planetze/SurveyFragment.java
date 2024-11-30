@@ -62,6 +62,9 @@ public class SurveyFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_init_survey, container, false);
 
+        db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        userId = UserData.getUserID(getContext());
+
         please_answer1 = view.findViewById(R.id.please_answer1);
         please_answer2 = view.findViewById(R.id.please_answer2);
         next_btn = view.findViewById(R.id.next_btn);
@@ -104,8 +107,6 @@ public class SurveyFragment extends Fragment {
                         list.add(co2PerCategory[i]);
                     }
 
-                    db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-                    userId = UserData.getUserID(getContext());
                     DatabaseReference userRef = db.getReference("user data")
                             .child(userId);
                     //send survey results to firebase as Map<String, List<Double>>
