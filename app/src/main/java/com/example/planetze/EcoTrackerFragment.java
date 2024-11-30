@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -120,7 +121,6 @@ public class EcoTrackerFragment extends Fragment {
             if (args.containsKey("habitsToggled"))
                 habitsToggled = args.getBoolean("habitsToggled");
         } else {presetCalendar = 0;}
-
 
     }
 
@@ -295,11 +295,19 @@ public class EcoTrackerFragment extends Fragment {
                 issuePrompt2.setVisibility(View.INVISIBLE);
 
                 //passes date parameter so activity is added to current date
-                Bundle bundle = new Bundle();
+                /*Bundle bundle = new Bundle();
                 bundle.putString("date", date);
                 NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
                         .findFragmentById(R.id.fragment));
                 navController.navigate(R.id.AddActivity, bundle);
+                */
+                //loadFragment(new AddActivity(date));
+                AddActivity addActivity = new AddActivity(date);
+                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.eco_tracker, addActivity);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         };
         addBtn.setOnClickListener(addListener);
@@ -460,7 +468,6 @@ public class EcoTrackerFragment extends Fragment {
 
                 List<String> habitToLog = currentHabits.get(id);
                 AddActivity.writeToFirebase(date, habitToLog, userId);
-                //AddHabit.logHabit(habitToLog);
 
                 fetchSnapshot();  //Update ecoTracker display
                 updateDisplay();
@@ -470,11 +477,19 @@ public class EcoTrackerFragment extends Fragment {
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
+                /*Bundle bundle = new Bundle();
                 bundle.putString("date", date);
                 NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
                         .findFragmentById(R.id.fragment));
                 navController.navigate(R.id.AddHabit, bundle);
+                 */
+                //loadFragment(new AddActivity(date));
+                AddHabit addHabit = new AddHabit();
+                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.eco_tracker, addHabit);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
 
@@ -598,15 +613,21 @@ public class EcoTrackerFragment extends Fragment {
                         return;
                     }
                     //boot addActivity in edit mode, passing activityToEdit
-                    Bundle bundle = new Bundle();
+                    /*Bundle bundle = new Bundle();
                     bundle.putString("date", date);
                     bundle.putStringArrayList("activityToEdit", (ArrayList<String>) activityToEdit);
                     bundle.putInt("id", id);
                     NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
                             .findFragmentById(R.id.fragment));
                     navController.navigate(R.id.AddActivity, bundle);
-
+                    */
                     //loadFragment(new AddActivity(date, activityToEdit, id));
+                    AddActivity addActivity = new AddActivity(date, activityToEdit, id);
+                    FragmentManager fragmentManager = getChildFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.eco_tracker, addActivity);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
                     Log.d("Firebase", "data loaded successfully1" + activityToEdit);
 
                 } else {
@@ -665,7 +686,7 @@ public class EcoTrackerFragment extends Fragment {
 
 
     private boolean isHabit(List<String> list) {
-        int emissions = Integer.parseInt(list.get(2));
+        double emissions = Double.parseDouble(list.get(2));
         return emissions < 0 && !list.get(1).equals("Cycling/Walking");
     }
 
@@ -674,7 +695,7 @@ public class EcoTrackerFragment extends Fragment {
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.add(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
+        //transaction.addToBackStack(null);
         transaction.commit();
     }
 }

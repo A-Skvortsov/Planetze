@@ -109,8 +109,8 @@ public class AddHabit extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Bundle args = getArguments();  //needed solely for when returning to EcoTracker
-        date = args.getString("date");
+        //Bundle args = getArguments();  //needed solely for when returning to EcoTracker
+        //date = args.getString("date");
 
         userId = UserData.getUserID(getContext());
 
@@ -585,13 +585,14 @@ public class AddHabit extends Fragment {
 
     private void returnToEcoTracker() {
         EcoTrackerFragment.fetchSnapshot();
-        Bundle bundle = new Bundle();
+        /*Bundle bundle = new Bundle();
         bundle.putString("date", date);
         bundle.putBoolean("habitsToggled", true);
 
         NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
                 .findFragmentById(R.id.fragment));
-        navController.navigate(R.id.EcoTrackerFragment, bundle);
+        navController.navigate(R.id.EcoTrackerFragment, bundle);*/
+        getParentFragmentManager().popBackStack();
     }
 
 

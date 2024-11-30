@@ -129,13 +129,9 @@ public class AddActivity extends Fragment {
 
         userId = UserData.getUserID(getContext());
 
-        Bundle args = getArguments();
-        date = args.getString("date");
-        if (args.size() != 1) {  //corresponds to edit mode
-            edit = 1;
-            activityToEdit = args.getStringArrayList("activityToEdit");
-            id = args.getInt("id");
-        }
+        //occurs if we open AddActivity, then navigate elsewhere in the app,
+        //then navigate back to ecotracker. AddActivity will auto-close then
+        if (date.equals("date")) getParentFragmentManager().popBackStack();
 
         final Spinner catSpinner = view.findViewById(R.id.catSpinner);
         final Spinner actSpinner = view.findViewById(R.id.actSpinner);
@@ -153,13 +149,14 @@ public class AddActivity extends Fragment {
             @Override
             public void onClick(View v) {
                 EcoTrackerFragment.fetchSnapshot();
-                //getParentFragmentManager().popBackStack();
+                getParentFragmentManager().popBackStack();
+                //requireActivity().getOnBackPressedDispatcher().onBackPressed();
 
-                Bundle bundle = new Bundle();
+                /*Bundle bundle = new Bundle();
                 bundle.putString("date", date);
                 NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
                         .findFragmentById(R.id.fragment));
-                navController.navigate(R.id.EcoTrackerFragment, bundle);
+                navController.popBackStack(R.id.EcoTrackerFragment, false);*/
             }
         });
         saveBtn.setOnClickListener(new View.OnClickListener() {
@@ -187,11 +184,12 @@ public class AddActivity extends Fragment {
                     updateFirebase(date, activity, id);  //update firebase (for edit mode)
                 } else {writeToFirebase(date, activity, userId);}  //write list to firebase
                 EcoTrackerFragment.fetchSnapshot();  //update ecotracker info
-                Bundle bundle = new Bundle();
+                /*Bundle bundle = new Bundle();
                 bundle.putString("date", date);
                 NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
                         .findFragmentById(R.id.fragment));
-                navController.navigate(R.id.EcoTrackerFragment, bundle);
+                navController.navigate(R.id.EcoTrackerFragment, bundle);*/
+                getParentFragmentManager().popBackStack();
             }
         });
 
