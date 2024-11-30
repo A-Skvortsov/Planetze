@@ -38,7 +38,7 @@ public class UserEmissionsData {
     private List<String> sortedDates;
 
     // TODO: Source this from the database
-    private boolean interpolate = false;
+    private final boolean interpolate;
 
     /**
      * Interface for handling database events.
@@ -52,9 +52,10 @@ public class UserEmissionsData {
     /**
      * This class fetches user emissions data and activity data.
      */
-    public UserEmissionsData(String userId, DataReadyListener listener) {
+    public UserEmissionsData(String userId, boolean interpolate, DataReadyListener listener) {
         this.userId = userId;
         this.listener = listener;
+        this.interpolate = interpolate;
 
         // Format the data in the form yyyy-mm-dd
         this.simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
@@ -109,7 +110,7 @@ public class UserEmissionsData {
     }
 
     /**
-     * Checks whether the user has any tracked activity data.
+     * Checks whether the user has any logged activity data.
      *
      * @return Returns true if the sortedDates list is not null and contains more than one entry.
      */
@@ -120,12 +121,12 @@ public class UserEmissionsData {
 
 
     /**
-     * Retrieves the first time an activity was tracked by the user.
+     * Retrieves the first time an activity was logged by the user.
      *
-     * @return The date of the first tracked activity as a string in the yyyy-mm-dd format,
+     * @return The date of the first logged activity as a string in the yyyy-mm-dd format,
      * or null if no activity data is available.
      */
-    public String getFirstTrackedDay() {
+    public String getFirstLoggedDay() {
         if (!userHasData()) {
             return null;
         }
@@ -138,22 +139,22 @@ public class UserEmissionsData {
     }
 
     /**
-     * Calculates the total number of days since the user first tracked an activity.
+     * Calculates the total number of days since the user first logged an activity.
      *
-     * @return the total number of days since the user first tracked an activity,
+     * @return the total number of days since the user first logged an activity,
      * or 0 if no activity data is available.
      *
      */
-    public int totalDaysAsUser() {
+    public int totalDaysSinceFirstLoggedActivity() {
         if (!userHasData()) {
             return 0;
         }
 
         /*
-            Calculate and return the number of days between the first tracked activity date
+            Calculate and return the number of days between the first logged activity date
             and the current date.
         */
-        return daysBetweenDates(getFirstTrackedDay(), getCurrentDate());
+        return daysBetweenDates(getFirstLoggedDay(), getCurrentDate());
     }
 
     /**
@@ -230,15 +231,15 @@ public class UserEmissionsData {
     }
 
     /**
-     * Retrieves the last date before the given date when an activity was tracked
+     * Retrieves the last date before the given date when an activity was logged
      * in the yyyy-mm-dd format.
      *
      * @param date The date to search before, formatted as yyyy-mm-dd (pre-supposed).
-     * @return the last date before the given date when an activity was tracked,
+     * @return the last date before the given date when an activity was logged,
      * or null if no valid date is found.
      * @throws RuntimeException if an error occurs while parsing the dates.
      */
-    private String getLastTrackedDate(String date) {
+    private String getLastLoggedDate(String date) {
         if (date == null) {
             return null;
         }
@@ -360,8 +361,8 @@ public class UserEmissionsData {
             // Go back one day
             current = getTheDayBefore(current);
 
-            // Check the search has gone past the first day an activity was tracked.
-            if (daysBetweenDates(getFirstTrackedDay(), current) < 0) {
+            // Check the search has gone past the first day an activity was logged.
+            if (daysBetweenDates(getFirstLoggedDay(), current) < 0) {
                 break;
             }
         }
@@ -391,14 +392,14 @@ public class UserEmissionsData {
                 chartData.add(0, collection);
                 addedDates.add(current);
                 current = getTheDayBefore(current);
-                x1 = getLastTrackedDate(current);
+                x1 = getLastLoggedDate(current);
             } else if (chartData.isEmpty()) {
-                x1 = getLastTrackedDate(current);
+                x1 = getLastLoggedDate(current);
                 EmissionNodeCollection collection = dataToEmissionsNodesCollection(current, data.get(x1));
                 chartData.add(0, collection);
                 addedDates.add(current);
                 current = getTheDayBefore(current);
-                x1 = getLastTrackedDate(current);
+                x1 = getLastLoggedDate(current);
 
                 i++;  //Ignore the iteration as new data was created.
             } else {
@@ -410,7 +411,7 @@ public class UserEmissionsData {
                 addedDates.add(current);
 
                 current = getTheDayBefore(current);
-                x1 = getLastTrackedDate(current);
+                x1 = getLastLoggedDate(current);
 
                 i++; // Ignore the iteration as new data was created.
             }

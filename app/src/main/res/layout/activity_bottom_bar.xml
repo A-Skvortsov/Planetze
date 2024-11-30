@@ -43,7 +43,7 @@
                 android:drawablePadding="4dp"
                 android:textSize="9sp"
                 android:onClick="True"
-                android:text="@string/EcoGuage"
+                android:text="@string/EcoGauge"
                 android:textColor="@color/black"
                 android:background="@android:color/transparent"
                 android:layout_weight="1"
