@@ -3,6 +3,11 @@ package com.example.planetze;
 
 import static android.app.Activity.RESULT_OK;
 import static java.lang.Character.isLetter;
+import static utilities.Constants.HIDE_GRID_LINES;
+import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
+import static utilities.Constants.SHOW_TREND_LINE_POINTS;
+import static utilities.Constants.STAY_LOGGED_ON;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -318,10 +323,10 @@ public class SignUpFragment extends Fragment {
 
     private void setDefaultSettings(String userID) {
         userRef.child(userID+"/is_new_user").setValue(true);
-        userRef.child(userID+"/settings/stay_logged_on").setValue(false);
-        userRef.child(userID+"/settings/interpolate_emissions_data").setValue(false);
-        userRef.child(userID+"/settings/show_trend_line_points").setValue(false);
-        userRef.child(userID+"/settings/hide_grid_lines").setValue(false);
+        userRef.child(userID+"/settings/"+STAY_LOGGED_ON).setValue(false);
+        userRef.child(userID+"/settings/"+INTERPOLATE_EMISSIONS_DATA).setValue(false);
+        userRef.child(userID+"/settings/"+SHOW_TREND_LINE_POINTS).setValue(false);
+        userRef.child(userID+"/settings/"+HIDE_GRID_LINES).setValue(false);
         userRef.child(userID+"/calendar/0000-00-00/0").setValue(0);
 
     }

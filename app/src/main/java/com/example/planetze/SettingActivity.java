@@ -1,5 +1,10 @@
 package com.example.planetze;
 
+import static utilities.Constants.HIDE_GRID_LINES;
+import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
+import static utilities.Constants.SHOW_TREND_LINE_POINTS;
+import static utilities.Constants.STAY_LOGGED_ON;
+
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -73,10 +78,10 @@ public class SettingActivity extends AppCompatActivity {
             db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
             userRef = db.getReference("user data");
             if (stayLoggedOnSwitch.isChecked()) {
-                userRef.child(userID+"/settings/stay_logged_on").setValue(true);
+                userRef.child(userID+"/settings/"+STAY_LOGGED_ON).setValue(true);
             }
             else {
-                userRef.child(userID+"/settings/stay_logged_on").setValue(false);
+                userRef.child(userID+"/settings/"+STAY_LOGGED_ON).setValue(false);
             }
 
         });
@@ -87,10 +92,10 @@ public class SettingActivity extends AppCompatActivity {
             db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
             userRef = db.getReference("user data");
             if (interpolateEmissionsDataSwitch.isChecked()) {
-                userRef.child(userID+"/settings/interpolate_emissions_data").setValue(true);
+                userRef.child(userID+"/settings/"+INTERPOLATE_EMISSIONS_DATA).setValue(true);
             }
             else {
-                userRef.child(userID+"/settings/interpolate_emissions_data").setValue(false);
+                userRef.child(userID+"/settings/"+INTERPOLATE_EMISSIONS_DATA).setValue(false);
             }
 
         });
@@ -101,10 +106,10 @@ public class SettingActivity extends AppCompatActivity {
             db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
             userRef = db.getReference("user data");
             if (hideGridLinesSwitch.isChecked()) {
-                userRef.child(userID+"/settings/hide_grid_lines").setValue(true);
+                userRef.child(userID+"/settings/"+HIDE_GRID_LINES).setValue(true);
             }
             else {
-                userRef.child(userID+"/settings/hide_grid_lines").setValue(false);
+                userRef.child(userID+"/settings/"+HIDE_GRID_LINES).setValue(false);
             }
         });
 
@@ -115,19 +120,19 @@ public class SettingActivity extends AppCompatActivity {
             db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
             userRef = db.getReference("user data");
             if (showTrendLinePointsSwitch.isChecked()) {
-                userRef.child(userID+"/settings/show_trend_line_points").setValue(true);
+                userRef.child(userID+"/settings/" + SHOW_TREND_LINE_POINTS).setValue(true);
             }
             else {
-                userRef.child(userID+"/settings/show_trend_line_points").setValue(false);
+                userRef.child(userID+"/settings/"+ SHOW_TREND_LINE_POINTS).setValue(false);
             }
         });
     }
 
     private void initialize() {
-        boolean stayLoggedOn = UserData.getSetting(getApplicationContext(),"stay_logged_on");
-        boolean interpolateEmissionsData = UserData.getSetting(getApplicationContext(),"interpolate_emissions_data");
-        boolean hideGridLines = UserData.getSetting(getApplicationContext(),"hide_grid_lines");
-        boolean showTrendLinePoints = UserData.getSetting(getApplicationContext(),"show_trend_line_points");
+        boolean stayLoggedOn = UserData.getSetting(getApplicationContext(),STAY_LOGGED_ON);
+        boolean interpolateEmissionsData = UserData.getSetting(getApplicationContext(),INTERPOLATE_EMISSIONS_DATA);
+        boolean hideGridLines = UserData.getSetting(getApplicationContext(),HIDE_GRID_LINES);
+        boolean showTrendLinePoints = UserData.getSetting(getApplicationContext(),SHOW_TREND_LINE_POINTS);
 
         stayLoggedOnSwitch.setChecked(stayLoggedOn);
         interpolateEmissionsDataSwitch.setChecked(interpolateEmissionsData);

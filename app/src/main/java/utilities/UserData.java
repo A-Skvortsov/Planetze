@@ -2,6 +2,11 @@ package utilities;
 
 import static java.lang.Thread.sleep;
 
+import static utilities.Constants.HIDE_GRID_LINES;
+import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
+import static utilities.Constants.SHOW_TREND_LINE_POINTS;
+import static utilities.Constants.STAY_LOGGED_ON;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -104,7 +109,6 @@ public class UserData {
         SharedPreferences.Editor e = p.edit();
         e.putBoolean("isLoggedIn", false);
         e.putString("UserID", " ");
-        e.putString("Username", " ");
         e.commit();
     }
 
@@ -156,10 +160,10 @@ public class UserData {
         getEmail(context);
         getUsername(context);
 
-        retrieveSetting(context,"stay_logged_on");
-        retrieveSetting(context,"interpolate_emission_data");
-        retrieveSetting(context,"hide_grid_lines");
-        retrieveSetting(context,"show_trend_line_points");
+        retrieveSetting(context,STAY_LOGGED_ON);
+        retrieveSetting(context,INTERPOLATE_EMISSIONS_DATA);
+        retrieveSetting(context,HIDE_GRID_LINES);
+        retrieveSetting(context,SHOW_TREND_LINE_POINTS);
     }
 
 }

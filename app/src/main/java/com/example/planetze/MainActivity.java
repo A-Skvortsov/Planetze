@@ -4,6 +4,8 @@ import android.content.Intent;
 import static androidx.navigation.fragment.FragmentKt.findNavController;
 import static java.security.AccessController.getContext;
 
+import static utilities.Constants.STAY_LOGGED_ON;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeData() {
         boolean isLoggedIn = UserData.isLoggedIn(getApplicationContext());
-        boolean stayLoggedOn = UserData.getSetting(getApplicationContext(),"stay_logged_on");
+        boolean stayLoggedOn = UserData.getSetting(getApplicationContext(),STAY_LOGGED_ON);
         if (isLoggedIn && !stayLoggedOn) {
             UserData.logout(getApplicationContext());
         }
