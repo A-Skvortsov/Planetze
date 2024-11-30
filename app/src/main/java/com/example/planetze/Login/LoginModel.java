@@ -17,7 +17,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -68,7 +67,7 @@ public class LoginModel {
 
     private void takeToHomePage(LoginPresenter presenter) {
 
-        if (UserData.is_new_user(presenter.getViewContext())) {
+        if (UserData.isNewUser(presenter.getViewContext())) {
             presenter.takeToSurvey();
         }
         else {

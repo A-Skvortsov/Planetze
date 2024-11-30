@@ -3,10 +3,11 @@
     <!-- Default colours -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="dark_gray">#5A5A5A</color>
+    <color name="red">#DE3163</color>
 
     <!-- Default Light Mode Background -->
     <color name="default_background_white">#FAFAFA</color>
-
 
     <!-- Palette colours -->
     <color name="palette_light_gray">#d8dbe2</color>
@@ -14,7 +15,6 @@
     <color name="palette_turquoise">#009999</color>
     <color name="palette_stormy_gray">#373f51</color>
     <color name="palette_black">#1b1b1e</color>
-
 
     <!-- palette_turquoise tints -->
     <color name="palette_turquoise_tint_100">#10A3A3</color>
@@ -36,9 +36,4 @@
     <color name="palette_turquoise_shade_700">#002E2E</color>
     <color name="palette_turquoise_shade_800">#001F1F</color>
     <color name="palette_turquoise_shade_900">#000F0F</color>
-    <color name="red">#DE3163</color>
-    <!-- Palette colours -->
-
-    <!-- Default Light Mode Background -->
-
 </resources>
