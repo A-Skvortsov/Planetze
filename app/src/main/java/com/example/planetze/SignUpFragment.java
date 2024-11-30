@@ -61,6 +61,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import utilities.UserData;
 
 
 public class SignUpFragment extends Fragment {
@@ -272,20 +273,10 @@ public class SignUpFragment extends Fragment {
                 else if (notEmpty(email, name) && validPass(pass,confirm_pass, name)){
                     createAccountOnFirebase(email, pass, name);
                 }
-                //inputError.setText(errorMsg);
 
 
             }
         });
-
-        /*
-        else if (!cond6) {
-            //signupEmail.setError("Not a valid Email");
-            errorMsg = "Not a valid Email";
-            return false;
-        }
-
-         */
 
     }
 
@@ -336,32 +327,95 @@ public class SignUpFragment extends Fragment {
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == RESULT_OK) {
-                            Task<GoogleSignInAccount> accountTask = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
-                            try {
-                                GoogleSignInAccount signInAccount = accountTask.getResult(ApiException.class);
-                                AuthCredential authCredential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(), null);
-                                auth.signInWithCredential(authCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (task.isSuccessful()) {
-                                            //loadFragment(new HomeFragment());
-                                            Intent intent = new Intent(getActivity(), com.example.planetze.HomeActivity.class);
-                                            startActivity(intent);
-                                        }
-                                        else {
+                        onGoogleActivityResult(result);
+                    }
+                });
+    }
 
-                                        }
-                                    }
-                                });
-
-                            } catch (ApiException e) {
-                                e.printStackTrace();
-                            }
+    public void onGoogleActivityResult(ActivityResult result) {
+        if (result.getResultCode() == RESULT_OK) {
+            Task<GoogleSignInAccount> accountTask = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+            try {
+                GoogleSignInAccount signInAccount = accountTask.getResult(ApiException.class);
+                AuthCredential authCredential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(), null);
+                auth.signInWithCredential(authCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            googleSignin();
+                        }
+                        else {
 
                         }
                     }
                 });
+
+            } catch (ApiException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
+
+    private void googleSignin() {
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                UserData.login(requireContext(),auth.getCurrentUser().getUid());
+                UserData.initialize(getContext());
+                DataSnapshot users = task.getResult();
+                boolean equalsEmail = false;
+                for(DataSnapshot user:users.getChildren()) {
+                    String currentemail = " ";
+                    if (user.hasChild("email")) {
+                        currentemail = user.child("email").getValue(String.class).toString().trim();
+                    }
+                    if (currentemail.equals(auth.getCurrentUser().getEmail().trim())) {
+                        equalsEmail = true;
+                    }
+
+                }
+
+                if (!equalsEmail) {
+                    String id = auth.getCurrentUser().getUid();
+                    userRef.child(id+"/name").setValue(auth.getCurrentUser().getDisplayName());
+                    userRef.child(id+"/email").setValue(auth.getCurrentUser().getEmail());
+                    setDefaultSettings(id);
+                    loadFragment(new SurveyFragment());
+                }
+                else {
+                    isNewUser();
+                }
+
+            }
+        });
+    }
+
+    private void isNewUser() {
+        userRef.get().addOnCompleteListener(task -> {
+            DataSnapshot users = task.getResult();
+            String userID = auth.getCurrentUser().getUid();
+            for(DataSnapshot user:users.getChildren()) {
+                Object inu = user.child("is_new_user").getValue();
+                boolean cond1 = user.getKey().toString().trim().equals(userID);
+                boolean cond2 = inu != null && inu.toString().equals("true");
+
+                if (cond1 && cond2) {
+                    loadFragment(new SurveyFragment());
+                    break;
+                }
+                else if (cond1) {
+                    Intent intent = new Intent(getContext(), HomeActivity.class);
+                    // Prevent the user from being able to navigate back the login page using the return action.
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    break;
+                }
+
+            }
+        });
+    }
+
+
 
 }
