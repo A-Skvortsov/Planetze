@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
         //change this later
         String userID = UserData.getUserID(getApplicationContext());
 
-        if (UserData.is_new_user(getApplicationContext())) {
+        if (UserData.isNewUser(getApplicationContext())) {
             loadFragment(new SurveyFragment());
         }
         else {
