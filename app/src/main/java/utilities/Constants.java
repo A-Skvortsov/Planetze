@@ -5,6 +5,8 @@ import java.util.List;
 
 public class Constants {
 
+    public static final String FIREBASE_LINK = "https://planetze-c3c95-default-rtdb.firebaseio.com/";
+
     public static final String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "June",
             "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
 

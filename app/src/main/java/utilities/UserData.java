@@ -2,6 +2,7 @@ package utilities;
 
 import static java.lang.Thread.sleep;
 
+import static utilities.Constants.FIREBASE_LINK;
 import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
 import static utilities.Constants.SHOW_TREND_LINE_POINTS;
@@ -18,6 +19,7 @@ import com.google.firebase.database.FirebaseDatabase;
 public class UserData {
 
     private static SharedPreferences p;
+
     public UserData() {
 
     }
@@ -35,7 +37,7 @@ public class UserData {
 
     private static void retrieveUsername(Context context) {
 
-        FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        FirebaseDatabase db = FirebaseDatabase.getInstance(FIREBASE_LINK);
         DatabaseReference userRef = db.getReference("user data");
 
         userRef.get().addOnCompleteListener(task -> {
@@ -68,7 +70,7 @@ public class UserData {
 
     private static void retrieveEmail(Context context) {
 
-        FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        FirebaseDatabase db = FirebaseDatabase.getInstance(FIREBASE_LINK);
         DatabaseReference userRef = db.getReference("user data");
 
         userRef.get().addOnCompleteListener(task -> {
@@ -124,7 +126,7 @@ public class UserData {
     }
 
     private static void retrieveSetting(Context context, String setting) {
-        FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        FirebaseDatabase db = FirebaseDatabase.getInstance(FIREBASE_LINK);
         DatabaseReference userRef = db.getReference("user data");
 
         userRef.get().addOnCompleteListener(task -> {
@@ -164,6 +166,16 @@ public class UserData {
         retrieveSetting(context,INTERPOLATE_EMISSIONS_DATA);
         retrieveSetting(context,HIDE_GRID_LINES);
         retrieveSetting(context,SHOW_TREND_LINE_POINTS);
+    }
+
+    public static void deleteAccount(Context context) {
+        FirebaseDatabase db = FirebaseDatabase.getInstance(FIREBASE_LINK);
+        DatabaseReference userRef = db.getReference("user data");
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        auth.getCurrentUser().delete();
+        userRef.child(UserData.getUserID(context)).removeValue();
+        UserData.logout(context);
     }
 
 }

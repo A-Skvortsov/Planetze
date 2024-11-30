@@ -1,16 +1,19 @@
 package com.example.planetze;
 
+import static utilities.Constants.FIREBASE_LINK;
 import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
 import static utilities.Constants.SHOW_TREND_LINE_POINTS;
 import static utilities.Constants.STAY_LOGGED_ON;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.planetze.Login.LoginView;
 
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.widget.Button;
@@ -34,6 +37,8 @@ public class SettingActivity extends AppCompatActivity {
     private Button returnButton;
     private Button logoutButton;
 
+    private Button deleteAccountButton;
+
     private TextView name;
     private TextView email;
 
@@ -47,6 +52,7 @@ public class SettingActivity extends AppCompatActivity {
 
         returnButton = findViewById(R.id.returnButton);
         logoutButton = findViewById(R.id.logoutButton);
+        deleteAccountButton = findViewById(R.id.delete_account_button);
         stayLoggedOnSwitch = findViewById(R.id.stay_logged_in_switch);
         interpolateEmissionsDataSwitch = findViewById(R.id.ied_switch);
         showTrendLinePointsSwitch = findViewById(R.id.show_trend_line_points_switch);
@@ -57,6 +63,10 @@ public class SettingActivity extends AppCompatActivity {
 
         name.setText(UserData.getUsername(getApplicationContext()));
         email.setText(UserData.getEmail(getApplicationContext()));
+
+        db = FirebaseDatabase.getInstance(FIREBASE_LINK);
+        userRef = db.getReference("user data");
+        String userID = UserData.getUserID(getApplicationContext());
 
         initialize();
 
@@ -72,11 +82,35 @@ public class SettingActivity extends AppCompatActivity {
             loadFragment(new LoginView());
         });
 
-        stayLoggedOnSwitch.setOnClickListener(view -> {
-            String userID = UserData.getUserID(getApplicationContext());
+        deleteAccountButton.setOnClickListener(view -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
 
-            db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-            userRef = db.getReference("user data");
+            builder.setTitle("Are you sure you want to delete this account?");
+            builder.setMessage("This action cannot be undone");
+
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    UserData.deleteAccount(getApplicationContext());
+                    loadFragment(new LoginView());
+                    dialog.cancel();
+                }
+            });
+
+            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+
+            AlertDialog alert = builder.create();
+            alert.show();
+
+        });
+
+        stayLoggedOnSwitch.setOnClickListener(view -> {
+
             if (stayLoggedOnSwitch.isChecked()) {
                 userRef.child(userID+"/settings/"+STAY_LOGGED_ON).setValue(true);
             }
@@ -87,10 +121,7 @@ public class SettingActivity extends AppCompatActivity {
         });
 
         interpolateEmissionsDataSwitch.setOnClickListener(view -> {
-            String userID = UserData.getUserID(getApplicationContext());
 
-            db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-            userRef = db.getReference("user data");
             if (interpolateEmissionsDataSwitch.isChecked()) {
                 userRef.child(userID+"/settings/"+INTERPOLATE_EMISSIONS_DATA).setValue(true);
             }
@@ -101,10 +132,7 @@ public class SettingActivity extends AppCompatActivity {
         });
 
         hideGridLinesSwitch.setOnClickListener(view -> {
-            String userID = UserData.getUserID(getApplicationContext());
 
-            db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-            userRef = db.getReference("user data");
             if (hideGridLinesSwitch.isChecked()) {
                 userRef.child(userID+"/settings/"+HIDE_GRID_LINES).setValue(true);
             }
@@ -115,10 +143,7 @@ public class SettingActivity extends AppCompatActivity {
 
 
         showTrendLinePointsSwitch.setOnClickListener(view -> {
-            String userID = UserData.getUserID(getApplicationContext());
 
-            db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-            userRef = db.getReference("user data");
             if (showTrendLinePointsSwitch.isChecked()) {
                 userRef.child(userID+"/settings/" + SHOW_TREND_LINE_POINTS).setValue(true);
             }

@@ -3,6 +3,7 @@ package com.example.planetze;
 
 import static android.app.Activity.RESULT_OK;
 import static java.lang.Character.isLetter;
+import static utilities.Constants.FIREBASE_LINK;
 import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
 import static utilities.Constants.SHOW_TREND_LINE_POINTS;
@@ -112,7 +113,7 @@ public class SignUpFragment extends Fragment {
             }
         });
 
-        db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        db = FirebaseDatabase.getInstance(FIREBASE_LINK);
         userRef = db.getReference("user data");
 
         signupButton.setOnClickListener(new View.OnClickListener() {

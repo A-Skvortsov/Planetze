@@ -4,6 +4,7 @@ import static android.app.Activity.RESULT_OK;
 
 import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
 
+import static utilities.Constants.FIREBASE_LINK;
 import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
 import static utilities.Constants.SHOW_TREND_LINE_POINTS;
@@ -41,7 +42,7 @@ public class LoginModel {
     public LoginModel() {
 
         auth = FirebaseAuth.getInstance();
-        db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        db = FirebaseDatabase.getInstance(FIREBASE_LINK);
         userRef = db.getReference("user data");
     }
 
