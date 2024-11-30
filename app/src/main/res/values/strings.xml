@@ -41,26 +41,27 @@
     <string name="enter_your_email">Enter your Email</string>
     <string name="close">Close</string>
 
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
+    <!-- Strings used for home -->
+    <string name="eco_gauge">Eco Gauge</string>
+    <string name="eco_balance">Eco Balance</string>
+    <string name="eco_hub">Eco Hub</string>
+
+    <string name="ecogauge">EcoGauge</string>
+    <string name="ecotracker">EcoTracker</string>
+    <string name="ecobalance">EcoBalance</string>
+    <string name="ecohub">EcoHub</string>
+
+
+
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="home">Home</string>
-    <string name="EcoGauge">Eco Gauge</string>
-    <string name="EcoBalance">Eco Balance</string>
-    <string name="EcoHub">Eco Hub</string>
 
-    <string name="intro">You Carbon Emission is:</string>
-    <string name="idk">.?.</string>
-    <string name="title">Eco Balance</string>
-    <string name="para1">Rergardless of how your carbon emission, we can all contribute to helping reduce carbonmissoin.
-    We understand it is at times difficult to neutrilize emmiision, that we cannot control through sustainable behaviors habits.
+    <string name="para1">Regardless of how your carbon emission, we can all contribute to helping reduce carbonmissoin.
+    We understand it is at times difficult to neutralize emission, that we cannot control through sustainable behaviors habits.
 
 We have provided offset emission  projects, which can help offset you carbon emission. Through purchasing carbon credits.
     </string>
-    <string name="reducebutn">CLICK HERE TO REDUCE YOUR CARBON EMISSION</string>
-    <string name="p1">Tester Paragraph</string>
 
     <!-- EcoGauge strings -->
     <string name="_11_nov">11 Nov</string>
@@ -94,4 +95,6 @@ We have provided offset emission  projects, which can help offset you carbon emi
     </string>
     <string name="stay_logged_in">Stay logged in</string>
     <string name="log_out">Log out</string>
+    <string name="hide_trend_line_points">Hide trend line points</string>
+    <string name="interpolate_data">Interpolate data</string>
 </resources>

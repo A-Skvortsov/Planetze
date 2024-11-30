@@ -24,7 +24,7 @@ public class SettingActivity extends AppCompatActivity {
     private SwitchMaterial stayLoggedOn;
     private SwitchMaterial interpolateEmissionsData;
     private SwitchMaterial hideGridLinesSwitch;
-    private SwitchMaterial showTrendLinePointsSwitch;
+    private SwitchMaterial hideTrendLinePointsSwitch;
     private Button returnButton;
     private Button logoutButton;
 
@@ -40,7 +40,7 @@ public class SettingActivity extends AppCompatActivity {
         logoutButton = findViewById(R.id.logoutButton);
         stayLoggedOn = findViewById(R.id.stay_logged_in_switch);
         interpolateEmissionsData = findViewById(R.id.ied_switch);
-        showTrendLinePointsSwitch = findViewById(R.id.show_trend_line_points_switch);
+        hideTrendLinePointsSwitch = findViewById(R.id.hide_trend_line_points_switch);
         hideGridLinesSwitch = findViewById(R.id.hide_grid_lines_switch);
 
         initialize();
@@ -98,12 +98,12 @@ public class SettingActivity extends AppCompatActivity {
         });
 
 
-        showTrendLinePointsSwitch.setOnClickListener(view -> {
+        hideTrendLinePointsSwitch.setOnClickListener(view -> {
             String userID = UserData.getUserID(getApplicationContext());
 
             db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
             userRef = db.getReference("user data");
-            if (showTrendLinePointsSwitch.isChecked()) {
+            if (hideTrendLinePointsSwitch.isChecked()) {
                 userRef.child(userID+"/settings/show_trend_line_points").setValue(true);
             }
             else {
