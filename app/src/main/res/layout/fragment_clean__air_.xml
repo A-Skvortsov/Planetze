@@ -5,6 +5,14 @@
     android:layout_height="match_parent"
     tools:context=".CleanAirFragment">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:fillViewport="true">
+
+
+
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -12,7 +20,7 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
         android:orientation="vertical"
-        android:background="#E1F1F1"
+        android:background="@color/palette_turquoise"
         tools:context=".Details">
 
         <androidx.cardview.widget.CardView
@@ -20,9 +28,6 @@
             android:layout_height="200dp"
             android:layout_marginStart="45dp"
             android:layout_marginEnd="30dp"
-            app:cardBackgroundColor="@color/palette_turquoise"
-
-
             android:layout_marginTop="30dp"
             app:cardElevation="30dp"
             app:cardCornerRadius="20dp">
@@ -40,19 +45,19 @@
             android:id="@+id/detailDescription"
             android:layout_width="320dp"
             android:layout_height="wrap_content"
-            android:background="@color/palette_turquoise"
+            android:background="@color/white"
             android:layout_marginStart="45dp"
             android:layout_marginTop="20dp"
             android:paddingStart="50dp"
             android:padding="10dp"
             android:text="Grow Clean Air"
-            android:textColor="@color/clean_air_background"
+            android:textColor="@color/black"
 
             android:textSize="34sp"
             android:textStyle="bold" />
 
         <RelativeLayout
-            android:background="@color/palette_turquoise"
+            android:background="@color/white"
             android:layout_width="350dp"
             android:layout_marginStart="35dp"
             android:layout_marginTop="10dp"
@@ -65,7 +70,6 @@
                 android:layout_marginStart="50dp"
                 android:layout_marginTop="20dp"
                 android:fontFamily="sans-serif-condensed-medium"
-                android:textColor="@color/clean_air_background"
                 android:textStyle="bold"
                 android:text="Tree Canada’s Grow Clean Air program supports improved forest management practices led by coastal First Nations communities living in the Great Bear Rainforest. You can offset your carbon emissions by helping to protect old-growth trees in British Columbia. Users can help prevent deforestation and land clearing, which then prevents the release of carbon, through these trees."
                 />
@@ -78,14 +82,14 @@
             android:layout_marginStart="100dp"
             android:layout_marginTop="20dp"
             android:text="Click here to Donate"
+            android:textColor="@color/black"
             android:bottomRightRadius="30dp"
             android:bottomLeftRadius="30dp"
             android:topLeftRadius="30dp"
             android:topRightRadius="30dp"
-
-
-
-            android:background="@color/red"/>
+            android:backgroundTint="@color/white"
+            />
     </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>
