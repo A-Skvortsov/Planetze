@@ -48,15 +48,12 @@ public class LoginModel {
                             if (user.isEmailVerified()) {
                                 UserData.login(presenter.getViewContext(),userID);
                                 takeToHomePage(presenter);
-                                //eco guage
-                                // survey if just registered
                             }
                             else {
                                 presenter.setMessage("Account needs to be verified");
                             }
 
                         } else {
-                            //Toast.makeText(activity, "signup failed", Toast.LENGTH_SHORT).show();
                             presenter.setMessage("Invalid email or password");
 
                         }
@@ -67,39 +64,26 @@ public class LoginModel {
     }
 
     private void takeToHomePage(LoginPresenter presenter) {
+        UserData.initialize(presenter.getViewContext());
+        userRef.get().addOnCompleteListener(task -> {
+            DataSnapshot users = task.getResult();
+            String userID = UserData.getUserID(presenter.getViewContext());
+            for(DataSnapshot user:users.getChildren()) {
+                Object inu = user.child("is_new_user").getValue();
+                boolean cond1 = user.getKey().toString().trim().equals(userID);
+                boolean cond2 = inu != null && inu.toString().equals("true");
 
-        if (UserData.is_new_user(presenter.getViewContext())) {
-            presenter.takeToSurvey();
-        }
-        else {
-            presenter.takeToHub();
-        }
-
-        /*
-
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                DataSnapshot users = task.getResult();
-                String userID = UserData.getUserID(presenter.getViewContext());
-                for(DataSnapshot user:users.getChildren()) {
-                    boolean cond1 = user.getKey().toString().trim().equals(userID);
-                    boolean cond2 = user.child("is_new_user").getValue().toString().equals("true");
-                    //System.out.println(user.getKey().toString().trim() + "       " +userID);
-                    if (cond1 && cond2) {
-                        presenter.takeToSurvey();
-                        break;
-                    }
-                    else if (cond1) {
-                        presenter.takeToHub();
-                        break;
-                    }
+                if (cond1 && cond2) {
+                    presenter.takeToSurvey();
+                    break;
                 }
+                else if (cond1) {
+                    presenter.takeToHub();
+                    break;
+                }
+
             }
         });
-
-         */
-
 
     }
     public void onSignInResult(ActivityResult result, LoginPresenter presenter) {

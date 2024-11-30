@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         userRef = db.getReference("user data");
         auth = FirebaseAuth.getInstance();
@@ -88,15 +89,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void takeToHomePage() {
-        //change this later
-        String userID = UserData.getUserID(getApplicationContext());
+        userRef.get().addOnCompleteListener(task -> {
+            DataSnapshot users = task.getResult();
+            String userID = UserData.getUserID(getApplicationContext());
+            for(DataSnapshot user:users.getChildren()) {
+                Object inu = user.child("is_new_user").getValue();
+                boolean cond1 = user.getKey().toString().trim().equals(userID);
+                boolean cond2 = inu != null && inu.toString().equals("true");
 
-        if (UserData.is_new_user(getApplicationContext())) {
-            loadFragment(new SurveyFragment());
-        }
-        else {
-            navigateToHomeActivity();
-        }
+                if (cond1 && cond2) {
+                    loadFragment(new SurveyFragment());
+                    break;
+                }
+                else if (cond1) {
+                    navigateToHomeActivity();
+                    break;
+                }
+
+            }
+        });
 
     }
 
@@ -123,5 +134,6 @@ public class MainActivity extends AppCompatActivity {
         if (isLoggedIn && !stayLoggedOn) {
             UserData.logout(getApplicationContext());
         }
+        UserData.initialize(getApplicationContext());
     }
 }

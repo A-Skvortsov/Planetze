@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,21 +9,26 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintTop_toTopOf="parent">
-    <!-- Category of question -->
 
     <!-- Question box -->
+
+    <!-- Category of question -->
     <TextView
         android:id="@+id/category"
-        android:layout_width="244dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_marginStart="15dp"
         android:gravity="center_vertical"
         android:text="@string/transportation"
-        android:textColor="@color/palette_light_gray"
-        android:textSize="22sp"
+        android:textColor="@color/white"
+        android:textSize="20sp"
         android:textStyle="italic|bold"
+        android:shadowColor="#80000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.100"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,13 +36,14 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
         android:layout_width="match_parent"
-        android:layout_height="700dp"
-        android:layout_margin="15dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="15dp"
         android:backgroundTint="@color/white"
+        android:layout_margin="15dp"
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/category">
+        app:layout_constraintBottom_toTopOf="@id/next_btn"
+        app:layout_constraintTop_toBottomOf="@+id/category">
 
         <!-- LinearLayout to hold all content inside the ScrollView -->
         <LinearLayout
@@ -125,6 +130,7 @@
         android:textSize="16sp"
         android:text="@string/next"
         android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/cardView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -139,6 +145,7 @@
         android:textSize="16sp"
         android:text="@string/back"
         android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/cardView"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

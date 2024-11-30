@@ -93,10 +93,15 @@ public class EcoGaugeFragment extends Fragment
     private int timePeriod;
     private String userId;
 
+    // TODO: Source this from the database
+    private boolean interpolate = false;
+    private boolean showTrendLinePoints = false;
+    private boolean hideGridLines = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        userId = UserData.getUserID(getContext());
+        userId = UserData.getUserID(requireContext());
         View view = inflater.inflate(R.layout.fragment_eco_gauge, container, false);
 
         this.emissionsTrendGraph = view.findViewById(R.id.line_chart);
@@ -114,7 +119,7 @@ public class EcoGaugeFragment extends Fragment
         this.comparisonChartCard = view.findViewById(R.id.comparison_chart_card);
 
         // TODO: THE SOURCE OF THE ID BELOW SHOULD BE CHANGED TO ACCURATELY REFLECT THE CURRENT USER
-        this.userEmissionsData = new UserEmissionsData(userId, new UserEmissionsData.DataReadyListener() {
+        this.userEmissionsData = new UserEmissionsData(userId, interpolate, new UserEmissionsData.DataReadyListener() {
             @Override
             public void start() {
                 // TODO: Show progress dialog
@@ -329,13 +334,15 @@ public class EcoGaugeFragment extends Fragment
 
         // Chart data configuration. See https://weeklycoding.com/mpandroidchart-documentation/
         LineDataSet lineDataSet = new LineDataSet(entries, "Emission");
+        lineDataSet.setCircleHoleColor(PALETTE_TURQUOISE_TINT_800);
         lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
+        lineDataSet.setCircleColor(PALETTE_TURQUOISE);
         lineDataSet.setFillDrawable(gradientDrawable);
         lineDataSet.setValueTextColor(Color.BLACK);
         lineDataSet.setColor(PALETTE_TURQUOISE);
         lineDataSet.setDrawValues(false);
+        lineDataSet.setDrawCircles(showTrendLinePoints);
         lineDataSet.setDrawFilled(true);
-        lineDataSet.setDrawCircles(false);
         lineDataSet.setLineWidth(2f);
 
         LineData lineData = new LineData(lineDataSet);
@@ -349,6 +356,11 @@ public class EcoGaugeFragment extends Fragment
         emissionsTrendGraph.setScaleEnabled(true);
         emissionsTrendGraph.setDragEnabled(true);
         emissionsTrendGraph.setData(lineData);
+
+        // Hide grid lines
+        emissionsTrendGraph.getXAxis().setDrawGridLines(!hideGridLines);
+        emissionsTrendGraph.getAxisLeft().setDrawGridLines(!hideGridLines);
+        emissionsTrendGraph.getAxisRight().setDrawGridLines(!hideGridLines);
 
         // To solve issue where x-axis labels are repeated.
         emissionsTrendGraph.getXAxis().setGranularityEnabled(true);
@@ -444,11 +456,17 @@ public class EcoGaugeFragment extends Fragment
             instead to get the accurate comparison data.
         */
         if (timePeriod == OVERALL) {
-            System.out.println();
+            int daysSinceFirstLoggedActivity = userEmissionsData.totalDaysSinceFirstLoggedActivity();
+
+            // Make sure the number comparable days is at least one.
+            int comparableDays = daysSinceFirstLoggedActivity == 0?
+                    1 : daysSinceFirstLoggedActivity;
+
             countryPerCapitaEmissions = countryEmissions.getComparableEmissionsDataKG(country,
-                    userEmissionsData.totalDaysAsUser());
+                    comparableDays);
         } else {
-            countryPerCapitaEmissions = countryEmissions.getComparableEmissionsDataKG(country, timePeriod);
+            countryPerCapitaEmissions = countryEmissions.getComparableEmissionsDataKG(country,
+                    timePeriod);
         }
 
         // Stop rendering if the country emissions data is not found.
@@ -484,6 +502,11 @@ public class EcoGaugeFragment extends Fragment
         comparisonChart.getAxisRight().setEnabled(false);
         comparisonChart.getDescription().setText("");
         comparisonChart.setData(barData);
+
+        // Hide grid lines
+        comparisonChart.getXAxis().setDrawGridLines(!hideGridLines);
+        comparisonChart.getAxisLeft().setDrawGridLines(!hideGridLines);
+        comparisonChart.getAxisRight().setDrawGridLines(!hideGridLines);
 
         // Display the comparison percentage.
         showComparisonPercentage(userEmissions, countryPerCapitaEmissions.floatValue());
@@ -560,74 +583,26 @@ public class EcoGaugeFragment extends Fragment
      * Ignore un-utilized methods from the OnChartGestureListener and OnChartValueSelectedListener
      * interface
      */
-
-    /**
-     * Callbacks when a touch-gesture has started on the chart (ACTION_DOWN)
-     *
-     * @param me
-     * @param lastPerformedGesture
-     */
+    
     @Override
     public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {}
 
-    /**
-     * Callbacks when the chart is long pressed.
-     *
-     * @param me
-     */
     @Override
     public void onChartLongPressed(MotionEvent me) {}
 
-    /**
-     * Callbacks when the chart is double-tapped.
-     *
-     * @param me
-     */
     @Override
     public void onChartDoubleTapped(MotionEvent me) {}
 
-    /**
-     * Callbacks when the chart is single-tapped.
-     *
-     * @param me
-     */
     @Override
     public void onChartSingleTapped(MotionEvent me) {}
-
-    /**
-     * Callbacks then a fling gesture is made on the chart.
-     *
-     * @param me1
-     * @param me2
-     * @param velocityX
-     * @param velocityY
-     */
     @Override
     public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {}
-
-    /**
-     * Callbacks when the chart is scaled / zoomed via pinch zoom gesture.
-     *
-     * @param me
-     * @param scaleX scale factor on the x-axis
-     * @param scaleY scale factor on the y-axis
-     */
     @Override
     public void onChartScale(MotionEvent me, float scaleX, float scaleY) {}
 
-    /**
-     * Callbacks when the chart is moved / translated via drag gesture.
-     *
-     * @param me
-     * @param dX translation distance on the x-axis
-     * @param dY translation distance on the y-axis
-     */
     @Override
     public void onChartTranslate(MotionEvent me, float dX, float dY) {}
 
-    /**
-     * Called when nothing has been selected or an "un-select" has been made.
-     */
     @Override
     public void onNothingSelected() {}
 }
