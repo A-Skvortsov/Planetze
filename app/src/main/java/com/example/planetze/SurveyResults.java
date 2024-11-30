@@ -29,11 +29,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import utilities.Constants;
+import utilities.UserData;
 
- 
+
 public class SurveyResults extends Fragment {
 
     private FirebaseDatabase db;
+    private String userId;
 
     final String[] country = Constants.country;
     final double[] country_emissions = Constants.country_emissions;
@@ -52,7 +54,7 @@ public class SurveyResults extends Fragment {
         });
 
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-        String userId = "IHdNxXO2pGXsicTlymf5HQAaUnL2";  //this should be changed to the particular logged in user
+        userId = UserData.getUserID(getContext());
         DatabaseReference userArrayRef = db.getReference("user data")
                 .child(userId).child("survey_results");
         userArrayRef.addListenerForSingleValueEvent(new ValueEventListener() {
