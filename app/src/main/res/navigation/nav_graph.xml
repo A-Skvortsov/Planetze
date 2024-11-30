@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/EcoGaugeFragment"
         android:name="com.example.planetze.EcoGaugeFragment"
-        android:label="@string/EcoGauge"
+        android:label="@string/eco_gauge"
         tools:layout="@layout/fragment_eco_gauge">
     </fragment>
     <fragment
