@@ -5,6 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".EcoBalanceDestinationFragment">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:fillViewport="true">
+
 
     <LinearLayout
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -25,7 +31,7 @@
             android:layout_marginTop="20dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="25dp"
-            app:cardBackgroundColor="#E1F1F1">
+            >
 
 
             <RelativeLayout
@@ -75,7 +81,7 @@
             android:layout_marginTop="20dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="25dp"
-            app:cardBackgroundColor="#E1F1F1">
+            >
 
 
             <RelativeLayout
@@ -124,7 +130,7 @@
             android:layout_marginTop="20dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="25dp"
-            app:cardBackgroundColor="#E1F1F1">
+            >
 
 
             <RelativeLayout
@@ -173,7 +179,7 @@
             android:layout_marginTop="20dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="25dp"
-            app:cardBackgroundColor="#E1F1F1">
+            >
 
 
             <RelativeLayout
@@ -222,7 +228,7 @@
             android:layout_marginTop="20dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="25dp"
-            app:cardBackgroundColor="#E1F1F1">
+            >
 
 
             <RelativeLayout
@@ -269,7 +275,7 @@
         android:layout_marginTop="20dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="25dp"
-        app:cardBackgroundColor="#E1F1F1">
+        >
 
 
         <RelativeLayout
@@ -306,5 +312,6 @@
     </androidx.cardview.widget.CardView>
 
     </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>
