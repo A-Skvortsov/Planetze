@@ -23,12 +23,12 @@ public class UserData {
     }
 
     public static String getUsername(Context context) {
-        retriveUsername(context);
+        retrieveUsername(context);
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
         return p.getString("Username", "");
     }
 
-    private static void retriveUsername(Context context) {
+    private static void retrieveUsername(Context context) {
 
         FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         DatabaseReference userRef = db.getReference("user data");
@@ -56,12 +56,12 @@ public class UserData {
     }
 
     public static String getEmail(Context context) {
-        retriveEmail(context);
+        retrieveEmail(context);
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
         return p.getString("Email", "");
     }
 
-    private static void retriveEmail(Context context) {
+    private static void retrieveEmail(Context context) {
 
         FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         DatabaseReference userRef = db.getReference("user data");
@@ -113,14 +113,13 @@ public class UserData {
         return p.getBoolean("isLoggedIn", false);
     }
 
-    public static boolean isNewUser(Context context) {
-        getIsNewUser(context);
+    public static boolean getSetting(Context context, String setting) {
+        retrieveSetting(context,setting);
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-        return p.getBoolean("isNewUser", true);
+        return p.getBoolean(setting, false);
     }
 
-
-    private static void getIsNewUser(Context context) {
+    private static void retrieveSetting(Context context, String setting) {
         FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         DatabaseReference userRef = db.getReference("user data");
 
@@ -128,16 +127,16 @@ public class UserData {
             DataSnapshot users = task.getResult();
             String userID = UserData.getUserID(context);
             for(DataSnapshot user:users.getChildren()) {
-                Object inu = user.child("is_new_user").getValue();
+                Object s = user.child("setting/"+setting).getValue();
                 boolean cond1 = user.getKey().toString().trim().equals(userID);
-                boolean cond2 = inu != null && inu.toString().equals("true");
+                boolean cond2 = s != null && s.toString().equals("true");
 
                 if (cond1 && cond2) {
-                    setIsNewUser(context, true);
+                    setSetting(context, setting,true);
                     break;
                 }
                 else if (cond1) {
-                    setIsNewUser(context,false);
+                    setSetting(context,setting,false);
                     break;
                 }
 
@@ -145,94 +144,22 @@ public class UserData {
         });
     }
 
-    private static void setIsNewUser(Context context, boolean is_new_user) {
+    private static void setSetting(Context context, String settingName, boolean settingValue) {
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
         SharedPreferences.Editor e = p.edit();
-        e.putBoolean("isNewUser", is_new_user);
+        e.putBoolean(settingName, settingValue);
         e.apply();
     }
 
-    public static boolean stayLoggedOn(Context context) {
-        getStayLoggedOn(context);
-        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-        return p.getBoolean("stayLoggedOn", false);
-    }
-
-    private static void getStayLoggedOn(Context context) {
-        FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-        DatabaseReference userRef = db.getReference("user data");
-
-        userRef.get().addOnCompleteListener(task -> {
-            DataSnapshot users = task.getResult();
-            String userID = UserData.getUserID(context);
-            for(DataSnapshot user:users.getChildren()) {
-                Object slo = user.child("settings/stay_logged_on").getValue();
-                boolean cond1 = user.getKey().toString().trim().equals(userID);
-                boolean cond2 = slo != null && slo.toString().equals("true");
-
-                if (cond1 && cond2) {
-                    setStayLoggedOn(context, true);
-                    break;
-                }
-                else if (cond1) {
-                    setStayLoggedOn(context,false);
-                    break;
-                }
-
-            }
-        });
-    }
-
-    private static void setStayLoggedOn(Context context, boolean stayLoggedOn) {
-        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-        SharedPreferences.Editor e = p.edit();
-        e.putBoolean("stayLoggedOn", stayLoggedOn);
-        e.apply();
-    }
-
-    public static boolean interpolateEmissionsData(Context context) {
-        getInterpolateEmissionsData(context);
-        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-        return p.getBoolean("interpolateEmissionsData", false);
-    }
-
-    private static void getInterpolateEmissionsData(Context context) {
-        FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-        DatabaseReference userRef = db.getReference("user data");
-
-        userRef.get().addOnCompleteListener(task -> {
-            DataSnapshot users = task.getResult();
-            String userID = UserData.getUserID(context);
-            for(DataSnapshot user:users.getChildren()) {
-                Object ied = user.child("settings/interpolate_emissions_data").getValue();
-                boolean cond1 = user.getKey().toString().trim().equals(userID);
-                boolean cond2 = ied != null && ied.toString().equals("true");
-
-                if (cond1 && cond2) {
-                    setInterpolateEmissionsData(context, true);
-                    break;
-                }
-                else if (cond1) {
-                    setInterpolateEmissionsData(context,false);
-                    break;
-                }
-
-            }
-        });
-    }
-
-    private static void setInterpolateEmissionsData(Context context, boolean interpolateEmissionsData) {
-        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-        SharedPreferences.Editor e = p.edit();
-        e.putBoolean("interpolateEmissionsData", interpolateEmissionsData);
-        e.apply();
-    }
 
     public static void initialize(Context context) {
         getEmail(context);
         getUsername(context);
-        getStayLoggedOn(context);
-        getInterpolateEmissionsData(context);
+
+        retrieveSetting(context,"stay_logged_on");
+        retrieveSetting(context,"interpolate_emission_data");
+        retrieveSetting(context,"hide_grid_lines");
+        retrieveSetting(context,"show_trend_line_points");
     }
 
 }

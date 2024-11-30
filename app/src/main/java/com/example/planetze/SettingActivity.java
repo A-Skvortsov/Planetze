@@ -22,8 +22,8 @@ import utilities.UserData;
 
 public class SettingActivity extends AppCompatActivity {
 
-    private SwitchMaterial stayLoggedOn;
-    private SwitchMaterial interpolateEmissionsData;
+    private SwitchMaterial stayLoggedOnSwitch;
+    private SwitchMaterial interpolateEmissionsDataSwitch;
     private SwitchMaterial hideGridLinesSwitch;
     private SwitchMaterial showTrendLinePointsSwitch;
     private Button returnButton;
@@ -42,8 +42,8 @@ public class SettingActivity extends AppCompatActivity {
 
         returnButton = findViewById(R.id.returnButton);
         logoutButton = findViewById(R.id.logoutButton);
-        stayLoggedOn = findViewById(R.id.stay_logged_in_switch);
-        interpolateEmissionsData = findViewById(R.id.ied_switch);
+        stayLoggedOnSwitch = findViewById(R.id.stay_logged_in_switch);
+        interpolateEmissionsDataSwitch = findViewById(R.id.ied_switch);
         showTrendLinePointsSwitch = findViewById(R.id.show_trend_line_points_switch);
         hideGridLinesSwitch = findViewById(R.id.hide_grid_lines_switch);
 
@@ -67,12 +67,12 @@ public class SettingActivity extends AppCompatActivity {
             loadFragment(new LoginView());
         });
 
-        stayLoggedOn.setOnClickListener(view -> {
+        stayLoggedOnSwitch.setOnClickListener(view -> {
             String userID = UserData.getUserID(getApplicationContext());
 
             db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
             userRef = db.getReference("user data");
-            if (stayLoggedOn.isChecked()) {
+            if (stayLoggedOnSwitch.isChecked()) {
                 userRef.child(userID+"/settings/stay_logged_on").setValue(true);
             }
             else {
@@ -81,12 +81,12 @@ public class SettingActivity extends AppCompatActivity {
 
         });
 
-        interpolateEmissionsData.setOnClickListener(view -> {
+        interpolateEmissionsDataSwitch.setOnClickListener(view -> {
             String userID = UserData.getUserID(getApplicationContext());
 
             db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
             userRef = db.getReference("user data");
-            if (interpolateEmissionsData.isChecked()) {
+            if (interpolateEmissionsDataSwitch.isChecked()) {
                 userRef.child(userID+"/settings/interpolate_emissions_data").setValue(true);
             }
             else {
@@ -124,8 +124,15 @@ public class SettingActivity extends AppCompatActivity {
     }
 
     private void initialize() {
-        stayLoggedOn.setChecked(UserData.stayLoggedOn(getApplicationContext()));
-        interpolateEmissionsData.setChecked(UserData.interpolateEmissionsData(getApplicationContext()));
+        boolean stayLoggedOn = UserData.getSetting(getApplicationContext(),"stay_logged_on");
+        boolean interpolateEmissionsData = UserData.getSetting(getApplicationContext(),"interpolate_emissions_data");
+        boolean hideGridLines = UserData.getSetting(getApplicationContext(),"hide_grid_lines");
+        boolean showTrendLinePoints = UserData.getSetting(getApplicationContext(),"show_trend_line_points");
+
+        stayLoggedOnSwitch.setChecked(stayLoggedOn);
+        interpolateEmissionsDataSwitch.setChecked(interpolateEmissionsData);
+        hideGridLinesSwitch.setChecked(hideGridLines);
+        showTrendLinePointsSwitch.setChecked(showTrendLinePoints);
     }
 
     private void loadFragment(Fragment fragment) {

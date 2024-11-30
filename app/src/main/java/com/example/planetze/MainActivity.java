@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeData() {
         boolean isLoggedIn = UserData.isLoggedIn(getApplicationContext());
-        boolean stayLoggedOn = UserData.stayLoggedOn(getApplicationContext());
+        boolean stayLoggedOn = UserData.getSetting(getApplicationContext(),"stay_logged_on");
         if (isLoggedIn && !stayLoggedOn) {
             UserData.logout(getApplicationContext());
         }
