@@ -67,21 +67,13 @@ public class LoginModel {
 
     private void takeToHomePage(LoginPresenter presenter) {
 
-        presenter.takeToHub();
-
-        /*
-
         if (UserData.isNewUser(presenter.getViewContext())) {
             presenter.takeToSurvey();
         }
         else {
             presenter.takeToHub();
         }
-
-         */
-
-
-
+        
 
     }
     public void onSignInResult(ActivityResult result, LoginPresenter presenter) {
