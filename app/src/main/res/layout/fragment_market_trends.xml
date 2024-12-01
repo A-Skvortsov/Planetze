@@ -11,7 +11,7 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:fillViewport="true">
 
@@ -37,12 +37,12 @@
             <TextView
                 android:id="@+id/description_title"
                 android:layout_width="340dp"
-                android:layout_height="50dp"
+                android:layout_height="47dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif"
                 android:text="Top 2024 Eco-Friendly Products"
-                android:textColor="@color/palette_stormy_gray"
+                android:textColor="@color/palette_black"
                 android:textSize="23sp"
                 android:textStyle="bold" />
 
@@ -61,7 +61,7 @@
             android:layout_marginTop="60dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="25dp"
-            app:cardBackgroundColor="#d1fffc"
+            app:cardBackgroundColor="@color/white"
             >
 
             <TextView
@@ -72,6 +72,7 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif"
                 android:text="Energy-Efficient Appliances"
+                android:textColor="@color/palette_turquoise"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -126,7 +127,7 @@
             android:layout_marginTop="50dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="25dp"
-            app:cardBackgroundColor="#d1fffc"
+            app:cardBackgroundColor="@color/white"
             >
 
             <TextView
@@ -137,7 +138,7 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif"
                 android:text="Sustainable Fashion Brands"
-                android:textColor="@color/black"
+                android:textColor="@color/palette_turquoise"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
