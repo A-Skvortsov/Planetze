@@ -38,7 +38,6 @@ public class UserData {
     }
 
     public static String getUsername(Context context) {
-        retrieveUsername(context);
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
         return p.getString("Username", "");
     }
@@ -71,7 +70,6 @@ public class UserData {
     }
 
     public static String getEmail(Context context) {
-        retrieveEmail(context);
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
         return p.getString("Email", "");
     }
@@ -104,21 +102,12 @@ public class UserData {
         e.apply();
     }
 
-    public static void login(Context context, String userID, String email, String key) {
+    public static void login(Context context, String userID, String key) {
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
         SharedPreferences.Editor e = p.edit();
         e.putString("UserID", userID);
         e.putBoolean("isLoggedIn", true);
         e.putString("privateKey", key);
-
-        /*
-        Gson gson = new Gson();
-        AuthCredential credential = EmailAuthProvider.getCredential(email, password);
-        String serializedObject = gson.toJson(credential);
-        e.putString("credentials", serializedObject);
-        //System.out.println("heihfefhiihif" + serializedObject);
-
-         */
 
         e.apply();
     }
@@ -189,8 +178,8 @@ public class UserData {
 
 
     public static void initialize(Context context) {
-        getEmail(context);
-        getUsername(context);
+        retrieveEmail(context);
+        retrieveUsername(context);
 
         retrieveSetting(context,STAY_LOGGED_ON);
         retrieveSetting(context,INTERPOLATE_EMISSIONS_DATA);
@@ -204,12 +193,6 @@ public class UserData {
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-        /*
-        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-        Gson gson = new Gson();
-        AuthCredential credential = gson.fromJson(p.getString("credentials", ""), AuthCredential.class);
-
-         */
 
         String key = p.getString("privateKey","");
         AuthCredential credential = EmailAuthProvider.getCredential(getEmail(context), key);

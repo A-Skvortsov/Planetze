@@ -56,7 +56,7 @@ public class LoginModel {
                     FirebaseUser user = auth.getCurrentUser();
                     String userID = user.getUid().toString().trim();
                     if (user.isEmailVerified()) {
-                        UserData.login(presenter.getViewContext(), userID, email, password);
+                        UserData.login(presenter.getViewContext(), userID, password);
                         takeToHomePage(presenter);
                     } else {
                         presenter.setMessage("Account needs to be verified");
