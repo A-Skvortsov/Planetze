@@ -31,7 +31,7 @@ public class EcoBalanceDestinationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 CleanAirFragment cleanAirFragment = new CleanAirFragment();
-                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentManager fragmentManager = getParentFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.eco_balance_destination, cleanAirFragment);
                 fragmentTransaction.addToBackStack(null);
@@ -46,13 +46,11 @@ public class EcoBalanceDestinationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 PlantTreeFragment plantATreeFragment = new PlantTreeFragment();
-                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentManager fragmentManager = getParentFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.eco_balance_destination, plantATreeFragment);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
-
-
             }
         });
         CardView crd3 = view.findViewById(R.id.cd3);
@@ -60,7 +58,7 @@ public class EcoBalanceDestinationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 TechnologyFragment technologyFragment = new TechnologyFragment();
-                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentManager fragmentManager = getParentFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.eco_balance_destination, technologyFragment);
                 fragmentTransaction.addToBackStack(null);
@@ -75,13 +73,11 @@ public class EcoBalanceDestinationFragment extends Fragment {
         @Override
         public void onClick(View v) {
            WasteFragment wasteFragment = new WasteFragment();
-            FragmentManager fragmentManager = getChildFragmentManager();
+            FragmentManager fragmentManager = getParentFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.eco_balance_destination, wasteFragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
-
-
         }
     });
 
@@ -90,7 +86,7 @@ public class EcoBalanceDestinationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FarmersFragment farmersFragment = new FarmersFragment();
-                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentManager fragmentManager = getParentFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.eco_balance_destination, farmersFragment);
                 fragmentTransaction.addToBackStack(null);
@@ -105,7 +101,7 @@ public class EcoBalanceDestinationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 FuelsFragment fuelsFragment = new FuelsFragment();
-                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentManager fragmentManager = getParentFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.eco_balance_destination, fuelsFragment);
                 fragmentTransaction.addToBackStack(null);
@@ -114,9 +110,6 @@ public class EcoBalanceDestinationFragment extends Fragment {
 
             }
         });
-
-
-
         return view;
     }
 }

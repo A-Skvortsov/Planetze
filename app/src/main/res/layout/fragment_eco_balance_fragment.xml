@@ -4,8 +4,16 @@
     android:id="@+id/balance_entry"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/palette_turquoise"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".EcoBalanceFragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:fillViewport="true">
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,35 +21,42 @@
         android:layout_height="match_parent">
 
         <androidx.cardview.widget.CardView
-            android:layout_marginTop="100dp"
-            android:layout_marginStart="25dp"
+            android:layout_marginTop="130dp"
+            android:layout_marginStart="28dp"
             android:layout_width="360dp"
-            android:layout_height="330dp"
+            android:layout_height="390dp"
             app:cardElevation="50dp"
-            app:cardBackgroundColor="@color/palette_turquoise"
             app:cardCornerRadius="30dp">
 
             <TextView
-                android:layout_width="270dp"
-                android:layout_height="180dp"
-                android:layout_gravity="center"
-                android:fontFamily="sans-serif-condensed-medium"
+                android:layout_width="320dp"
+                android:layout_height="300dp"
+                android:layout_marginStart="27dp"
+                android:layout_marginTop="50dp"
+                android:fontFamily="sans-serif"
                 android:text="@string/para1"
-                android:textColor="@color/clean_air_background"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
         </androidx.cardview.widget.CardView>
 
         <Button
             android:id="@+id/button4"
+            android:layout_width="190dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="110dp"
             android:layout_marginTop="60dp"
-            android:layout_marginStart="80dp"
-            android:layout_width="250dp"
-            android:layout_height="80dp"
-            android:text="Click Here to Find Projects" />
+            android:backgroundTint="@color/white"
+            android:fontFamily="sans-serif"
+            android:text="Click Here to Find Projects"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            app:rippleColor="@color/black" />
 
 
     </LinearLayout>
 
+    </ScrollView>
 
 </FrameLayout>
+

@@ -39,7 +39,7 @@ public class EcoBalanceFragment extends Fragment {
                 EcoBalanceDestinationFragment ecoBalanceDestinationFragment = new EcoBalanceDestinationFragment();
                 FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
                 transaction.replace(R.id.balance_entry, ecoBalanceDestinationFragment);
-                transaction.addToBackStack(null);
+                transaction.addToBackStack("nati");
                 transaction.commit();
             }
         });

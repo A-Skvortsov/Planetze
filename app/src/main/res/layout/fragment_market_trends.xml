@@ -11,6 +11,12 @@
 
     <ScrollView
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:fillViewport="true">
+
+<LinearLayout
+    android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:fillViewport="true">
@@ -42,7 +48,7 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif"
                 android:text="Top 2024 Eco-Friendly Products"
-                android:textColor="@color/palette_black"
+                android:textColor="@color/palette_stormy_gray"
                 android:textSize="23sp"
                 android:textStyle="bold" />
 
@@ -61,7 +67,7 @@
             android:layout_marginTop="60dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="25dp"
-            app:cardBackgroundColor="@color/white"
+            app:cardBackgroundColor="#d1fffc"
             >
 
             <TextView
@@ -72,6 +78,7 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif"
                 android:text="Energy-Efficient Appliances"
+
                 android:textColor="@color/palette_turquoise"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -126,7 +133,7 @@
             android:layout_marginTop="50dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="25dp"
-            app:cardBackgroundColor="@color/white"
+            app:cardBackgroundColor="#d1fffc"
             >
 
             <TextView
@@ -137,7 +144,7 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif"
                 android:text="Sustainable Fashion Brands"
-                android:textColor="@color/palette_turquoise"
+                android:textColor="@color/black"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
