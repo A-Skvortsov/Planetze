@@ -1,5 +1,6 @@
 package com.example.planetze;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -27,13 +29,17 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.prolificinteractive.materialcalendarview.CalendarDay;
+import com.prolificinteractive.materialcalendarview.DayViewDecorator;
+import com.prolificinteractive.materialcalendarview.DayViewFacade;
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView;
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener;
+import com.prolificinteractive.materialcalendarview.spans.DotSpan;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Semaphore;
 
 import utilities.Constants;
@@ -147,6 +153,7 @@ public class EcoTrackerFragment extends Fragment {
         habitsRef = db.getReference().child("user data")
                         .child(userId).child("current_habits");
         Log.d("Firebase", "Reference Path: " + calendarRef);  //for debugging
+        setCalendarDecorators();
 
         final Button calendarToggle = view.findViewById(R.id.calendarToggle);  //button to toggle calendar
         final ConstraintLayout calendarView = view.findViewById(R.id.calendarView);  //view containing calendar
@@ -419,6 +426,7 @@ public class EcoTrackerFragment extends Fragment {
         } else {
             switchToActivities();
         }
+        setCalendarDecorators();
     }
 
     public void switchToHabits() {
@@ -451,7 +459,7 @@ public class EcoTrackerFragment extends Fragment {
                 }
 
                 List<String> habitToLog = currentHabits.get(id);
-                AddActivity.writeToFirebase(date, habitToLog);
+                AddActivity.writeToFirebase(date, habitToLog, userId);
                 //AddHabit.logHabit(habitToLog);
 
                 fetchSnapshot();  //Update ecoTracker display
@@ -608,6 +616,48 @@ public class EcoTrackerFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 Log.e("FirebaseData", "Error: " + databaseError.getMessage());
+            }
+        });
+    }
+
+
+    /**
+     * Puts little dots on calendar days with activities so user knows what days have activities
+     */
+    private void setCalendarDecorators() {
+        MaterialCalendarView calendarView = globalView.findViewById(R.id.calendar);
+        DatabaseReference calendarRef = db.getReference("user data")
+                .child(userId).child("calendar");
+        calendarRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                HashMap<String, Object> calendar = (HashMap<String, Object>) snapshot.getValue();
+                Set<String> dates = (Set<String>) calendar.keySet();
+                dates.remove("0000-00-00");  //gets rid of default date
+                List<CalendarDay> eventDates = new ArrayList<>();
+                for (String date : dates) {
+                    String[] ymd = date.split("-");
+                    int y = Integer.parseInt(ymd[0]);
+                    int m = Integer.parseInt(ymd[1]);
+                    int d = Integer.parseInt(ymd[2]);
+                    eventDates.add(CalendarDay.from(y, m, d));
+                }
+
+                calendarView.addDecorator(new DayViewDecorator() {
+                    @Override
+                    public boolean shouldDecorate(CalendarDay day) {
+                        return eventDates.contains(day);
+                    }
+                    @Override
+                    public void decorate(DayViewFacade view) {
+                        view.addSpan(new DotSpan(10, Color.MAGENTA));
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("FirebaseError", "Failed to fetch event dates", error.toException());
             }
         });
     }

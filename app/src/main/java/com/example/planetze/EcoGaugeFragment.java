@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,13 +86,19 @@ public class EcoGaugeFragment extends Fragment
     private TextView emissionsOverviewTextView;
     private TextView comparisonPercentageText;
 
+    private ProgressBar loadingIndicator;
     private MaterialButtonToggleGroup timePeriodToggle;
     private Spinner comparisonSpinner;
 
     private CountryEmissionsData countryEmissions;
     private UserEmissionsData userEmissionsData;
     private int timePeriod;
+
     private String userId;
+    private boolean interpolate;
+    // TODO: Source this from the database
+    private boolean hideTrendLinePoints = false;
+    private boolean hideGridLines = false;
 
     // TODO: Source this from the database
     private boolean interpolate = false;
@@ -102,33 +109,43 @@ public class EcoGaugeFragment extends Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         userId = UserData.getUserID(requireContext());
+        interpolate = UserData.interpolateEmissionsData(getContext());
+        System.out.println(interpolate);
+
         View view = inflater.inflate(R.layout.fragment_eco_gauge, container, false);
 
         this.emissionsTrendGraph = view.findViewById(R.id.line_chart);
         this.categoryBreakdownChart = view.findViewById(R.id.pie_chart);
         this.comparisonChart = view.findViewById(R.id.bar_chart);
-        this.countryEmissions = new CountryEmissionsData(requireContext());
-        this.emissionsOverviewTextView = view.findViewById(R.id.emissions_overview_textview);
-        this.comparisonSpinner = view.findViewById(R.id.spinner);
-        this.comparisonPercentageText = view.findViewById(R.id.comparison_percentage_text);
-
-        this.timePeriod = OVERALL;
 
         this.trendGraphCard = view.findViewById(R.id.trend_graph_card);
         this.emissionBreakdownCard = view.findViewById(R.id.emissions_breakdown_card);
         this.comparisonChartCard = view.findViewById(R.id.comparison_chart_card);
 
+        this.comparisonPercentageText = view.findViewById(R.id.comparison_percentage_text);
+        this.emissionsOverviewTextView = view.findViewById(R.id.emissions_overview_textview);
+
+        this.comparisonSpinner = view.findViewById(R.id.spinner);
+        this.loadingIndicator = view.findViewById(R.id.loading_bar);
+        this.timePeriod = OVERALL;
+
+        this.countryEmissions = new CountryEmissionsData(requireContext());
+
         // TODO: THE SOURCE OF THE ID BELOW SHOULD BE CHANGED TO ACCURATELY REFLECT THE CURRENT USER
         this.userEmissionsData = new UserEmissionsData(userId, interpolate, new UserEmissionsData.DataReadyListener() {
             @Override
             public void start() {
-                // TODO: Show progress dialog
+                // Display loading indicator
+                loadingIndicator.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onDataReady() {
                 if (userEmissionsData.userHasData()) {
-                    // Upon determining the user has data un hide the charts and show the data.
+                    // Hide loading indicator when data is ready
+                    loadingIndicator.setVisibility(View.GONE);
+
+                    // Un hide the charts and show the data.
                     unHideUI();
                     updateUI();
                 } else {
@@ -341,7 +358,7 @@ public class EcoGaugeFragment extends Fragment
         lineDataSet.setValueTextColor(Color.BLACK);
         lineDataSet.setColor(PALETTE_TURQUOISE);
         lineDataSet.setDrawValues(false);
-        lineDataSet.setDrawCircles(showTrendLinePoints);
+        lineDataSet.setDrawCircles(!hideTrendLinePoints);
         lineDataSet.setDrawFilled(true);
         lineDataSet.setLineWidth(2f);
 

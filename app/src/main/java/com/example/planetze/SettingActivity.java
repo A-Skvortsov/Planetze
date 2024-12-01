@@ -12,8 +12,8 @@ import android.os.Bundle;
 
 import com.example.planetze.Login.LoginView;
 
-
 import androidx.appcompat.app.AlertDialog;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.widget.Button;
@@ -33,7 +33,8 @@ public class SettingActivity extends AppCompatActivity {
     private SwitchMaterial stayLoggedOnSwitch;
     private SwitchMaterial interpolateEmissionsDataSwitch;
     private SwitchMaterial hideGridLinesSwitch;
-    private SwitchMaterial showTrendLinePointsSwitch;
+    private SwitchMaterial hideTrendLinePointsSwitch;
+
     private Button returnButton;
     private Button logoutButton;
 
@@ -55,7 +56,7 @@ public class SettingActivity extends AppCompatActivity {
         deleteAccountButton = findViewById(R.id.delete_account_button);
         stayLoggedOnSwitch = findViewById(R.id.stay_logged_in_switch);
         interpolateEmissionsDataSwitch = findViewById(R.id.ied_switch);
-        showTrendLinePointsSwitch = findViewById(R.id.show_trend_line_points_switch);
+        hideTrendLinePointsSwitch = findViewById(R.id.hide_trend_line_points_switch);
         hideGridLinesSwitch = findViewById(R.id.hide_grid_lines_switch);
 
         name = findViewById(R.id.name);
@@ -120,6 +121,7 @@ public class SettingActivity extends AppCompatActivity {
 
         });
 
+
         interpolateEmissionsDataSwitch.setOnClickListener(view -> {
 
             if (interpolateEmissionsDataSwitch.isChecked()) {
@@ -142,7 +144,7 @@ public class SettingActivity extends AppCompatActivity {
         });
 
 
-        showTrendLinePointsSwitch.setOnClickListener(view -> {
+        hideTrendLinePointsSwitch.setOnClickListener(view -> {
 
             if (showTrendLinePointsSwitch.isChecked()) {
                 userRef.child(userID+"/settings/" + SHOW_TREND_LINE_POINTS).setValue(true);

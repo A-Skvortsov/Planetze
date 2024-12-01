@@ -3,22 +3,22 @@
 
     <item
         android:id="@+id/EcoGaugeFragment"
-        android:title="EcoGauge"
-        android:icon="@drawable/ic_android"
+        android:title="@string/ecogauge"
+        android:icon="@drawable/eco_gauge_nav_ic"
     />
     <item
         android:id="@+id/EcoTrackerFragment"
-        android:title="EcoTracker"
-        android:icon="@drawable/ic_android"
+        android:title="@string/ecotracker"
+        android:icon="@drawable/eco_tracker_nav_img"
     />
     <item
         android:id="@+id/EcoBalanceFragment"
-        android:title="EcoBalance"
+        android:title="@string/ecobalance"
         android:icon="@drawable/ic_android"
     />
     <item
         android:id="@+id/EcoHubEntryFragment"
-        android:title="EcoHub"
+        android:title="@string/ecohub"
         android:icon="@drawable/ic_android"
     />
 </menu>

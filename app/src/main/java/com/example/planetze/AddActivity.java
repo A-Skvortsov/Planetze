@@ -185,7 +185,7 @@ public class AddActivity extends Fragment {
                 List<String> activity = saveActivity(cat, act, input1, input2);
                 if (edit == 1) {
                     updateFirebase(date, activity, id);  //update firebase (for edit mode)
-                } else {writeToFirebase(date, activity);}  //write list to firebase
+                } else {writeToFirebase(date, activity, userId);}  //write list to firebase
                 EcoTrackerFragment.fetchSnapshot();  //update ecotracker info
                 Bundle bundle = new Bundle();
                 bundle.putString("date", date);
@@ -476,7 +476,7 @@ public class AddActivity extends Fragment {
     }
 
 
-    public static void writeToFirebase(String date, List<String> activity) {
+    public static void writeToFirebase(String date, List<String> activity, String userId) {
         DatabaseReference calendarRef = db.getReference("user data")
                 .child(userId).child("calendar");
 
@@ -556,13 +556,7 @@ public class AddActivity extends Fragment {
                 }
                 return x * y;
             case "Cycling/Walking":
-                switch (input1) {
-                    case 0: x = 2; break;
-                    case 1: x = 4; break;
-                    case 2: x = 8; break;
-                    default: x = 12; break;
-                }
-                return -x * 3;  //negative because we reduce carbon emissions if they avoid transport
+                return 0;  //no emissions are produced from cycling/walking
             case "Flight (< 1,500km)":
                 x = 225;  //kg of CO2
                 switch (input2) {
@@ -695,7 +689,7 @@ public class AddActivity extends Fragment {
         activity.add(String.valueOf(input1)); activity.add(String.valueOf(input2));
 
         for (int i = 0; i < past29Days.size(); i++) {
-            writeToFirebase(past29Days.get(i), activity);
+            writeToFirebase(past29Days.get(i), activity, userId);
         }
     }
 

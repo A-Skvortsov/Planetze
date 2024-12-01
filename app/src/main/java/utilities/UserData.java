@@ -88,6 +88,7 @@ public class UserData {
 
     }
 
+
     private static void setEmail(Context context, String email) {
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
         SharedPreferences.Editor e = p.edit();
@@ -106,7 +107,7 @@ public class UserData {
     public static void logout(Context context) {
         FirebaseAuth auth = FirebaseAuth.getInstance();
         auth.signOut();
-
+      
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
         SharedPreferences.Editor e = p.edit();
         e.putBoolean("isLoggedIn", false);
