@@ -30,7 +30,8 @@
         android:shadowRadius="2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="invisible"/>
 
     <!-- Multiple Choice Card -->
     <androidx.cardview.widget.CardView
@@ -42,7 +43,7 @@
         android:layout_margin="15dp"
         app:cardCornerRadius="16dp"
         app:cardElevation="8dp"
-        app:layout_constraintBottom_toTopOf="@id/next_btn"
+        app:layout_constraintBottom_toTopOf="@id/nextBtn"
         app:layout_constraintTop_toBottomOf="@+id/category">
 
         <!-- LinearLayout to hold all content inside the ScrollView -->
@@ -66,7 +67,11 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:layout_height="225dp">
             <RadioGroup
+                android:paddingBottom="20dp"
                 android:id="@+id/options"
                 android:layout_width="342dp"
                 android:layout_height="wrap_content"
@@ -77,6 +82,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/question">
             </RadioGroup>
+            </ScrollView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -85,7 +91,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/please_answer2"
+                android:id="@+id/pleaseAnswer2"
                 android:layout_width="17dp"
                 android:layout_height="12dp"
                 android:textSize="18sp"
@@ -99,7 +105,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/options" />
 
             <TextView
-                android:id="@+id/please_answer1"
+                android:id="@+id/pleaseAnswer1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
@@ -113,6 +119,24 @@
                 app:layout_constraintTop_toBottomOf="@+id/options" />
         </LinearLayout>
 
+            <TextView
+                android:id="@+id/getStartedPrompt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/getStartedSurveyPrompt"
+                android:textColor="@color/palette_black"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="italic|bold"
+                android:layout_marginBottom="70dp"/>
+
+            <Button
+                android:id="@+id/beginSurveyBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Begin Survey"
+                android:layout_gravity="center"/>
+
 
             <!-- "Please select an answer" prompt for when user tries to proceed without answering-->
             <!-- also part of the "select an answer" prompt-->
@@ -121,7 +145,7 @@
 
     <!-- Next Button -->
     <Button
-        android:id="@+id/next_btn"
+        android:id="@+id/nextBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
@@ -132,11 +156,12 @@
         android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@id/cardView"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="invisible"/>
 
     <!-- Back Button -->
     <Button
-        android:id="@+id/back_btn"
+        android:id="@+id/backBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -147,5 +172,6 @@
         android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@id/cardView"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:visibility="invisible"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

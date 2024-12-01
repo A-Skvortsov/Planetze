@@ -51,6 +51,7 @@ public class SurveyResults extends Fragment {
     public SurveyResults(boolean b) {
         returnToEcoTracker = b;
     }
+    public SurveyResults(){}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

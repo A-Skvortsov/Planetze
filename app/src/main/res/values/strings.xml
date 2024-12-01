@@ -119,4 +119,5 @@ We have provided offset emission  projects, which can help offset you carbon emi
     <string name="interpolate_data">Interpolate data</string>
     <string name="log_out">Log out</string>
     <string name="delete_account">Delete Account</string>
+    <string name="getStartedSurveyPrompt">Let\'s get started! We will calculate your current carbon footprint based on your lifestyle. You only need to do this survey once.</string>
 </resources>
