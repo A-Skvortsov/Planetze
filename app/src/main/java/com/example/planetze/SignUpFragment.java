@@ -6,7 +6,7 @@ import static java.lang.Character.isLetter;
 import static utilities.Constants.FIREBASE_LINK;
 import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
-import static utilities.Constants.SHOW_TREND_LINE_POINTS;
+import static utilities.Constants.HIDE_TREND_LINE_POINTS;
 import static utilities.Constants.STAY_LOGGED_ON;
 
 import android.app.Activity;
@@ -21,15 +21,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.URLUtil;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -44,22 +39,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 import utilities.UserData;
@@ -317,7 +304,7 @@ public class SignUpFragment extends Fragment {
         userRef.child(userID+"/is_new_user").setValue(true);
         userRef.child(userID+"/settings/"+STAY_LOGGED_ON).setValue(false);
         userRef.child(userID+"/settings/"+INTERPOLATE_EMISSIONS_DATA).setValue(false);
-        userRef.child(userID+"/settings/"+SHOW_TREND_LINE_POINTS).setValue(false);
+        userRef.child(userID+"/settings/"+ HIDE_TREND_LINE_POINTS).setValue(false);
         userRef.child(userID+"/settings/"+HIDE_GRID_LINES).setValue(false);
         userRef.child(userID+"/calendar/0000-00-00/0").setValue(0);
 

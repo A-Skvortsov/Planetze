@@ -8,6 +8,9 @@ import static utilities.Colors.PALETTE_TURQUOISE_TINT_500;
 import static utilities.Colors.PALETTE_TURQUOISE_TINT_600;
 import static utilities.Colors.PALETTE_TURQUOISE_TINT_800;
 import static utilities.Constants.DAILY;
+import static utilities.Constants.HIDE_GRID_LINES;
+import static utilities.Constants.HIDE_TREND_LINE_POINTS;
+import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
 import static utilities.Constants.MONTHLY;
 import static utilities.Constants.OVERALL;
 import static utilities.Constants.WEEKLY;
@@ -97,20 +100,17 @@ public class EcoGaugeFragment extends Fragment
     private String userId;
     private boolean interpolate;
     // TODO: Source this from the database
-    private boolean hideTrendLinePoints = false;
+    private boolean hideTrendLinePoints;
     private boolean hideGridLines = false;
 
-    // TODO: Source this from the database
-    private boolean interpolate = false;
-    private boolean showTrendLinePoints = false;
-    private boolean hideGridLines = false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         userId = UserData.getUserID(requireContext());
-        interpolate = UserData.interpolateEmissionsData(getContext());
-        System.out.println(interpolate);
+        interpolate = UserData.getSetting(getContext(), INTERPOLATE_EMISSIONS_DATA);
+        hideTrendLinePoints = UserData.getSetting(getContext(), HIDE_TREND_LINE_POINTS);
+        hideGridLines = UserData.getSetting(getContext(), HIDE_GRID_LINES);
 
         View view = inflater.inflate(R.layout.fragment_eco_gauge, container, false);
 

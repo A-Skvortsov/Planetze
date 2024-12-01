@@ -3,7 +3,7 @@ package com.example.planetze;
 import static utilities.Constants.FIREBASE_LINK;
 import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
-import static utilities.Constants.SHOW_TREND_LINE_POINTS;
+import static utilities.Constants.HIDE_TREND_LINE_POINTS;
 import static utilities.Constants.STAY_LOGGED_ON;
 
 import android.content.DialogInterface;
@@ -146,11 +146,11 @@ public class SettingActivity extends AppCompatActivity {
 
         hideTrendLinePointsSwitch.setOnClickListener(view -> {
 
-            if (showTrendLinePointsSwitch.isChecked()) {
-                userRef.child(userID+"/settings/" + SHOW_TREND_LINE_POINTS).setValue(true);
+            if (hideTrendLinePointsSwitch.isChecked()) {
+                userRef.child(userID+"/settings/" + HIDE_TREND_LINE_POINTS).setValue(true);
             }
             else {
-                userRef.child(userID+"/settings/"+ SHOW_TREND_LINE_POINTS).setValue(false);
+                userRef.child(userID+"/settings/"+ HIDE_TREND_LINE_POINTS).setValue(false);
             }
         });
     }
@@ -159,12 +159,12 @@ public class SettingActivity extends AppCompatActivity {
         boolean stayLoggedOn = UserData.getSetting(getApplicationContext(),STAY_LOGGED_ON);
         boolean interpolateEmissionsData = UserData.getSetting(getApplicationContext(),INTERPOLATE_EMISSIONS_DATA);
         boolean hideGridLines = UserData.getSetting(getApplicationContext(),HIDE_GRID_LINES);
-        boolean showTrendLinePoints = UserData.getSetting(getApplicationContext(),SHOW_TREND_LINE_POINTS);
+        boolean hideTrendLinePoints = UserData.getSetting(getApplicationContext(), HIDE_TREND_LINE_POINTS);
 
         stayLoggedOnSwitch.setChecked(stayLoggedOn);
         interpolateEmissionsDataSwitch.setChecked(interpolateEmissionsData);
         hideGridLinesSwitch.setChecked(hideGridLines);
-        showTrendLinePointsSwitch.setChecked(showTrendLinePoints);
+        hideTrendLinePointsSwitch.setChecked(hideTrendLinePoints);
     }
 
     private void loadFragment(Fragment fragment) {
