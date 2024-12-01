@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".EcoTrackerFragment"
-    android:background="@color/default_background_white">
+    android:background="@color/default_background_white"
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/eco_tracker"
@@ -35,9 +36,9 @@
             android:background="@color/palette_turquoise"
             android:gravity="center"
             android:text="0.0 kg of CO2 Emitted"
-            android:textStyle="bold"
-            android:textSize="20sp"
             android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/title"
             app:layout_constraintStart_toStartOf="@+id/title"
             app:layout_constraintTop_toBottomOf="@+id/title"
@@ -122,11 +123,11 @@
             android:id="@+id/toggleBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@+id/scrollView2"
-            app:layout_constraintEnd_toEndOf="@+id/scrollView2"
             app:layout_constraintBottom_toTopOf="@+id/scrollView2"
-            app:singleSelection="true"
-            app:selectionRequired="true">
+            app:layout_constraintEnd_toEndOf="@+id/scrollView2"
+            app:layout_constraintStart_toStartOf="@+id/scrollView2"
+            app:selectionRequired="true"
+            app:singleSelection="true">
 
             <Button
                 android:id="@+id/activitiesBtn"
@@ -243,6 +244,16 @@
             app:layout_constraintStart_toStartOf="@+id/editBtn"
             app:layout_constraintTop_toBottomOf="@+id/editBtn" />
 
+        <Button
+            android:id="@+id/annualEmissionsBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="See My Annual Emissions"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+</ScrollView>

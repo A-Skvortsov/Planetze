@@ -172,6 +172,7 @@ public class EcoTrackerFragment extends Fragment {
         final Button activitiesBtn = view.findViewById(R.id.activitiesBtn);
         final Button habitsBtn = view.findViewById(R.id.habitsBtn);
         activitiesBtn.performClick();  //by default, loads activities & not habits
+        setAnnualEmissionsBtn(view);
 
         String prompt;
         if (habitsToggled && activities.getChildCount() != 0) {
@@ -657,6 +658,22 @@ public class EcoTrackerFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.e("FirebaseError", "Failed to fetch event dates", error.toException());
+            }
+        });
+    }
+
+
+    private void setAnnualEmissionsBtn(View view) {
+        Button annualEmissionsBtn = view.findViewById(R.id.annualEmissionsBtn);
+        annualEmissionsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SurveyResults surveyResults = new SurveyResults();
+                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.eco_tracker, surveyResults);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
     }
