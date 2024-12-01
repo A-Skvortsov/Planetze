@@ -2,6 +2,7 @@ package com.example.planetze;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -41,9 +42,11 @@ public class SurveyResults extends Fragment {
     private String userId;
 
     final String[] country = Constants.country;
-    final double[] country_emissions = Constants.country_emissions;
-    String default_country = Constants.default_country;
-    double user_e = 0.0;  //total user emissions
+    final double[] countryEmissions = Constants.country_emissions;
+    //this is set to Canada just in case Firebase messes up. Really, it is fetched from Firebase.
+    String defaultCountry = "Canada";
+    double userE = 0.0;  //total user emissions in tons
+    double globalTarget = 2.0;  //global target emissions (tons per year for 1 person)
 
     List<Double> results = new ArrayList<>();
     private boolean returnToEcoTracker = false;
@@ -62,7 +65,6 @@ public class SurveyResults extends Fragment {
             return insets;
         });
 
-        Button homeBtn = view.findViewById(R.id.homeBtn);
         //for if we arrive from ecoTracker
         if (returnToEcoTracker) initHomeBtn(view, 1);
         else initHomeBtn(view, 0);
@@ -81,22 +83,23 @@ public class SurveyResults extends Fragment {
                     }  //conversion necessary because Firebase stores doubles weirld
                         // (sometimes integers, sometimes Longs, etc.)
                     results = kgToTons(results);
-                    user_e = sum(results);  //saves user result immediately
+                    userE = sum(results);  //saves user result immediately
+                    setGlobalTargetComparison(view);
                 } else {
                     Log.d("FirebaseData:", "Array does not exist for this user.");
                 }
 
                 //initializes some basics
                 final TextView your_emissions = view.findViewById(R.id.your_emissions);
-                String sum = round(user_e) + "   ";
+                String sum = round(userE) + "   ";
                 your_emissions.setText(sum);
                 final TextView total_bar = view.findViewById(R.id.total_bar);
                 String msg = sum + " tons of CO2 emitted annually";
                 total_bar.setText(msg);
                 setCategoryGraph(view, results);  //sets category graph
 
-                initComparisonGraph(view, default_country);  //initializes comparison graph
-                setUserDataComparisonGraph(view, user_e);
+                initComparisonGraph(view);  //initializes comparison graph
+                setUserDataComparisonGraph(view, userE);
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -112,10 +115,12 @@ public class SurveyResults extends Fragment {
                                        int position, long id) {
                 String selectedItem = (String) parent.getItemAtPosition(position);
                 setComparisonGraph(view, selectedItem);
+
+                setCountryStats(view, position);
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                setComparisonGraph(view, default_country);
+                setComparisonGraph(view, defaultCountry);
             }
         });
 
@@ -172,19 +177,31 @@ public class SurveyResults extends Fragment {
     /**
      * Initializes second graph (comparison of user emissions with a selected country)
      * to default country and loads spinner with list of countries
-     * @param c the default country
      */
-    private void initComparisonGraph(View view, String c) {
-        //initialize spinner to country c
-        Spinner s = view.findViewById(R.id.spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
-                 android.R.layout.simple_spinner_item, country);  //used to load spinner
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        s.setAdapter(adapter);  //loads spinner
-        int init = adapter.getPosition(c);  //initializes spinner to default country
-        s.setSelection(init);  //^^
+    private void initComparisonGraph(View view) {
+        DatabaseReference countryRef = db.getReference().child("user data")
+                .child(userId).child("default_country");
 
-        setComparisonGraph(view, c);  //set UI
+        countryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                defaultCountry = (String) snapshot.getValue();
+
+                //initialize spinner to country c
+                Spinner s = view.findViewById(R.id.spinner);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
+                        android.R.layout.simple_spinner_item, country);  //used to load spinner
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                s.setAdapter(adapter);  //loads spinner
+                int init = adapter.getPosition(defaultCountry);  //initializes spinner to default country
+                s.setSelection(init);  //^^
+
+                setComparisonGraph(view, defaultCountry);  //set UI
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 
 
@@ -194,7 +211,7 @@ public class SurveyResults extends Fragment {
      */
     private void setComparisonGraph(View view, String c) {
         int i = indexOf(country, c);
-        double country_e = country_emissions[indexOf(country, c)];
+        double countryE = countryEmissions[indexOf(country, c)];
 
         assert view.findViewById(R.id.user_bar) != null;
 
@@ -208,7 +225,7 @@ public class SurveyResults extends Fragment {
                 125, display_metrics);
         //next line is main formula. Math.abs() used in the case that user emissions are < 0
         int height_in_p =
-                (int) Math.min(max_p, Math.max(min_p, Math.abs((country_e/user_e) * height_user_in_p)));
+                (int) Math.min(max_p, Math.max(min_p, Math.abs((countryE/userE) * height_user_in_p)));
 
         //sets bar height of compared country
         TextView bar = view.findViewById(R.id.country_bar);
@@ -219,7 +236,7 @@ public class SurveyResults extends Fragment {
 
         //sets text of bar height textbox
         TextView bar_height = view.findViewById(R.id.country_emissions);
-        String x = String.valueOf(round(country_e)) + "   ";
+        String x = String.valueOf(round(countryE)) + "   ";
         bar_height.setText(x);
     }
 
@@ -282,6 +299,45 @@ public class SurveyResults extends Fragment {
                 startActivity(intent);
             }
         });
+    }
+
+
+    /**
+     * shows what percent the user's emissions are of the national average for the selected country
+     * @param view
+     * @param index the index of the selected country in the country array
+     */
+    private void setCountryStats(View view, int index) {
+        TextView countryStats = view.findViewById(R.id.countryStat);
+        String countryToCompare = country[index];
+        double emissionsToCompare = countryEmissions[index];
+        double percentDiff = Math.round((userE / emissionsToCompare) * 100.0);
+
+        String s;
+        if (percentDiff == 100)
+            s = "Your emissions are <font color='#009999'>equal</font> to those of the national average for " + countryToCompare;
+        else if (percentDiff < 100)
+            s = "Your emissions are " + (100 - percentDiff)
+                    + "% <font color='#03AC13'>lower</font> than that of the national average for " + countryToCompare;
+        else s = "Your emissions are " + (percentDiff - 100)
+                    + "% <font color='#FF0000'>higher</font> than that of the national average for " + countryToCompare;
+        countryStats.setText(Html.fromHtml(s, Html.FROM_HTML_MODE_LEGACY));
+    }
+
+
+    private void setGlobalTargetComparison(View view) {
+        TextView globalTargetStats = view.findViewById(R.id.globalTargetStat);
+        double percentDiff = Math.round((userE / globalTarget) * 100.0);
+
+        String s;
+        if (percentDiff == 100)
+            s = "Your emissions are <font color='#009999'>equal</font> to the global emissions target (in tons of CO2 per year, per person)";
+        else if (percentDiff < 100)
+            s = "Your emissions are " + (100 - percentDiff)
+                    + "% <font color='#03AC13'>lower</font> than that of the global emissions target (in tons of CO2 per year, per person)";
+        else s = "Your emissions are " + (percentDiff - 100)
+                    + "% <font color='#FF0000'>higher</font> than that of the global emissions target (in tons of CO2 per year, per person)";
+        globalTargetStats.setText(Html.fromHtml(s, Html.FROM_HTML_MODE_LEGACY));
     }
 
 

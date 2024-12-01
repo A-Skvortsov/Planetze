@@ -14,11 +14,11 @@
     <item
         android:id="@+id/EcoBalanceFragment"
         android:title="@string/ecobalance"
-        android:icon="@drawable/ic_android"
+        android:icon="@drawable/eco_balance_img"
     />
     <item
         android:id="@+id/EcoHubEntryFragment"
         android:title="@string/ecohub"
-        android:icon="@drawable/ic_android"
+        android:icon="@drawable/eco_hub_img"
     />
 </menu>
