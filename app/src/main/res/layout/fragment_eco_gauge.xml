@@ -193,7 +193,7 @@
                 android:gravity="center"
                 app:singleSelection="true"
                 app:selectionRequired="true"
-                app:checkedButton="@+id/button_overall">
+                app:checkedButton="@+id/button_monthly">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/button_daily"
