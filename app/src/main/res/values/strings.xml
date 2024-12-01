@@ -52,8 +52,6 @@
     <string name="ecobalance">EcoBalance</string>
     <string name="ecohub">EcoHub</string>
 
-
-
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="home">Home</string>
@@ -94,6 +92,7 @@ We have provided offset emission  projects, which can help offset you carbon emi
     <string name="this_will_increase_eco_gauge_loading_times">
          This will increase Eco Gauge loading times
     </string>
+    <string name="change_name"><u>Change Name</u></string>
     <string name="stay_logged_in">Stay logged in</string>
     <string name="log_out">Log out</string>
     <string name="hide_trend_line_points">Hide trend line points</string>

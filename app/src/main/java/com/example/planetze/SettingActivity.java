@@ -16,7 +16,10 @@ import androidx.appcompat.app.AlertDialog;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -39,6 +42,7 @@ public class SettingActivity extends AppCompatActivity {
     private Button logoutButton;
 
     private Button deleteAccountButton;
+    private TextView changeName;
 
     private TextView name;
     private TextView email;
@@ -54,6 +58,8 @@ public class SettingActivity extends AppCompatActivity {
         returnButton = findViewById(R.id.returnButton);
         logoutButton = findViewById(R.id.logoutButton);
         deleteAccountButton = findViewById(R.id.delete_account_button);
+        changeName = findViewById(R.id.change_name);
+
         stayLoggedOnSwitch = findViewById(R.id.stay_logged_in_switch);
         interpolateEmissionsDataSwitch = findViewById(R.id.ied_switch);
         hideTrendLinePointsSwitch = findViewById(R.id.hide_trend_line_points_switch);
@@ -78,6 +84,43 @@ public class SettingActivity extends AppCompatActivity {
 
         });
 
+        changeName.setOnClickListener(view -> {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+            alert.setTitle("Enter new name");
+
+// Set an EditText view to get user input
+            EditText input = new EditText(getApplicationContext());
+            alert.setView(input);
+
+            alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    String nameText = input.getText().toString().trim();
+                    if (nameText.isEmpty()) {
+                        showMessage("New name cannot be empty");
+                    }
+                    else {
+                        userRef.child(userID+"/name").setValue(nameText);
+                        showMessage("Name updated successfully");
+                        UserData.initialize(getApplicationContext());
+                        name.setText(nameText);
+                    }
+                    dialog.cancel();
+                }
+            });
+
+            alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int whichButton) {
+                    dialog.cancel();
+                }
+            });
+
+            alert.show();
+
+        });
+
         logoutButton.setOnClickListener(view -> {
             UserData.logout(getApplicationContext());
             loadFragment(new LoginView());
@@ -94,6 +137,7 @@ public class SettingActivity extends AppCompatActivity {
                 public void onClick(DialogInterface dialog, int which) {
                     UserData.deleteAccount(getApplicationContext());
                     loadFragment(new LoginView());
+                    showMessage("Account deleted successfully");
                     dialog.cancel();
                 }
             });
@@ -109,6 +153,8 @@ public class SettingActivity extends AppCompatActivity {
             alert.show();
 
         });
+
+
 
         stayLoggedOnSwitch.setOnClickListener(view -> {
 
@@ -157,6 +203,14 @@ public class SettingActivity extends AppCompatActivity {
             }
             UserData.initialize(getApplicationContext());
         });
+    }
+
+    private void showMessage(String msg) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(this);
+
+        alert.setTitle(msg+"\n\n\n");
+
+        alert.show();
     }
 
     private void initialize() {
