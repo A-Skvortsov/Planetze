@@ -1,89 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".FuelsFragment">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="#E1F1F1"
-        tools:context=".Details">
-
-        <androidx.cardview.widget.CardView
-            android:layout_width="320dp"
-            android:layout_height="200dp"
-            android:layout_marginStart="45dp"
-            android:layout_marginEnd="30dp"
-            app:cardBackgroundColor="@color/palette_turquoise"
+        android:fillViewport="true">
 
 
-            android:layout_marginTop="30dp"
-            app:cardElevation="30dp"
-            app:cardCornerRadius="20dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            android:orientation="vertical"
+            android:background="@color/palette_turquoise"
+            tools:context=".Details">
 
-
-            <ImageView
-                android:id="@+id/detailImage"
+            <androidx.cardview.widget.CardView
                 android:layout_width="320dp"
                 android:layout_height="200dp"
-                android:src="@mipmap/fossil" />
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginTop="30dp"
+                app:cardElevation="60dp"
+                app:cardCornerRadius="20dp">
 
-        </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/detailDescription"
-            android:layout_width="320dp"
-            android:layout_height="wrap_content"
-            android:background="@color/palette_turquoise"
-            android:layout_marginStart="45dp"
-            android:layout_marginTop="20dp"
-            android:paddingStart="50dp"
-            android:padding="10dp"
-            android:text="End Fossil Fuels"
-            android:textColor="@color/clean_air_background"
+                <ImageView
+                    android:id="@+id/detailImage"
+                    android:layout_width="320dp"
+                    android:layout_height="200dp"
+                    android:src="@mipmap/fossil" />
 
-            android:textSize="34sp"
-            android:textStyle="bold" />
+            </androidx.cardview.widget.CardView>
 
-        <RelativeLayout
-            android:background="@color/palette_turquoise"
-            android:layout_width="350dp"
-            android:layout_marginStart="35dp"
-            android:layout_marginTop="10dp"
-            android:layout_height="200dp">
+            <androidx.cardview.widget.CardView
+                android:layout_width="320dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginTop="30dp"
+                app:cardElevation="60dp"
+                app:cardCornerRadius="20dp">
 
-            <TextView
-                android:id="@+id/detailsParapgraph"
-                android:layout_width="250dp"
-                android:layout_height="220dp"
-                android:layout_marginStart="50dp"
+                <TextView
+                    android:id="@+id/detailDescription"
+                    android:layout_width="250dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/white"
+                    android:text="End Fossil Fuels"
+                    android:textColor="@color/palette_turquoise"
+
+                    android:textSize="34sp"
+                    android:textStyle="bold" />
+
+            </androidx.cardview.widget.CardView>
+
+
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="320dp"
+                android:layout_height="200dp"
+                android:layout_marginStart="45dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginTop="30dp"
+                app:cardElevation="60dp"
+                app:cardCornerRadius="20dp">
+
+                <TextView
+                    android:id="@+id/detailsParapgraph"
+                    android:layout_width="280dp"
+                    android:layout_height="170dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="15dp"
+                    android:fontFamily="sans-serif"
+                    android:text="Earthjustice is a registered  501(c)3 nonprofit, whose primary goal is to “End the Extraction and Burning of Fossil Fuels”. The foundation helps to keep coal, oil, and gas in the ground while supporting communities most affected by coal, oil, and gas. A significant amount of America’s and Canada's climate-polluting carbon dioxide emissions come from the burning and extraction of oil, gas, and coal. By supporting this foundation, users can help directly to offset their carbon emissions and also help to reduce millions of tons of carbon dioxide emitted annually."
+                    android:textStyle="bold" />
+            </androidx.cardview.widget.CardView>
+
+
+            <Button
+                android:layout_width="180dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="110dp"
                 android:layout_marginTop="20dp"
-                android:fontFamily="sans-serif-condensed-medium"
-                android:textColor="@color/clean_air_background"
-                android:text="Earthjustice is a registered  501(c)3 nonprofit, whose primary goal is to “End the Extraction and Burning of Fossil Fuels”. The foundation helps to keep coal, oil, and gas in the ground while supporting communities most affected by coal, oil, and gas. A significant amount of America’s and Canada's climate-polluting carbon dioxide emissions come from the burning and extraction of oil, gas, and coal. By supporting this foundation, users can help directly to offset their carbon emissions and also help to reduce millions of tons of carbon dioxide emitted annually."
+                android:backgroundTint="#d1fffc"
+                android:text="Click here to Donate"
+                android:textColor="@color/black"
+                android:textSize="16sp"
                 android:textStyle="bold" />
-        </RelativeLayout>
-
-        <Button
-            android:layout_width="200dp"
-            android:layout_height="100dp"
-            android:layout_marginStart="100dp"
-            android:layout_marginTop="20dp"
-            android:text="Click here to Donate"
-            android:bottomRightRadius="30dp"
-            android:bottomLeftRadius="30dp"
-            android:topLeftRadius="30dp"
-            android:topRightRadius="30dp"
-
-
-
-            android:background="@color/red"/>
-    </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </FrameLayout>
