@@ -42,7 +42,8 @@ public class SurveyResults extends Fragment {
 
     final String[] country = Constants.country;
     final double[] country_emissions = Constants.country_emissions;
-    String default_country = Constants.default_country;
+    //this is set to Canada just in case Firebase messes up. Really, it is fetched from Firebase.
+    String default_country = "Canada";
     double user_e = 0.0;  //total user emissions
 
     List<Double> results = new ArrayList<>();
@@ -95,7 +96,7 @@ public class SurveyResults extends Fragment {
                 total_bar.setText(msg);
                 setCategoryGraph(view, results);  //sets category graph
 
-                initComparisonGraph(view, default_country);  //initializes comparison graph
+                initComparisonGraph(view);  //initializes comparison graph
                 setUserDataComparisonGraph(view, user_e);
             }
             @Override
@@ -172,19 +173,31 @@ public class SurveyResults extends Fragment {
     /**
      * Initializes second graph (comparison of user emissions with a selected country)
      * to default country and loads spinner with list of countries
-     * @param c the default country
      */
-    private void initComparisonGraph(View view, String c) {
-        //initialize spinner to country c
-        Spinner s = view.findViewById(R.id.spinner);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
-                 android.R.layout.simple_spinner_item, country);  //used to load spinner
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        s.setAdapter(adapter);  //loads spinner
-        int init = adapter.getPosition(c);  //initializes spinner to default country
-        s.setSelection(init);  //^^
+    private void initComparisonGraph(View view) {
+        DatabaseReference countryRef = db.getReference().child("user data")
+                .child(userId).child("default_country");
 
-        setComparisonGraph(view, c);  //set UI
+        countryRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                default_country = (String) snapshot.getValue();
+
+                //initialize spinner to country c
+                Spinner s = view.findViewById(R.id.spinner);
+                ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
+                        android.R.layout.simple_spinner_item, country);  //used to load spinner
+                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                s.setAdapter(adapter);  //loads spinner
+                int init = adapter.getPosition(default_country);  //initializes spinner to default country
+                s.setSelection(init);  //^^
+
+                setComparisonGraph(view, default_country);  //set UI
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
     }
 
 
