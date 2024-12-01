@@ -66,5 +66,6 @@ dependencies {
     implementation(libs.play.services.auth)
     testImplementation(libs.mockito)
     implementation("com.stripe:stripe-android:21.2.0")
+    implementation ("com.google.code.gson:gson:2.8.8")
 
 }

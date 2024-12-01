@@ -10,9 +10,13 @@ import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
 import static utilities.Constants.HIDE_TREND_LINE_POINTS;
 import static utilities.Constants.STAY_LOGGED_ON;
 
+import android.app.Activity;
+import android.widget.Toast;
+
 import androidx.activity.result.ActivityResult;
 import androidx.annotation.NonNull;
 
+import com.example.planetze.ResendConfirmFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
@@ -40,55 +44,85 @@ public class LoginModel {
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance(FIREBASE_LINK);
         userRef = db.getReference("user data");
+        //addUserstoDatabase();
     }
 
     public void loginUser(String email, String password, LoginPresenter presenter) {
 
-        auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = auth.getCurrentUser();
-                            String userID = user.getUid().toString().trim();
-                            if (user.isEmailVerified()) {
-                                UserData.login(presenter.getViewContext(),userID);
-                                takeToHomePage(presenter);
-                            }
-                            else {
-                                presenter.setMessage("Account needs to be verified");
-                            }
-
-                        } else {
-                            presenter.setMessage("Invalid email or password");
-
-                        }
+        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    FirebaseUser user = auth.getCurrentUser();
+                    String userID = user.getUid().toString().trim();
+                    if (user.isEmailVerified()) {
+                        UserData.login(presenter.getViewContext(), userID, password);
+                        takeToHomePage(presenter);
+                    } else {
+                        presenter.setMessage("Account needs to be verified");
+                        auth.signOut();
                     }
-                });
 
-
+                } else {
+                    presenter.setMessage("Invalid email or password");
+                }
+            }
+        });
     }
+
+    private void addUsertoDatabase(LoginPresenter presenter) {
+        DatabaseReference unverifiedRef = db.getReference("unverified users");
+        unverifiedRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                DataSnapshot users = task.getResult();
+                for(DataSnapshot user:users.getChildren()) {
+                    if (user.hasChild("email")) {
+                        String email = user.child("email").getValue().toString().trim();
+                        String name = user.child("name").getValue().toString().trim();
+                        String userID = auth.getCurrentUser().getUid().toString().trim();
+                        if (email.equals(UserData.getEmail(presenter.getViewContext()))) {
+                            unverifiedRef.child(userID).removeValue();
+                            UserData.setDefaultSettings(userID, email, name);
+                            break;
+                        }
+
+                    }
+
+                }
+
+            }
+        });
+    }
+
 
     private void takeToHomePage(LoginPresenter presenter) {
         UserData.initialize(presenter.getViewContext());
         userRef.get().addOnCompleteListener(task -> {
             DataSnapshot users = task.getResult();
             String userID = UserData.getUserID(presenter.getViewContext());
-            for(DataSnapshot user:users.getChildren()) {
-                Object inu = user.child("is_new_user").getValue();
-                boolean cond1 = user.getKey().toString().trim().equals(userID);
-                boolean cond2 = inu != null && inu.toString().equals("true");
+            if (users.hasChild(UserData.getUserID(presenter.getViewContext()))) {
+                for(DataSnapshot user:users.getChildren()) {
+                    Object inu = user.child("is_new_user").getValue();
+                    boolean cond1 = user.getKey().toString().trim().equals(userID);
+                    boolean cond2 = inu != null && inu.toString().equals("true");
 
-                if (cond1 && cond2) {
-                    presenter.takeToSurvey();
-                    break;
-                }
-                else if (cond1) {
-                    presenter.takeToHub();
-                    break;
-                }
+                    if (cond1 && cond2) {
+                        presenter.takeToSurvey();
+                        break;
+                    }
+                    else if (cond1) {
+                        presenter.takeToHub();
+                        break;
+                    }
 
+                }
             }
+            else {
+                addUsertoDatabase(presenter);
+                presenter.takeToSurvey();
+            }
+
         });
 
 
@@ -119,7 +153,9 @@ public class LoginModel {
         }
     }
 
-    private void setDefaultSettings(String userID) {
+    private void setDefaultSettings(String userID, String email, String name) {
+        userRef.child(userID+"/email").setValue(email);
+        userRef.child(userID+"/name").setValue(name);
         userRef.child(userID+"/is_new_user").setValue(true);
         userRef.child(userID+"/settings/"+STAY_LOGGED_ON).setValue(false);
         userRef.child(userID+"/settings/"+INTERPOLATE_EMISSIONS_DATA).setValue(false);
@@ -133,7 +169,8 @@ public class LoginModel {
         userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                UserData.login(presenter.getViewContext(), auth.getCurrentUser().getUid());
+
+                UserData.googleLogin(presenter.getViewContext(), auth.getCurrentUser().getUid());
                 UserData.initialize(presenter.getViewContext());
                 DataSnapshot users = task.getResult();
                 boolean equalsEmail = false;
@@ -150,43 +187,21 @@ public class LoginModel {
 
                 if (!equalsEmail) {
                     String id = auth.getCurrentUser().getUid();
-                    userRef.child(id+"/name").setValue(auth.getCurrentUser().getDisplayName());
-                    userRef.child(id+"/email").setValue(auth.getCurrentUser().getEmail());
-                    setDefaultSettings(id);
+                    String email = auth.getCurrentUser().getDisplayName();
+                    String name = auth.getCurrentUser().getEmail();
+                    setDefaultSettings(id,email, name);
                     presenter.takeToSurvey();
                 }
                 else {
-                    isNewUser(presenter);
+                    takeToHomePage(presenter);
                 }
 
             }
         });
     }
 
-    private void isNewUser(LoginPresenter presenter) {
-        userRef.get().addOnCompleteListener(task -> {
-            DataSnapshot users = task.getResult();
-            String userID = auth.getCurrentUser().getUid();
-            for(DataSnapshot user:users.getChildren()) {
-                Object inu = user.child("is_new_user").getValue();
-                boolean cond1 = user.getKey().toString().trim().equals(userID);
-                boolean cond2 = inu != null && inu.toString().equals("true");
-
-                if (cond1 && cond2) {
-                    presenter.takeToSurvey();
-                    break;
-                }
-                else if (cond1) {
-                    presenter.takeToHub();
-                    break;
-                }
-
-            }
-        });
-    }
 
 }
 
-//put testing tickets at sprint 3
 
 

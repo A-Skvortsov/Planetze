@@ -72,6 +72,7 @@ public class LoginView extends Fragment  {
 
         presenter.setMessage(" ");
         presenter.setSignUpLauncher();
+        UserData.logout(getViewContext());
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override

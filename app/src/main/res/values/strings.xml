@@ -45,13 +45,12 @@
     <string name="eco_gauge">Eco Gauge</string>
     <string name="eco_balance">Eco Balance</string>
     <string name="eco_hub">Eco Hub</string>
+    <string name="eco_tracker">Eco Tracker</string>
 
     <string name="ecogauge">EcoGauge</string>
     <string name="ecotracker">EcoTracker</string>
     <string name="ecobalance">EcoBalance</string>
     <string name="ecohub">EcoHub</string>
-
-
 
     <string name="next">Next</string>
     <string name="previous">Previous</string>
@@ -114,6 +113,7 @@
     <string name="this_will_increase_eco_gauge_loading_times">
          This will increase Eco Gauge loading times
     </string>
+    <string name="change_name"><u>Change Name</u></string>
     <string name="stay_logged_in">Stay logged in</string>
     <string name="hide_trend_line_points">Hide trend line points</string>
     <string name="hide_chart_grid_lines">Hide chart grid line</string>

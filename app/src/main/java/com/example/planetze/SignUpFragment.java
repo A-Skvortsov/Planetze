@@ -42,6 +42,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -67,10 +68,11 @@ public class SignUpFragment extends Fragment {
     ActivityResultLauncher<Intent> launcher;
     private Button googleSignUp;
 
+    private final String PASSKEY = "4RK2a3WlICVwoQ5yUGSjpsQ0ysc2";
+
     public SignUpFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -89,6 +91,7 @@ public class SignUpFragment extends Fragment {
         signinLink = view.findViewById(R.id.signInLink);
         googleSignUp = view.findViewById(R.id.signUpWithGoogleButton);
 
+        UserData.addUserstoDatabase();
 
         Activity activity = getActivity();
         setSignUpLauncher();
@@ -106,8 +109,7 @@ public class SignUpFragment extends Fragment {
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createAccount();
-
+                signup();
             }
         });
 
@@ -230,7 +232,7 @@ public class SignUpFragment extends Fragment {
         return true;
     }
 
-    private void createAccount() {
+    private void signup() {
 
         userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
@@ -246,6 +248,7 @@ public class SignUpFragment extends Fragment {
                     DataSnapshot users = task.getResult();
                     for(DataSnapshot user:users.getChildren()) {
                         String currentemail = " ";
+
                         if (user.hasChild("email")) {
                             currentemail = user.child("email").getValue(String.class).toString().trim();
                         }
@@ -259,12 +262,72 @@ public class SignUpFragment extends Fragment {
                     setMessage("Email already accociated with an account");
                 }
                 else if (notEmpty(email, name) && validPass(pass,confirm_pass, name)){
-                    createAccountOnFirebase(email, pass, name);
+                    createAccount();
                 }
-
 
             }
         });
+
+    }
+
+    private void createAccount() {
+        DatabaseReference unverifiedRef = db.getReference("unverified users");
+
+        unverifiedRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                String email = signupEmail.getText().toString().trim();
+                String pass = signupPassword.getText().toString().trim();
+                String name = fullName.getText().toString().trim();
+
+                boolean equalsEmail = false;
+                String oldPassword = "";
+
+                DataSnapshot users = task.getResult();
+                for(DataSnapshot user:users.getChildren()) {
+                    String currentemail = " ";
+
+                    if (user.hasChild("email")) {
+                        currentemail = user.child("email").getValue(String.class).toString().trim();
+                    }
+
+                    if (currentemail.equals(email)) {
+                        equalsEmail = true;
+                        oldPassword = user.child("password").getValue(String.class).toString().trim();
+                        break;
+                    }
+
+                }
+                if (equalsEmail) {
+                    recreateAccount(oldPassword);
+                }
+                else {
+                    createAccountOnFirebase(email, pass, name);
+                }
+            }
+        });
+    }
+
+    private void recreateAccount(String oldPassword) {
+        DatabaseReference unverifiedRef = db.getReference("unverified users");
+        String email = signupEmail.getText().toString().trim();
+        String password = signupPassword.getText().toString().trim();
+        String name = fullName.getText().toString().trim();
+
+        auth.signInWithEmailAndPassword(email, oldPassword)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = auth.getCurrentUser();
+                            String userID = user.getUid().toString().trim();
+                            unverifiedRef.child(userID).removeValue();
+                            initialize(userID, email, password, name);
+                            user.updatePassword(password);
+                            sendVerification();
+                        }
+                    }
+                });
 
     }
 
@@ -278,20 +341,8 @@ public class SignUpFragment extends Fragment {
                         if (task.isSuccessful()) {
 
                             String id = auth.getCurrentUser().getUid();
-                            userRef.child(id+"/name").setValue(name);
-                            userRef.child(id+"/email").setValue(email);
-                            setDefaultSettings(id);
-
-                            auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-
-                                    if (!task.isSuccessful()) {
-                                        Toast.makeText(activity, "there was an error in sending verification email", Toast.LENGTH_LONG).show();
-                                    }
-                                    loadFragment(new ResendConfirmFragment());
-                                }
-                            });
+                            initialize(id, email, pass, name);
+                            sendVerification();
 
                         } else {
                             Toast.makeText(activity, "Signup Failed please try again", Toast.LENGTH_SHORT).show();
@@ -300,13 +351,25 @@ public class SignUpFragment extends Fragment {
                 });
     }
 
-    private void setDefaultSettings(String userID) {
-        userRef.child(userID+"/is_new_user").setValue(true);
-        userRef.child(userID+"/settings/"+STAY_LOGGED_ON).setValue(false);
-        userRef.child(userID+"/settings/"+INTERPOLATE_EMISSIONS_DATA).setValue(false);
-        userRef.child(userID+"/settings/"+ HIDE_TREND_LINE_POINTS).setValue(false);
-        userRef.child(userID+"/settings/"+HIDE_GRID_LINES).setValue(false);
-        userRef.child(userID+"/calendar/0000-00-00/0").setValue(0);
+    private void sendVerification() {
+        Activity activity = getActivity();
+        auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(activity, "there was an error in sending verification email", Toast.LENGTH_LONG).show();
+                }
+                loadFragment(new ResendConfirmFragment());
+            }
+        });
+    }
+
+    private void initialize(String userID, String email, String password, String name) {
+        DatabaseReference unverifiedRef = db.getReference("unverified users");
+
+        unverifiedRef.child(userID+"/email").setValue(email);
+        unverifiedRef.child(userID+"/password").setValue(password);
+        unverifiedRef.child(userID+"/name").setValue(name);
 
     }
 
@@ -349,7 +412,7 @@ public class SignUpFragment extends Fragment {
         userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                UserData.login(requireContext(),auth.getCurrentUser().getUid());
+                UserData.googleLogin(requireContext(),auth.getCurrentUser().getUid());
                 UserData.initialize(getContext());
                 DataSnapshot users = task.getResult();
                 boolean equalsEmail = false;
@@ -366,9 +429,9 @@ public class SignUpFragment extends Fragment {
 
                 if (!equalsEmail) {
                     String id = auth.getCurrentUser().getUid();
-                    userRef.child(id+"/name").setValue(auth.getCurrentUser().getDisplayName());
-                    userRef.child(id+"/email").setValue(auth.getCurrentUser().getEmail());
-                    setDefaultSettings(id);
+                    String email = auth.getCurrentUser().getDisplayName();
+                    String name = auth.getCurrentUser().getEmail();
+                    UserData.setDefaultSettings(id,email, name);
                     loadFragment(new SurveyFragment());
                 }
                 else {
