@@ -45,6 +45,11 @@ public class SurveyResults extends Fragment {
     double user_e = 0.0;  //total user emissions
 
     List<Double> results = new ArrayList<>();
+    private boolean returnToEcoTracker = false;
+
+    public SurveyResults(boolean b) {
+        returnToEcoTracker = b;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,7 +60,10 @@ public class SurveyResults extends Fragment {
             return insets;
         });
 
-        initHomeBtn(view);
+        Button homeBtn = view.findViewById(R.id.homeBtn);
+        //for if we arrive from ecoTracker
+        if (returnToEcoTracker) initHomeBtn(view, 1);
+        else initHomeBtn(view, 0);
 
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         userId = UserData.getUserID(getContext());
@@ -238,19 +246,30 @@ public class SurveyResults extends Fragment {
     }
 
 
-    public void initHomeBtn(View view) {
+    public void initHomeBtn(View view, int i) {
         Button homeBtn = view.findViewById(R.id.homeBtn);
 
-        homeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), HomeActivity.class);
+        if (i == 0) {
+            homeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), HomeActivity.class);
 
-                // Prevent the user from being able to navigate back the login page using the return action.
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            }
-        });
+                    // Prevent the user from being able to navigate back the login page using the return action.
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            String s = "Return";
+            homeBtn.setText(s);
+            homeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getParentFragmentManager().popBackStack();
+                }
+            });
+        }
     }
 
 

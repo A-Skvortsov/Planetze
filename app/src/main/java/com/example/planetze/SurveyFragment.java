@@ -116,7 +116,8 @@ public class SurveyFragment extends Fragment {
 
                     userRef.child("is_new_user").setValue(false);
 
-                    loadFragment(new SurveyResults());
+                    //"false" makes it so that pressing home button on survey results goes to app homepage
+                    loadFragment(new SurveyResults(false));
                     return;
                 }
                 if (questions[current_q][0].equals("-")) {  //iter'n to next category if necessary
