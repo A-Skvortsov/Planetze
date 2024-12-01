@@ -46,7 +46,7 @@ public class AddHabit extends Fragment {
     private final String[] categories = Constants.categories;
     private final String[] impacts = Constants.impacts;
     FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-    private String userId;
+    private static String userId;
     private HashMap<String, Object> calendar;
     List<List<String>> allHabits;
     List<List<String>> currentHabits;
@@ -344,6 +344,7 @@ public class AddHabit extends Fragment {
                 Spinner impactSpinner = globalView.findViewById(R.id.impactSpinner);
                 impactSpinner.setSelection(0);
 
+                getEmissionsSnapshot(userId);
                 //resets displayed habits list to recommended habits
                 computeRecommendedHabits();
                 displayRecommendedHabitsTexts(true);
@@ -576,8 +577,8 @@ public class AddHabit extends Fragment {
 
 
     //HELPER/MISCELLANEOUS FUNCTIONS BELOW
-    private UserEmissionsData userEmissionsData;
-    private List<EmissionNodeCollection> listOfEmissionNodeCollections;
+    private static UserEmissionsData userEmissionsData;
+    private static List<EmissionNodeCollection> listOfEmissionNodeCollections = new ArrayList<>();
 
     /**
      *
@@ -586,28 +587,15 @@ public class AddHabit extends Fragment {
      * for the user
      */
     private String[] getOrderOfHighestEmissions() {
-        listOfEmissionNodeCollections = new ArrayList<>();
-        userEmissionsData = new UserEmissionsData(userId, false,
-                new UserEmissionsData.DataReadyListener() {
-                    @Override
-                    public void start(){}
-                    @Override
-                    public void onDataReady(){
-                        listOfEmissionNodeCollections = userEmissionsData.getUserEmissionsData(30);
-                    }
-                    @Override
-                    public void onError(String s){}
-                });
-
-
         //note: activities have categories transportation, food, energy, consumption
         //habits have categories transportation, food, housing, consumption
         double[] emissionsPerType = new double[4];
+        System.out.println(listOfEmissionNodeCollections.size());
         for (int i = 0; i < listOfEmissionNodeCollections.size(); i++) {  //for each EmissionNodeCollection
             List<EmissionNode> listOfEmissionNodes = listOfEmissionNodeCollections.get(i).getData();
             for (int j = 0; j < listOfEmissionNodes.size(); j++) {  //for each EmissionNode
-                double amount = listOfEmissionNodes.get(i).getEmissionsAmount();  //gets amount of the EmissionNode
-                switch (listOfEmissionNodes.get(i).getEmissionType()) {
+                double amount = listOfEmissionNodes.get(j).getEmissionsAmount();  //gets amount of the EmissionNode
+                switch (listOfEmissionNodes.get(j).getEmissionType()) {
                     case "Transportation":
                         emissionsPerType[0] += amount; break;
                     case "Food":
@@ -632,6 +620,20 @@ public class AddHabit extends Fragment {
         }
 
         return sortedTypes;
+    }
+
+    public static void getEmissionsSnapshot(String userId) {
+        userEmissionsData = new UserEmissionsData(userId, false,
+                new UserEmissionsData.DataReadyListener() {
+                    @Override
+                    public void start(){}
+                    @Override
+                    public void onDataReady(){
+                        listOfEmissionNodeCollections = userEmissionsData.getUserEmissionsData(30);
+                    }
+                    @Override
+                    public void onError(String s){}
+                });
     }
 
 
