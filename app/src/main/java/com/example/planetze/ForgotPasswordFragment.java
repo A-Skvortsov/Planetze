@@ -1,5 +1,7 @@
 package com.example.planetze;
 
+import static utilities.Constants.USER_DATA;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -101,7 +103,7 @@ public class ForgotPasswordFragment extends Fragment {
         emailArray = new ArrayList<String>();
 
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-        userRef = db.getReference("user data");
+        userRef = db.getReference(USER_DATA);
 
 
         login.setOnClickListener(new View.OnClickListener() {

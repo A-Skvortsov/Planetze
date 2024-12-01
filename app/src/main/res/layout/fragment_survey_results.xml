@@ -11,18 +11,17 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="64dp"
+            android:layout_marginTop="20dp"
             android:gravity="center_horizontal"
             android:text="My Annual Carbon Footprint"
             android:textColor="@color/white"
-            android:textSize="26dp"
-
+            android:textSize="26sp"
             android:textStyle="bold|italic"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
@@ -31,22 +30,20 @@
 
 
         <!-- Second graph -->
-
         <androidx.cardview.widget.CardView
             android:id="@+id/trend_graph_card"
             android:layout_width="361dp"
             android:layout_height="188dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="40dp"
             android:background="@color/white"
             android:clickable="true"
             android:contentDescription="@string/emission_breakdown_by_category"
-            android:elevation="-1dp"
+            android:elevation="8dp"
             android:focusable="true"
             app:cardCornerRadius="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/total_bar">
-
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/graph1_constraint"
@@ -60,7 +57,6 @@
                 app:layout_constraintTop_toTopOf="@+id/trend_graph_card">
 
                 <!-- labels -->
-
                 <TextView
                     android:id="@+id/transport_label"
                     android:layout_width="wrap_content"
@@ -70,7 +66,7 @@
                     android:layout_marginTop="16dp"
                     android:gravity="center_vertical"
                     android:text="Transportation"
-                    android:textSize="10dp"
+                    android:textSize="11sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -83,7 +79,7 @@
 
                     android:gravity="center_vertical"
                     android:text="Food"
-                    android:textSize="10dp"
+                    android:textSize="11sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/transport_label" />
 
@@ -96,7 +92,7 @@
 
                     android:gravity="center_vertical"
                     android:text="Housing"
-                    android:textSize="10dp"
+                    android:textSize="11sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/food_label" />
 
@@ -109,7 +105,7 @@
 
                     android:gravity="center_vertical"
                     android:text="Consumption"
-                    android:textSize="10dp"
+                    android:textSize="11dp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/housing_label" />
 
@@ -132,8 +128,7 @@
                     android:gravity="center"
                     android:text="0"
                     android:textColor="@color/palette_light_gray"
-                    android:textSize="10dp"
-
+                    android:textSize="11sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/transport" />
 
@@ -147,7 +142,7 @@
                     android:gravity="center"
                     android:text="0"
                     android:textColor="@color/palette_light_gray"
-                    android:textSize="10dp"
+                    android:textSize="11sp"
 
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/food" />
@@ -248,10 +243,10 @@
             android:id="@+id/bycategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:text="Breakdown by Category (tons):"
             android:textColor="@color/white"
-            android:textSize="15dp"
+            android:layout_marginBottom="5dp"
+            android:textSize="15sp"
             android:textStyle="italic"
             app:layout_constraintBottom_toTopOf="@+id/trend_graph_card"
             app:layout_constraintStart_toStartOf="@+id/trend_graph_card" />
@@ -260,7 +255,6 @@
             android:id="@+id/select_country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_marginBottom="16dp"
             android:text="Comparing with:"
             android:textColor="@color/white"
@@ -271,8 +265,7 @@
         <Spinner
             android:id="@+id/spinner"
             android:layout_width="227dp"
-            android:layout_height="30dp"
-
+            android:layout_height="22dp"
             android:layout_marginBottom="16dp"
             android:background="@color/white"
             android:textAlignment="center"
@@ -283,7 +276,6 @@
             android:id="@+id/title2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_marginBottom="8dp"
             android:text="Comparison by Country"
             android:textColor="@color/white"
@@ -295,28 +287,15 @@
 
         <TextView
             android:id="@+id/total_bar"
-            android:layout_width="254dp"
-            android:layout_height="27dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/white"
-            android:gravity="center"
-            android:text="502.2 tons of CO2 emitted annually"
-            android:textColor="@color/palette_black"
-            app:layout_constraintStart_toEndOf="@+id/total"
-
-            app:layout_constraintTop_toBottomOf="@+id/title" />
-
-        <TextView
-            android:id="@+id/total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:layout_marginStart="64dp"
+            android:layout_marginStart="4dp"
             android:layout_marginTop="20dp"
-            android:text="Total:"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:text="502.2 tons of CO2 emitted annually"
             android:textColor="@color/white"
-            android:textSize="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title" />
 
@@ -324,11 +303,11 @@
             android:id="@+id/trend1graph_card"
             android:layout_width="357dp"
             android:layout_height="173dp"
-            android:layout_marginTop="104dp"
+            android:layout_marginTop="85dp"
             android:background="@color/white"
             android:clickable="true"
             android:contentDescription="@string/emission_breakdown_by_category"
-            android:elevation="-1dp"
+            android:elevation="8dp"
             android:focusable="true"
             app:cardCornerRadius="10dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -494,9 +473,8 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
             android:text="Home"
+            android:layout_margin="10dp"
             android:textColor="@color/palette_black"
-            tools:layout_editor_absoluteX="296dp"
-            tools:layout_editor_absoluteY="861dp"
             app:layout_constraintTop_toBottomOf="@id/extraInfo"
             app:layout_constraintEnd_toEndOf="@+id/extraInfo"/>
 
@@ -505,10 +483,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
-            android:text="Retake Survey"
+            android:text="Retake"
+            android:layout_margin="10dp"
             android:textColor="@color/palette_black"
-            tools:layout_editor_absoluteX="27dp"
-            tools:layout_editor_absoluteY="861dp"
             app:layout_constraintTop_toBottomOf="@id/extraInfo"
             app:layout_constraintStart_toStartOf="@+id/extraInfo"/>
 
@@ -516,14 +493,21 @@
             android:id="@+id/stats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:text="Statistics:"
             android:textColor="@color/white"
             android:textSize="15dp"
             android:textStyle="italic"
-            tools:layout_editor_absoluteX="40dp"
-            tools:layout_editor_absoluteY="691dp"
             app:layout_constraintBottom_toTopOf="@id/extraInfo"
             app:layout_constraintStart_toStartOf="@id/extraInfo"/>
 
+        <View
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            app:layout_constraintTop_toBottomOf="@id/extraInfo"
+            app:layout_constraintBottom_toBottomOf="parent">
+        </View>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

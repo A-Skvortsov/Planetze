@@ -1,5 +1,7 @@
 package com.example.planetze;
 
+import static utilities.Constants.USER_DATA;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -159,7 +161,7 @@ public class SurveyFragment extends Fragment {
         //firebase stuff used to store what car uses drives by default (needed for "Drive personal
         //vehicle" activity in EcoTracker)
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-        DatabaseReference userRef = db.getReference("user data")
+        DatabaseReference userRef = db.getReference(USER_DATA)
                 .child(userId);
         Map<String, Object> c = new HashMap<>();
 
@@ -407,7 +409,7 @@ public class SurveyFragment extends Fragment {
                         list.add(co2PerCategory[i]);
                     }
 
-                    DatabaseReference userRef = db.getReference("user data")
+                    DatabaseReference userRef = db.getReference(USER_DATA)
                             .child(userId);
                     //send survey results to firebase as Map<String, List<Double>>
                     Map<String, Object> c = new HashMap<>();
@@ -458,7 +460,7 @@ public class SurveyFragment extends Fragment {
      */
     private void saveDefaultCountry(int btnId) {
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-        DatabaseReference userRef = db.getReference("user data")
+        DatabaseReference userRef = db.getReference(USER_DATA)
                 .child(userId);
         Map<String, Object> c = new HashMap<>();
         c.put("default_country", questions[0][btnId + 1]);

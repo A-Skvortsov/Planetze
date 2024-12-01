@@ -11,6 +11,7 @@ import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
 import static utilities.Constants.HIDE_TREND_LINE_POINTS;
 import static utilities.Constants.STAY_LOGGED_ON;
+import static utilities.Constants.USER_DATA;
 import static utilities.Constants.USERNAME;
 
 import android.content.Context;
@@ -87,7 +88,7 @@ public class UserData {
 
     private static void retrieveSetting(Context context, String setting) {
         FirebaseDatabase db = FirebaseDatabase.getInstance(FIREBASE_LINK);
-        DatabaseReference userRef = db.getReference("user data");
+        DatabaseReference userRef = db.getReference(USER_DATA);
 
         userRef.get().addOnCompleteListener(task -> {
             DataSnapshot users = task.getResult();
@@ -132,7 +133,7 @@ public class UserData {
 
     public static void deleteAccount(Context context) {
         FirebaseDatabase db = FirebaseDatabase.getInstance(FIREBASE_LINK);
-        DatabaseReference userRef = db.getReference("user data");
+        DatabaseReference userRef = db.getReference(USER_DATA);
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
@@ -143,7 +144,7 @@ public class UserData {
 
         auth.getCurrentUser().delete();
         auth.signOut();
-        
+
         userRef.child(UserData.getUserID(context)).removeValue();
         UserData.logout(context);
     }
@@ -185,7 +186,7 @@ public class UserData {
 
     public static void setDefaultSettings(String userID, String email, String name) {
         FirebaseDatabase db = FirebaseDatabase.getInstance(FIREBASE_LINK);
-        DatabaseReference userRef = db.getReference("user data");
+        DatabaseReference userRef = db.getReference(USER_DATA);
 
         userRef.child(userID+"/email").setValue(email);
         userRef.child(userID+"/name").setValue(name);
@@ -195,7 +196,6 @@ public class UserData {
         userRef.child(userID+"/settings/"+ HIDE_TREND_LINE_POINTS).setValue(false);
         userRef.child(userID+"/settings/"+HIDE_GRID_LINES).setValue(false);
         userRef.child(userID+"/calendar/0000-00-00/0").setValue(0);
-
     }
 
     public static String getData(Context context, String dataName) {
@@ -232,6 +232,4 @@ public class UserData {
         e.putString(dataName, data);
         e.apply();
     }
-
-
 }
