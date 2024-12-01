@@ -56,10 +56,11 @@
     <string name="previous">Previous</string>
     <string name="home">Home</string>
 
-    <string name="para1">Regardless of how your carbon emission, we can all contribute to helping reduce carbonmissoin.
-    We understand it is at times difficult to neutralize emission, that we cannot control through sustainable behaviors habits.
-
-We have provided offset emission  projects, which can help offset you carbon emission. Through purchasing carbon credits.
+    <string name="intro">You Carbon Emission is:</string>
+    <string name="idk">.?.</string>
+    <string name="title">Eco Balance</string>
+    <string name="para1">Regardless of your carbon emission, we can all contribute to helping reduce carbon emission.
+    We understand it is at times difficult to neutralize emission, and at times we cannot control it. We have provided offset emission projects, which can help offset you carbon emission, through purchasing carbon credits.
     </string>
 
     <!-- EcoGauge strings -->
@@ -82,19 +83,48 @@ We have provided offset emission  projects, which can help offset you carbon emi
     <string name="add_item">Add Item</string>
     <string name="back">Back</string>
 
-    <string name="hlink1">hlink1</string>
-    <string name="hlink2">hlink2</string>
+    <string name="hlink1">
+        <a href="https://natural-resources.canada.ca/energy-efficiency/products/appliances-for-residential-use/clothes-dryers/13696"> - Clothes Dryer\n</a>
+        <a href="https://natural-resources.canada.ca/energy-efficiency/products/appliances-for-residential-use/freezers/13995">- Freezer\n</a>
+        <a href="https://natural-resources.canada.ca/energy-efficiency/products/cooling-and-ventilating-equipment-for-residential-use/central-air-conditioners/16183">- Air Condition\n</a>
+        <a href="https://natural-resources.canada.ca/energy-efficiency/products/appliances-for-residential-use/air-purifiers/14001">- Air purifiers\n</a>
+        <a href="https://natural-resources.canada.ca/energy-efficiency/products/appliances-for-residential-use/dishwashers/13991">- Dishwasher\n</a>
+        <a href="https://natural-resources.canada.ca/energy-efficiency/products/appliances-for-residential-use/refrigerators/13999">- Refrigerators\n</a>
+        <a href="https://natural-resources.canada.ca/energy-efficiency/energy-star-canada/energy-star-products/list-energy-star-certified-products/residential-electric-cooking-products/26135">- Electrical Cooking\n</a>
+    </string>
+    <string name="hlink2">
+
+        <a href="https://natural-resources.canada.ca/energy-efficiency/products/appliances-for-residential-use/clothes-dryers/13696"> - Eileen Fisher\n</a>
+        <a href="https://www.patagonia.com/shop/womens?irclickid=Uj%3AScNWaUxyKTfzR62zwD29ZUkCVybWNrXSGQw0&amp;sharedid=&amp;irpid=274622&amp;iradid=1948563&amp;utm_source=The%20Good%20Trade%E2%80%8A&amp;utm_medium=affiliate&amp;utm_content=%22Content%22&amp;irgwc=1">- Patagonia\n</a>
+        <a href="https://www.tentree.ca/">- tentree\n</a>
+        <a href="https://www.taylorstitch.com/?clickid=Uj%3AScNWaUxyKTfzR62zwD29ZUkCVyYSxrXSGQw0&amp;irgwc=1&amp;utm_medium=affiliate&amp;utm_source=ir&amp;iradid=451752&amp;iradname=Online%20Tracking%20Link&amp;prodsku=&amp;mpname=The%20Good%20Trade%E2%80%8A&amp;mpid=274622&amp;utm_campaign=The%20Good%20Trade%E2%80%8A">- Taylor Stitch\n</a>
+        <a href="https://wearpact.com/men/apparel?utm_source=147620&amp;utm_medium=affiliate&amp;utm_campaign=MAID1144&amp;utm_content=147620&amp;pjclkid=4930688027&amp;clickId=4930688027">- Pact\n</a>
+        <a href="https://www.buckmason.com/?sscid=b1k8_1au2n9&amp;g=men">- Buck Mason\n</a>
+        <a href="https://www.on.com/en-us/shop/womens/shoes?clickref=1011lzYwVdBJ&amp;utm_source=Partnerize&amp;utm_medium=affiliate&amp;utm_campaign=thegoodtrade&amp;utm_content=AMR-CA">- On\n</a>
+
+
+
+
+
+    </string>
 
     <!-- Settings page -->
     <string name="settings">Settings</string>
-    <string name="show_trend_line_points">Show trend line points</string>
-    <string name="hide_chart_grid_lines">Hide chart grid line</string>
     <string name="this_will_increase_eco_gauge_loading_times">
          This will increase Eco Gauge loading times
     </string>
     <string name="change_name"><u>Change Name</u></string>
     <string name="stay_logged_in">Stay logged in</string>
-    <string name="log_out">Log out</string>
     <string name="hide_trend_line_points">Hide trend line points</string>
+    <string name="hide_chart_grid_lines">Hide chart grid line</string>
     <string name="interpolate_data">Interpolate data</string>
+    <string name="log_out">Log out</string>
+    <string name="lk1"> <a href="https://treecanada.ca/donate"> Click here to Donate  </a></string>
+    <string name="lk2"> <a href="https://treecanada.ca/donate-ngp-individual/"> Click here to Donate  </a></string>
+    <string name="lk3"> <a href="https://donate.givepower.org/donate-now"> Click here to Donate  </a></string>
+    <string name="lk4"> <a href="https://www.torontoenvironment.org/donate"> Click here to Donate  </a></string>
+    <string name="lk5"> <a href="https://trees.org/"> Click here to Donate  </a></string>
+    <string name="lk6"> <a href="https://act.earthjustice.org/a/givetoday?ms=web_menu_header"> Click here to Donate  </a></string>
+    <string name="delete_account">Delete Account</string>
+    <string name="getStartedSurveyPrompt">Let\'s get started! We will calculate your current carbon footprint based on your lifestyle. You only need to do this survey once.</string>
 </resources>

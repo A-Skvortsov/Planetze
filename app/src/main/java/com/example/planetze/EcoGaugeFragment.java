@@ -99,9 +99,8 @@ public class EcoGaugeFragment extends Fragment
 
     private String userId;
     private boolean interpolate;
-    // TODO: Source this from the database
     private boolean hideTrendLinePoints;
-    private boolean hideGridLines = false;
+    private boolean hideGridLines;
 
 
     @Override
@@ -127,7 +126,7 @@ public class EcoGaugeFragment extends Fragment
 
         this.comparisonSpinner = view.findViewById(R.id.spinner);
         this.loadingIndicator = view.findViewById(R.id.loading_bar);
-        this.timePeriod = OVERALL;
+        this.timePeriod = MONTHLY;
 
         this.countryEmissions = new CountryEmissionsData(requireContext());
 
@@ -310,6 +309,11 @@ public class EcoGaugeFragment extends Fragment
         List<EmissionNodeCollection> emissionNodeCollections
                 = userEmissionsData.getUserEmissionsData(timePeriod);
 
+        // Stop rendering the chart if the data is null.
+        if (emissionNodeCollections == null) {
+            return;
+        }
+
         List<String> dates = new ArrayList<>();
 
         // Extract emissions data and dates
@@ -395,6 +399,11 @@ public class EcoGaugeFragment extends Fragment
         // Retrieve the dataset containing emissions data
         PieDataSet pieDataSet = getPieDataSet();
 
+        // Stop rendering the chart if the data is null.
+        if (pieDataSet == null) {
+            return;
+        }
+
         // Define a custom colour palette for the pie chart slices
         ArrayList<Integer> colors = new ArrayList<>();
         colors.add(PALETTE_TURQUOISE);
@@ -408,12 +417,21 @@ public class EcoGaugeFragment extends Fragment
         pieDataSet.setColors(colors);
         pieDataSet.setValueTextSize(12f);
 
+        // Format the value in percentage to one decimal point.
+        pieDataSet.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return Math.round(value * 10) / 10.0 + "%";
+            }
+        });
+
         // Chart configuration. See https://weeklycoding.com/mpandroidchart-documentation/
         categoryBreakdownChart.animateXY(2000, 2000, Easing.EaseInOutExpo);
         categoryBreakdownChart.getDescription().setEnabled(false);
         categoryBreakdownChart.setData(new PieData(pieDataSet));
-        categoryBreakdownChart.setEntryLabelTextSize(12f);
         categoryBreakdownChart.setEntryLabelColor(Color.BLACK);
+        categoryBreakdownChart.setEntryLabelTextSize(12f);
+        categoryBreakdownChart.setUsePercentValues(true);
     }
 
     /**
@@ -427,6 +445,11 @@ public class EcoGaugeFragment extends Fragment
         // Retrieve data
         List<EmissionNodeCollection> emissionNodeCollections =
                 userEmissionsData.getUserEmissionsData(timePeriod);
+
+        // Return null to if the data is null.
+        if (emissionNodeCollections == null) {
+            return null;
+        }
 
         List<PieEntry> pieEntries = new ArrayList<>();
         Map<String, Float> categoryToEmissionsMap = new HashMap<>();

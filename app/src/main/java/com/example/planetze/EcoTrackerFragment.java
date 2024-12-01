@@ -122,6 +122,7 @@ public class EcoTrackerFragment extends Fragment {
                 habitsToggled = args.getBoolean("habitsToggled");
         } else {presetCalendar = 0;}
 
+        AddHabit.getEmissionsSnapshot(userId);
     }
 
     /**
@@ -141,6 +142,7 @@ public class EcoTrackerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        AddHabit.getEmissionsSnapshot(userId);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_eco_tracker, container, false);
         globalView = view;
@@ -668,7 +670,7 @@ public class EcoTrackerFragment extends Fragment {
         annualEmissionsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SurveyResults surveyResults = new SurveyResults();
+                SurveyResults surveyResults = new SurveyResults(true);
                 FragmentManager fragmentManager = getChildFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.eco_tracker, surveyResults);
