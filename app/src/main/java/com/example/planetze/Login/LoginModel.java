@@ -7,16 +7,12 @@ import static androidx.activity.result.ActivityResultCallerKt.registerForActivit
 import static utilities.Constants.FIREBASE_LINK;
 import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
-import static utilities.Constants.SHOW_TREND_LINE_POINTS;
+import static utilities.Constants.HIDE_TREND_LINE_POINTS;
 import static utilities.Constants.STAY_LOGGED_ON;
-
-import android.content.Intent;
 
 import androidx.activity.result.ActivityResult;
 import androidx.annotation.NonNull;
 
-import com.example.planetze.HomeActivity;
-import com.example.planetze.SurveyFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.common.api.ApiException;
@@ -27,6 +23,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -126,7 +123,7 @@ public class LoginModel {
         userRef.child(userID+"/is_new_user").setValue(true);
         userRef.child(userID+"/settings/"+STAY_LOGGED_ON).setValue(false);
         userRef.child(userID+"/settings/"+INTERPOLATE_EMISSIONS_DATA).setValue(false);
-        userRef.child(userID+"/settings/"+SHOW_TREND_LINE_POINTS).setValue(false);
+        userRef.child(userID+"/settings/"+ HIDE_TREND_LINE_POINTS).setValue(false);
         userRef.child(userID+"/settings/"+HIDE_GRID_LINES).setValue(false);
         userRef.child(userID+"/calendar/0000-00-00/0").setValue(0);
 

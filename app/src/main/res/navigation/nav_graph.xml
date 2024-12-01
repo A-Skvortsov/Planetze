@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/EcoGaugeFragment">
+    app:startDestination="@id/EcoTrackerFragment">
 
     <fragment
         android:id="@+id/EcoGaugeFragment"
@@ -55,9 +55,4 @@
             android:id="@+id/action_LoginView_to_EcoTrackerFragment"
             app:destination="@id/EcoTrackerFragment" />
     </fragment>
-
-    ]
-
-
-
 </navigation>

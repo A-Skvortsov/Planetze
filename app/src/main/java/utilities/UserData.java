@@ -5,7 +5,7 @@ import static java.lang.Thread.sleep;
 import static utilities.Constants.FIREBASE_LINK;
 import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
-import static utilities.Constants.SHOW_TREND_LINE_POINTS;
+import static utilities.Constants.HIDE_TREND_LINE_POINTS;
 import static utilities.Constants.STAY_LOGGED_ON;
 
 import android.content.Context;
@@ -166,7 +166,7 @@ public class UserData {
         retrieveSetting(context,STAY_LOGGED_ON);
         retrieveSetting(context,INTERPOLATE_EMISSIONS_DATA);
         retrieveSetting(context,HIDE_GRID_LINES);
-        retrieveSetting(context,SHOW_TREND_LINE_POINTS);
+        retrieveSetting(context, HIDE_TREND_LINE_POINTS);
     }
 
     public static void deleteAccount(Context context) {
