@@ -118,6 +118,7 @@ public class SettingActivity extends AppCompatActivity {
             else {
                 userRef.child(userID+"/settings/"+STAY_LOGGED_ON).setValue(false);
             }
+            UserData.initialize(getApplicationContext());
 
         });
 
@@ -130,6 +131,7 @@ public class SettingActivity extends AppCompatActivity {
             else {
                 userRef.child(userID+"/settings/"+INTERPOLATE_EMISSIONS_DATA).setValue(false);
             }
+            UserData.initialize(getApplicationContext());
 
         });
 
@@ -141,6 +143,7 @@ public class SettingActivity extends AppCompatActivity {
             else {
                 userRef.child(userID+"/settings/"+HIDE_GRID_LINES).setValue(false);
             }
+            UserData.initialize(getApplicationContext());
         });
 
 
@@ -152,6 +155,7 @@ public class SettingActivity extends AppCompatActivity {
             else {
                 userRef.child(userID+"/settings/"+ HIDE_TREND_LINE_POINTS).setValue(false);
             }
+            UserData.initialize(getApplicationContext());
         });
     }
 
