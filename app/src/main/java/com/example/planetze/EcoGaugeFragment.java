@@ -100,6 +100,11 @@ public class EcoGaugeFragment extends Fragment
     private boolean hideTrendLinePoints = false;
     private boolean hideGridLines = false;
 
+    // TODO: Source this from the database
+    private boolean interpolate = false;
+    private boolean showTrendLinePoints = false;
+    private boolean hideGridLines = false;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -3,6 +3,12 @@ package com.example.planetze;
 
 import static android.app.Activity.RESULT_OK;
 import static java.lang.Character.isLetter;
+import static utilities.Constants.FIREBASE_LINK;
+import static utilities.Constants.HIDE_GRID_LINES;
+import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
+import static utilities.Constants.SHOW_TREND_LINE_POINTS;
+import static utilities.Constants.STAY_LOGGED_ON;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,11 +62,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link SignUpFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import utilities.UserData;
+
 
 public class SignUpFragment extends Fragment {
 
@@ -71,7 +75,6 @@ public class SignUpFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-    private String errorMsg;
     private DatabaseReference userRef;
     private FirebaseDatabase db;
     ActivityResultLauncher<Intent> launcher;
@@ -81,14 +84,6 @@ public class SignUpFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static SignUpFragment newInstance(String param1, String param2) {
-        SignUpFragment fragment = new SignUpFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -118,7 +113,7 @@ public class SignUpFragment extends Fragment {
             }
         });
 
-        db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        db = FirebaseDatabase.getInstance(FIREBASE_LINK);
         userRef = db.getReference("user data");
 
         signupButton.setOnClickListener(new View.OnClickListener() {
@@ -148,6 +143,17 @@ public class SignUpFragment extends Fragment {
 
     }
 
+    private void setMessage(String msg) {
+        inputError.setText(msg);
+        if (!msg.trim().isEmpty()) {
+            inputError.setTextSize(18);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(50,20,20,20);
+            inputError.setLayoutParams(params);
+        }
+    }
+
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
@@ -161,15 +167,15 @@ public class SignUpFragment extends Fragment {
         boolean cond3 = hasSpace(password);
 
         if (!cond1) {
-            errorMsg = "Password has to be at least 7 character long";
+            setMessage("Password has to be at least 7 character long");
             return false;
         }
         else if (!cond2) {
-            errorMsg = "Password has to contains numbers";
+            setMessage("Password has to contains numbers");
             return false;
         }
         else if (cond3) {
-            errorMsg = "Password cannot contain a space";
+            setMessage("Password cannot contain a space");
             return false;
         }
 
@@ -215,11 +221,11 @@ public class SignUpFragment extends Fragment {
         boolean cond1 = name == null || name.trim().isEmpty();
         boolean cond2 = email == null ||email.trim().isEmpty();
         if (cond1) {
-            errorMsg = "Name cannot be empty";
+            setMessage("Name cannot be empty");
             return false;
         }
         else if (cond2) {
-            errorMsg = "Email cannot be empty";
+            setMessage("Email cannot be empty");
             return false;
         }
         return true;
@@ -231,7 +237,7 @@ public class SignUpFragment extends Fragment {
             return false;
         }
         else if (!cond4) {
-            errorMsg = "Confirm Password has to match with password";
+            setMessage("Confirm Password has to match with password");
             return false;
         }
         return true;
@@ -263,31 +269,20 @@ public class SignUpFragment extends Fragment {
                     }
                 }
                 if (equalsEmail && notEmpty(email, name)) {
-                    errorMsg = "Email already accociated with an account";
+                    setMessage("Email already accociated with an account");
                 }
                 else if (notEmpty(email, name) && validPass(pass,confirm_pass, name)){
                     createAccountOnFirebase(email, pass, name);
                 }
-                inputError.setText(errorMsg);
 
 
             }
         });
 
-        /*
-        else if (!cond6) {
-            //signupEmail.setError("Not a valid Email");
-            errorMsg = "Not a valid Email";
-            return false;
-        }
-
-         */
-
     }
 
     private void createAccountOnFirebase(String email, String pass, String name) {
         Activity activity = getActivity();
-        errorMsg = " ";
         auth.createUserWithEmailAndPassword(email, pass)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -298,26 +293,11 @@ public class SignUpFragment extends Fragment {
                             String id = auth.getCurrentUser().getUid();
                             userRef.child(id+"/name").setValue(name);
                             userRef.child(id+"/email").setValue(email);
-                            //userRef.child(id+"/is_new_user").setValue(true);
                             setDefaultSettings(id);
 
-                            //userRef.child(id+"/password").setValue(pass);
                             auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
-
-                                    //Toast.makeText(activity, "Signup Successful, check email for verification.", Toast.LENGTH_LONG).show();
-                                    //loadFragment(new LoginView());
-
-                                        /*
-                                        Bundle bundle = new Bundle();
-                                        bundle.putString("email", email);
-
-                                        ResendConfirmFragment frag = new ResendConfirmFragment();
-                                        frag.setArguments(bundle);
-                                        loadFragment(frag);
-
-                                         */
 
                                     if (!task.isSuccessful()) {
                                         Toast.makeText(activity, "there was an error in sending verification email", Toast.LENGTH_LONG).show();
@@ -335,8 +315,10 @@ public class SignUpFragment extends Fragment {
 
     private void setDefaultSettings(String userID) {
         userRef.child(userID+"/is_new_user").setValue(true);
-        userRef.child(userID+"/settings/stay_logged_on").setValue(false);
-        userRef.child(userID+"/settings/interpolate_emissions_data").setValue(false);
+        userRef.child(userID+"/settings/"+STAY_LOGGED_ON).setValue(false);
+        userRef.child(userID+"/settings/"+INTERPOLATE_EMISSIONS_DATA).setValue(false);
+        userRef.child(userID+"/settings/"+SHOW_TREND_LINE_POINTS).setValue(false);
+        userRef.child(userID+"/settings/"+HIDE_GRID_LINES).setValue(false);
         userRef.child(userID+"/calendar/0000-00-00/0").setValue(0);
 
     }
@@ -346,32 +328,95 @@ public class SignUpFragment extends Fragment {
                 new ActivityResultCallback<ActivityResult>() {
                     @Override
                     public void onActivityResult(ActivityResult result) {
-                        if (result.getResultCode() == RESULT_OK) {
-                            Task<GoogleSignInAccount> accountTask = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
-                            try {
-                                GoogleSignInAccount signInAccount = accountTask.getResult(ApiException.class);
-                                AuthCredential authCredential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(), null);
-                                auth.signInWithCredential(authCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (task.isSuccessful()) {
-                                            //loadFragment(new HomeFragment());
-                                            Intent intent = new Intent(getActivity(), com.example.planetze.HomeActivity.class);
-                                            startActivity(intent);
-                                        }
-                                        else {
+                        onGoogleActivityResult(result);
+                    }
+                });
+    }
 
-                                        }
-                                    }
-                                });
-
-                            } catch (ApiException e) {
-                                e.printStackTrace();
-                            }
+    public void onGoogleActivityResult(ActivityResult result) {
+        if (result.getResultCode() == RESULT_OK) {
+            Task<GoogleSignInAccount> accountTask = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+            try {
+                GoogleSignInAccount signInAccount = accountTask.getResult(ApiException.class);
+                AuthCredential authCredential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(), null);
+                auth.signInWithCredential(authCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            googleSignin();
+                        }
+                        else {
 
                         }
                     }
                 });
+
+            } catch (ApiException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
+
+    private void googleSignin() {
+        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DataSnapshot> task) {
+                UserData.login(requireContext(),auth.getCurrentUser().getUid());
+                UserData.initialize(getContext());
+                DataSnapshot users = task.getResult();
+                boolean equalsEmail = false;
+                for(DataSnapshot user:users.getChildren()) {
+                    String currentemail = " ";
+                    if (user.hasChild("email")) {
+                        currentemail = user.child("email").getValue(String.class).toString().trim();
+                    }
+                    if (currentemail.equals(auth.getCurrentUser().getEmail().trim())) {
+                        equalsEmail = true;
+                    }
+
+                }
+
+                if (!equalsEmail) {
+                    String id = auth.getCurrentUser().getUid();
+                    userRef.child(id+"/name").setValue(auth.getCurrentUser().getDisplayName());
+                    userRef.child(id+"/email").setValue(auth.getCurrentUser().getEmail());
+                    setDefaultSettings(id);
+                    loadFragment(new SurveyFragment());
+                }
+                else {
+                    isNewUser();
+                }
+
+            }
+        });
+    }
+
+    private void isNewUser() {
+        userRef.get().addOnCompleteListener(task -> {
+            DataSnapshot users = task.getResult();
+            String userID = auth.getCurrentUser().getUid();
+            for(DataSnapshot user:users.getChildren()) {
+                Object inu = user.child("is_new_user").getValue();
+                boolean cond1 = user.getKey().toString().trim().equals(userID);
+                boolean cond2 = inu != null && inu.toString().equals("true");
+
+                if (cond1 && cond2) {
+                    loadFragment(new SurveyFragment());
+                    break;
+                }
+                else if (cond1) {
+                    Intent intent = new Intent(getContext(), HomeActivity.class);
+                    // Prevent the user from being able to navigate back the login page using the return action.
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    break;
+                }
+
+            }
+        });
+    }
+
+
 
 }

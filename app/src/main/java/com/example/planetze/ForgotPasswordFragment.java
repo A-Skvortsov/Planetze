@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +49,6 @@ public class ForgotPasswordFragment extends Fragment {
     private EditText emailInput;
     private String email;
 
-    private String messagetext;
     private TextView message;
 
     private Button login, sendlink;
@@ -97,7 +97,6 @@ public class ForgotPasswordFragment extends Fragment {
         emailInput = view.findViewById(R.id.emailInput);
         message = view.findViewById(R.id.msg);
 
-        messagetext = " ";
 
         emailArray = new ArrayList<String>();
 
@@ -132,12 +131,9 @@ public class ForgotPasswordFragment extends Fragment {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    messagetext = "Password reset link sent! Please check your email";
-                    message.setText(messagetext);
-
+                    setMessage("Password reset link sent! Please check your email");
                 }else{
-                    messagetext = "There was an error in sending verification email, please try again";
-                    message.setText(messagetext);
+                    setMessage("There was an error in sending verification email, please try again");
                 }
             }
         });
@@ -149,6 +145,19 @@ public class ForgotPasswordFragment extends Fragment {
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    public void setMessage(String msg) {
+
+        message.setText(msg);
+        if (!msg.trim().isEmpty()) {
+            message.setTextSize(18);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(50,20,20,20);
+            message.setLayoutParams(params);
+        }
+
     }
 
 
@@ -172,9 +181,11 @@ public class ForgotPasswordFragment extends Fragment {
                 if (equalsEmail) {
                     sendPassResetEmail(email);
                 }
+                else if (email.trim().isEmpty()) {
+                    setMessage("Email cannot be empty");
+                }
                 else {
-                    messagetext = "There isn't an account accociated with that email";
-                    message.setText(messagetext);
+                    setMessage("There isn't an account accociated with that email");
                 }
 
 
