@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             onOpenApp();
+            //loadFragment(new LoginView());
         }
     }
 
@@ -137,6 +138,9 @@ public class MainActivity extends AppCompatActivity {
         if (isLoggedIn && !stayLoggedOn) {
             UserData.logout(getApplicationContext());
         }
-        UserData.initialize(getApplicationContext());
+        if (isLoggedIn) {
+            UserData.initialize(getApplicationContext());
+        }
+
     }
 }

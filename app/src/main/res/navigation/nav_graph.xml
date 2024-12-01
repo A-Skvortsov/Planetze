@@ -14,7 +14,7 @@
     <fragment
         android:id="@+id/EcoTrackerFragment"
         android:name="com.example.planetze.EcoTrackerFragment"
-        android:label="Eco Tracker"
+        android:label="@string/eco_tracker"
         tools:layout="@layout/fragment_eco_tracker" >
         <action
             android:id="@+id/action_EcoTrackerFragment_to_AddActivity"
@@ -38,12 +38,12 @@
     <fragment
         android:id="@+id/EcoBalanceFragment"
         android:name="com.example.planetze.EcoBalanceFragment"
-        android:label="EcoBalance"
+        android:label="@string/eco_balance"
         tools:layout="@layout/fragment_eco_balance_fragment" />
     <fragment
         android:id="@+id/EcoHubEntryFragment"
         android:name="com.example.planetze.EcoHubEntryFragment"
-        android:label="EcoHub"
+        android:label="@string/eco_hub"
         tools:layout="@layout/fragment_eco_hub_entry_" />
     <fragment
         android:id="@+id/LoginView"
