@@ -5,6 +5,8 @@ import java.util.List;
 
 public class Constants {
 
+    public static final String FIREBASE_LINK = "https://planetze-c3c95-default-rtdb.firebaseio.com/";
+
     public static final String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "June",
             "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
 
@@ -27,6 +29,13 @@ public class Constants {
     public static final int food_qs = 6;
     public static final int housing_qs = 7;
     public static final int consumption_qs = 4;
+
+    //settings
+
+    public static final String STAY_LOGGED_ON = "stay_logged_on";
+    public static final String INTERPOLATE_EMISSIONS_DATA = "interpolate_emissions_data";
+    public static final String HIDE_GRID_LINES = "hide_grid_lines";
+    public static final String SHOW_TREND_LINE_POINTS = "show_trend_line_points";
 
     // All survey questions. Each sub array is a question followed by all possible answer options
     public static final String[][] questions = {

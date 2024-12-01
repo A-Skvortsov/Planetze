@@ -37,8 +37,6 @@
         app:layout_constraintStart_toStartOf="@+id/imageView"
         app:layout_constraintTop_toTopOf="@+id/imageView" />
 
-
-
     <!-- Form Card -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
@@ -187,10 +185,9 @@
                     android:id="@+id/error"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="10dp"
-                    android:text=" "
+                    android:text=""
                     android:textColor="#FF0000"
-                    android:textSize="14sp" />
+                    android:textSize="0sp" />
 
                 <!-- Register Button -->
                 <!-- com.google.android.material.button.MaterialButton -->
