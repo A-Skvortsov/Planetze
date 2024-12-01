@@ -311,7 +311,7 @@ public class SurveyResults extends Fragment {
         TextView countryStats = view.findViewById(R.id.countryStat);
         String countryToCompare = country[index];
         double emissionsToCompare = countryEmissions[index];
-        double percentDiff = Math.round(userE / emissionsToCompare) * 100.0;
+        double percentDiff = Math.round((userE / emissionsToCompare) * 100.0);
 
         String s;
         if (percentDiff == 100)
@@ -327,7 +327,7 @@ public class SurveyResults extends Fragment {
 
     private void setGlobalTargetComparison(View view) {
         TextView globalTargetStats = view.findViewById(R.id.globalTargetStat);
-        double percentDiff = Math.round(userE / globalTarget) * 100.0;
+        double percentDiff = Math.round((userE / globalTarget) * 100.0);
 
         String s;
         if (percentDiff == 100)
