@@ -32,7 +32,7 @@ public class SurveyFragment extends Fragment {
     int current_cat = 0;  //0-transportation,1-food, 2-housing,3-consumption
     int current_q = 0;  //index of current question
     double[] co2PerCategory = {0.0, 0.0, 0.0, 0.0};
-    final String[] categories = Constants.categories;
+    final String[] categories = Constants.categories1;
     //final int total_cats = categories.length;
     final String[][] questions = Constants.questions;
     final int num_qs = size(questions);
@@ -50,13 +50,15 @@ public class SurveyFragment extends Fragment {
     int[] housing_ans = new int[num_housing_qs];
     int[] consumption_ans = new int[num_consumption_qs];
 
-    private TextView please_answer1;
-    private TextView please_answer2;
-    private Button next_btn;
-    private Button back_btn;
+    private TextView pleaseAnswer1;
+    private TextView pleaseAnswer2;
+    private Button nextBtn;
+    private Button backBtn;
     private TextView category;
     private TextView question;
     private RadioGroup options;
+
+    public SurveyFragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,92 +67,7 @@ public class SurveyFragment extends Fragment {
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         userId = UserData.getUserID(getContext());
 
-        please_answer1 = view.findViewById(R.id.please_answer1);
-        please_answer2 = view.findViewById(R.id.please_answer2);
-        next_btn = view.findViewById(R.id.next_btn);
-        back_btn = view.findViewById(R.id.back_btn);
-        category = view.findViewById(R.id.category);
-        question = view.findViewById(R.id.question);
-        options = view.findViewById(R.id.options);
-
-        //nested code initializes survey at first question
-        back_btn.setVisibility(View.INVISIBLE);
-        category.setText(categories[current_cat]);
-        question.setText(questions[current_q][0]);
-        for (int i = 1; i < questions[current_q].length; i++) {
-            RadioButton btn = new RadioButton(getContext());
-            btn.setId(i - 1);
-            btn.setText(questions[current_q][i]);
-            btn.setTextColor(Color.BLACK);
-            btn.setTextSize(16);
-            options.addView(btn);
-        }
-
-        next_btn.setOnClickListener(new View.OnClickListener() {
-            /**
-             * Updates survey info (model of MVP) and UI (view) after each click of "next" by user
-             * @param v The view that was clicked.
-             */
-            public void onClick(View v) {
-                //if no answer selected, should not proceed. Should prompt user to answer
-                if (!saveAnswer(options, current_cat, current_q)) {  //saves user's answer to prev question
-                    please_answer1.setVisibility(View.VISIBLE); please_answer2.setVisibility(View.VISIBLE);
-                    return;
-                } else back_btn.setVisibility(View.VISIBLE);  // this is here to avoid back being visible on first question
-                please_answer1.setVisibility(View.INVISIBLE); please_answer2.setVisibility(View.INVISIBLE);
-
-                current_q++;  //iterates to next q
-                if (current_q >= num_qs) {  //true if survey is finished
-                    computeCatEmissions(current_cat);
-                    List<Double> list = new ArrayList<>();
-                    for (int i = 0; i < co2PerCategory.length; i++) {
-                        list.add(co2PerCategory[i]);
-                    }
-
-                    DatabaseReference userRef = db.getReference("user data")
-                            .child(userId);
-                    //send survey results to firebase as Map<String, List<Double>>
-                    Map<String, Object> c = new HashMap<>();
-                    c.put("survey_results", list);
-                    userRef.updateChildren(c);
-
-                    userRef.child("is_new_user").setValue(false);
-
-                    //"false" makes it so that pressing home button on survey results goes to app homepage
-                    loadFragment(new SurveyResults(false));
-                    return;
-                }
-                if (questions[current_q][0].equals("-")) {  //iter'n to next category if necessary
-                    computeCatEmissions(current_cat);  //computes emissions for the finished category
-                    current_q++; current_cat++;
-                }
-                updateSurvey(options, question, category, current_q, current_cat);  //updates UI
-            }
-        });
-
-        back_btn.setOnClickListener(new View.OnClickListener() {
-            /**
-             * Goes back to previous question when back button clicked
-             * @param v The view that was clicked.
-             */
-            public void onClick(View v) {
-                if (current_q == 3 && transport_ans[0] == 1) current_q -= 2;  //skips follow-ups if user says no to car
-                if (current_q == 5 && transport_ans[3] == 0) current_q -= 1;  //same but for public transport
-                if (current_q == 13 && food_ans[0] != 3) current_q -= 4;  //skips follow-ups if user says no to meat
-
-                current_q--;
-                if (current_q == 0) back_btn.setVisibility(View.INVISIBLE);
-                if (questions[current_q][0].equals("-")) {
-                    current_q--;
-                    current_cat--;
-                }
-                updateSurvey(options, question, category, current_q, current_cat);
-            }
-
-
-
-        });
-
+        initSurvey(view);
         return view;
     }
 
@@ -191,20 +108,23 @@ public class SurveyFragment extends Fragment {
 
         switch(cat) {
             case 0:
-                transport_ans[q] = btnId;
-                if (q == 0 && transport_ans[0] == 1) current_q += 2;  //skips follow-ups if user says no to car
-                if (q == 3 && transport_ans[3] == 0) current_q += 1;  //same but for public transport
+                saveDefaultCountry(btnId);
                 break;
             case 1:
-                //index subtractions rely on construction of questions array
-                food_ans[q - num_transport_qs - 1] = btnId;
-                if (q == 8 && food_ans[0] != 3) current_q += 4;  //skips follow-ups if user says no to meat
+                transport_ans[q-2] = btnId;
+                if (q == 2 && transport_ans[0] == 1) current_q += 2;  //skips follow-ups if user says no to car
+                if (q == 5 && transport_ans[3] == 0) current_q += 1;  //same but for public transport
                 break;
             case 2:
-                housing_ans[q - num_transport_qs - num_food_qs - 2] = btnId;
+                //index subtractions rely on construction of questions array
+                food_ans[q - num_transport_qs - 3] = btnId;
+                if (q == 10 && food_ans[0] != 3) current_q += 4;  //skips follow-ups if user says no to meat
+                break;
+            case 3:
+                housing_ans[q - num_transport_qs - num_food_qs - 4] = btnId;
                 break;
             default:
-                consumption_ans[q - num_transport_qs - num_food_qs - num_housing_qs - 3] = btnId;
+                consumption_ans[q - num_transport_qs - num_food_qs - num_housing_qs - 5] = btnId;
                 break;
         }
         return true;
@@ -216,13 +136,13 @@ public class SurveyFragment extends Fragment {
      */
     protected void computeCatEmissions(int cat) {
         switch(cat) {
-            case 0:
+            case 1:
                 co2PerCategory[0] = transportEmissions();
                 break;
-            case 1:
+            case 2:
                 co2PerCategory[1] = foodEmissions();
                 break;
-            case 2:
+            case 3:
                 co2PerCategory[2] = housingEmissions();
                 break;
             default:
@@ -419,6 +339,130 @@ public class SurveyFragment extends Fragment {
             }
         }
         return s;
+    }
+
+
+
+
+    private void initSurvey(View view) {
+        TextView getStartedPrompt = view.findViewById(R.id.getStartedPrompt);
+        Button beginSurveyBtn = view.findViewById(R.id.beginSurveyBtn);
+        nextBtn = view.findViewById(R.id.nextBtn);
+        category = view.findViewById(R.id.category);
+
+        beginSurveyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getStartedPrompt.setVisibility(View.INVISIBLE);
+                beginSurveyBtn.setVisibility(View.INVISIBLE);
+
+                nextBtn.setVisibility(View.VISIBLE);
+                category.setVisibility(View.VISIBLE);
+                beginFirstQuestion(view);
+            }
+        });
+    }
+
+    private void beginFirstQuestion(View view) {
+
+        pleaseAnswer1 = view.findViewById(R.id.pleaseAnswer1);
+        pleaseAnswer2 = view.findViewById(R.id.pleaseAnswer2);
+        nextBtn = view.findViewById(R.id.nextBtn);
+        backBtn = view.findViewById(R.id.backBtn);
+        category = view.findViewById(R.id.category);
+        question = view.findViewById(R.id.question);
+        options = view.findViewById(R.id.options);
+
+        //nested code initializes survey at first question
+        backBtn.setVisibility(View.INVISIBLE);
+        category.setText(categories[current_cat]);
+        question.setText(questions[current_q][0]);
+        for (int i = 1; i < questions[current_q].length; i++) {
+            RadioButton btn = new RadioButton(getContext());
+            btn.setId(i - 1);
+            btn.setText(questions[current_q][i]);
+            btn.setTextColor(Color.BLACK);
+            btn.setTextSize(16);
+            options.addView(btn);
+        }
+
+        nextBtn.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Updates survey info (model of MVP) and UI (view) after each click of "next" by user
+             * @param v The view that was clicked.
+             */
+            public void onClick(View v) {
+                //if no answer selected, should not proceed. Should prompt user to answer
+                if (!saveAnswer(options, current_cat, current_q)) {  //saves user's answer to prev question
+                    pleaseAnswer1.setVisibility(View.VISIBLE); pleaseAnswer2.setVisibility(View.VISIBLE);
+                    return;
+                } else backBtn.setVisibility(View.VISIBLE);  // this is here to avoid back being visible on first question
+                pleaseAnswer1.setVisibility(View.INVISIBLE); pleaseAnswer2.setVisibility(View.INVISIBLE);
+
+                current_q++;  //iterates to next q
+                if (current_q >= num_qs) {  //true if survey is finished
+                    computeCatEmissions(current_cat);
+                    List<Double> list = new ArrayList<>();
+                    for (int i = 0; i < co2PerCategory.length; i++) {
+                        list.add(co2PerCategory[i]);
+                    }
+
+                    DatabaseReference userRef = db.getReference("user data")
+                            .child(userId);
+                    //send survey results to firebase as Map<String, List<Double>>
+                    Map<String, Object> c = new HashMap<>();
+                    c.put("survey_results", list);
+                    userRef.updateChildren(c);
+
+                    userRef.child("is_new_user").setValue(false);
+
+                    //"false" makes it so that pressing home button on survey results goes to app homepage
+                    loadFragment(new SurveyResults(false));
+                    return;
+                }
+                if (questions[current_q][0].equals("-")) {  //iter'n to next category if necessary
+                    if (current_cat != 0)
+                        computeCatEmissions(current_cat);  //computes emissions for the finished category (unless we just did first question)
+                    current_q++; current_cat++;
+                }
+                updateSurvey(options, question, category, current_q, current_cat);  //updates UI
+            }
+        });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            /**
+             * Goes back to previous question when back button clicked
+             * @param v The view that was clicked.
+             */
+            public void onClick(View v) {
+                if (current_q == 5 && transport_ans[0] == 1) current_q -= 2;  //skips follow-ups if user says no to car
+                if (current_q == 7 && transport_ans[3] == 0) current_q -= 1;  //same but for public transport
+                if (current_q == 15 && food_ans[0] != 3) current_q -= 4;  //skips follow-ups if user says no to meat
+
+                current_q--;
+                if (current_q == 0) backBtn.setVisibility(View.INVISIBLE);
+                if (questions[current_q][0].equals("-")) {
+                    current_q--;
+                    current_cat--;
+                }
+                updateSurvey(options, question, category, current_q, current_cat);
+            }
+        });
+
+    }
+
+
+    /**
+     * saves the country chosen in "area of residence" as default country of the user.
+     * @param btnId
+     */
+    private void saveDefaultCountry(int btnId) {
+        db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        DatabaseReference userRef = db.getReference("user data")
+                .child(userId);
+        Map<String, Object> c = new HashMap<>();
+        c.put("default_country", questions[0][btnId + 1]);
+        userRef.updateChildren(c);
     }
 
     private void loadFragment(Fragment fragment) {
