@@ -134,7 +134,7 @@ public class UserData {
             DataSnapshot users = task.getResult();
             String userID = UserData.getUserID(context);
             for(DataSnapshot user:users.getChildren()) {
-                Object s = user.child("setting/"+setting).getValue();
+                Object s = user.child("settings/"+setting).getValue();
                 boolean cond1 = user.getKey().toString().trim().equals(userID);
                 boolean cond2 = s != null && s.toString().equals("true");
 
