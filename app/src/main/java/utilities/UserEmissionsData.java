@@ -223,10 +223,12 @@ public class UserEmissionsData {
      */
     private String getCurrentDate() {
         // Get the current date
-        Date date = Calendar.getInstance().getTime();
+        Calendar calendar = Calendar.getInstance();
 
         // Format and return the current date in the format yyyy-mm-dd
-        return simpleDateFormat.format(date);
+        return calendar.get(Calendar.YEAR) + "-"
+                + (calendar.get(Calendar.MONTH) + 1) + "-"
+                + (calendar.get(Calendar.DAY_OF_MONTH));
     }
 
     /**
@@ -250,7 +252,7 @@ public class UserEmissionsData {
                     return sortedDate;
                 }
             } catch (ParseException e) {
-                throw new RuntimeException("An error occurred while parsing through the sortedDate list. " + e);
+                throw new RuntimeException("An error occurred while parsing through the sortedDate list." + e);
             }
         }
         return null;
