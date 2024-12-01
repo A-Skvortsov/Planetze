@@ -99,9 +99,8 @@ public class EcoGaugeFragment extends Fragment
 
     private String userId;
     private boolean interpolate;
-    // TODO: Source this from the database
     private boolean hideTrendLinePoints;
-    private boolean hideGridLines = false;
+    private boolean hideGridLines;
 
 
     @Override
