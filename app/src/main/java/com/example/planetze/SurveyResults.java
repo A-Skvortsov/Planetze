@@ -261,8 +261,6 @@ public class SurveyResults extends Fragment {
                 }
             });
         } else {
-            String s = "Return";
-            homeBtn.setText(s);
             homeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

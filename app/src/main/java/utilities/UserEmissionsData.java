@@ -77,7 +77,6 @@ public class UserEmissionsData {
         db.mReadDataOnce(path, new Database.OnGetDataListener() {
             @Override
             public void onStart() {
-
             }
 
             @Override
