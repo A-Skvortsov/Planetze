@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResult;
@@ -45,7 +46,6 @@ public class LoginView extends Fragment  {
 
     private LoginPresenter presenter;
 
-    private ActivityResult r;
 
     ActivityResultLauncher<Intent> launcher;
 
@@ -103,7 +103,16 @@ public class LoginView extends Fragment  {
     }
 
     public void setMessage(String msg) {
+
         inputError.setText(msg);
+        if (!msg.trim().isEmpty()) {
+            inputError.setTextSize(18);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.setMargins(50,20,20,20);
+            inputError.setLayoutParams(params);
+        }
+
     }
 
     public Context getViewContext() {

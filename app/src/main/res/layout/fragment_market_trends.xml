@@ -19,6 +19,12 @@
     android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:fillViewport="true">
+
+<LinearLayout
+    android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         android:fitsSystemWindows="true"
     android:background="@color/palette_turquoise"
     tools:context=".MarketTrends">
@@ -37,7 +43,7 @@
             <TextView
                 android:id="@+id/description_title"
                 android:layout_width="340dp"
-                android:layout_height="50dp"
+                android:layout_height="47dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif"
@@ -72,6 +78,8 @@
                 android:layout_marginTop="10dp"
                 android:fontFamily="sans-serif"
                 android:text="Energy-Efficient Appliances"
+
+                android:textColor="@color/palette_turquoise"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -90,7 +98,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="240dp">
+                android:layout_height="match_parent">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/appliance"
@@ -106,14 +114,13 @@
 
                 <TextView
                     android:id="@+id/hyperlink1"
-                    android:layout_width="220dp"
-                    android:layout_height="200dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_width="185dp"
+                    android:layout_height="210dp"
                     android:layout_marginStart="25dp"
+                    android:layout_marginTop="30dp"
                     android:layout_toEndOf="@+id/appliance"
                     android:text="@string/hlink1"
-                    android:textSize="20sp"
-                    android:textStyle="bold|italic" />
+                    android:textSize="20sp" />
             </RelativeLayout>
 
         </androidx.cardview.widget.CardView>
@@ -155,7 +162,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="240dp">
+                android:layout_height="match_parent">
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/imgfashion"
@@ -173,12 +180,11 @@
                     android:id="@+id/hyperlink2"
                     android:layout_width="220dp"
                     android:layout_height="200dp"
-                    android:layout_marginTop="20dp"
                     android:layout_marginStart="25dp"
+                    android:layout_marginTop="40dp"
                     android:layout_toEndOf="@+id/imgfashion"
                     android:text="@string/hlink2"
-                    android:textSize="20sp"
-                    android:textStyle="bold|italic" />
+                    android:textSize="20sp" />
             </RelativeLayout>
 
         </androidx.cardview.widget.CardView>

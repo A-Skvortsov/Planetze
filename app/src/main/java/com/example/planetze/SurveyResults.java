@@ -1,5 +1,6 @@
 package com.example.planetze;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -17,6 +19,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -43,6 +46,12 @@ public class SurveyResults extends Fragment {
     double user_e = 0.0;  //total user emissions
 
     List<Double> results = new ArrayList<>();
+    private boolean returnToEcoTracker = false;
+
+    public SurveyResults(boolean b) {
+        returnToEcoTracker = b;
+    }
+    public SurveyResults(){}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +61,11 @@ public class SurveyResults extends Fragment {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        Button homeBtn = view.findViewById(R.id.homeBtn);
+        //for if we arrive from ecoTracker
+        if (returnToEcoTracker) initHomeBtn(view, 1);
+        else initHomeBtn(view, 0);
 
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         userId = UserData.getUserID(getContext());
@@ -234,6 +248,43 @@ public class SurveyResults extends Fragment {
     }
 
 
+    public void initHomeBtn(View view, int i) {
+        Button homeBtn = view.findViewById(R.id.homeBtn);
+        Button retakeSurveyBtn = view.findViewById(R.id.retakeSurveyBtn);
+
+        if (i == 0) {
+            homeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getContext(), HomeActivity.class);
+
+                    // Prevent the user from being able to navigate back the login page using the return action.
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+            });
+        } else {
+            homeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    getParentFragmentManager().popBackStack();
+                }
+            });
+        }
+
+        retakeSurveyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //loadFragment(new SurveyFragment());
+
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                intent.putExtra("retakeSurvey", true);
+                startActivity(intent);
+            }
+        });
+    }
+
+
     /**
      * Converts array of carbon emissions in kg to tons
      * @param list array of carbon emissions in kg
@@ -281,6 +332,12 @@ public class SurveyResults extends Fragment {
             }
         }
         return x;
+    }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction()
+                .replace(R.id.main, fragment);
+        transaction.commit();
     }
 
 }

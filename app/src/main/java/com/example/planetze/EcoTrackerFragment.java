@@ -6,23 +6,18 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
 
-import android.renderscript.Sampler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.CheckBox;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,7 +35,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.Semaphore;
 
 import utilities.Constants;
 import utilities.UserData;
@@ -106,6 +100,13 @@ public class EcoTrackerFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        final Button activitiesBtn = globalView.findViewById(R.id.activitiesBtn);
+        activitiesBtn.performClick();  //by default, loads activities & not habits
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
@@ -121,7 +122,7 @@ public class EcoTrackerFragment extends Fragment {
                 habitsToggled = args.getBoolean("habitsToggled");
         } else {presetCalendar = 0;}
 
-
+        AddHabit.getEmissionsSnapshot(userId);
     }
 
     /**
@@ -141,6 +142,7 @@ public class EcoTrackerFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        AddHabit.getEmissionsSnapshot(userId);
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_eco_tracker, container, false);
         globalView = view;
@@ -171,6 +173,8 @@ public class EcoTrackerFragment extends Fragment {
         final TextView issuePrompt2 = view.findViewById(R.id.issuePrompt2);
         final Button activitiesBtn = view.findViewById(R.id.activitiesBtn);
         final Button habitsBtn = view.findViewById(R.id.habitsBtn);
+        activitiesBtn.performClick();  //by default, loads activities & not habits
+        setAnnualEmissionsBtn(view);
 
         String prompt;
         if (habitsToggled && activities.getChildCount() != 0) {
@@ -295,11 +299,12 @@ public class EcoTrackerFragment extends Fragment {
                 issuePrompt2.setVisibility(View.INVISIBLE);
 
                 //passes date parameter so activity is added to current date
-                Bundle bundle = new Bundle();
-                bundle.putString("date", date);
-                NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment));
-                navController.navigate(R.id.AddActivity, bundle);
+                AddActivity addActivity = new AddActivity(date);
+                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.eco_tracker, addActivity);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         };
         addBtn.setOnClickListener(addListener);
@@ -460,7 +465,6 @@ public class EcoTrackerFragment extends Fragment {
 
                 List<String> habitToLog = currentHabits.get(id);
                 AddActivity.writeToFirebase(date, habitToLog, userId);
-                //AddHabit.logHabit(habitToLog);
 
                 fetchSnapshot();  //Update ecoTracker display
                 updateDisplay();
@@ -470,11 +474,12 @@ public class EcoTrackerFragment extends Fragment {
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("date", date);
-                NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
-                        .findFragmentById(R.id.fragment));
-                navController.navigate(R.id.AddHabit, bundle);
+                AddHabit addHabit = new AddHabit(false);  //"false" prevents immediate return to ecotracker
+                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.eco_tracker, addHabit);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
             }
         });
 
@@ -597,16 +602,13 @@ public class EcoTrackerFragment extends Fragment {
                         issueprompt2.setVisibility(View.VISIBLE);
                         return;
                     }
-                    //boot addActivity in edit mode, passing activityToEdit
-                    Bundle bundle = new Bundle();
-                    bundle.putString("date", date);
-                    bundle.putStringArrayList("activityToEdit", (ArrayList<String>) activityToEdit);
-                    bundle.putInt("id", id);
-                    NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
-                            .findFragmentById(R.id.fragment));
-                    navController.navigate(R.id.AddActivity, bundle);
-
-                    //loadFragment(new AddActivity(date, activityToEdit, id));
+                    //boots addActivity in edit mode, passing activityToEdit
+                    AddActivity addActivity = new AddActivity(date, activityToEdit, id);
+                    FragmentManager fragmentManager = getChildFragmentManager();
+                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                    fragmentTransaction.replace(R.id.eco_tracker, addActivity);
+                    fragmentTransaction.addToBackStack(null);
+                    fragmentTransaction.commit();
                     Log.d("Firebase", "data loaded successfully1" + activityToEdit);
 
                 } else {
@@ -663,9 +665,25 @@ public class EcoTrackerFragment extends Fragment {
     }
 
 
+    private void setAnnualEmissionsBtn(View view) {
+        Button annualEmissionsBtn = view.findViewById(R.id.annualEmissionsBtn);
+        annualEmissionsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SurveyResults surveyResults = new SurveyResults(true);
+                FragmentManager fragmentManager = getChildFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.eco_tracker, surveyResults);
+                fragmentTransaction.addToBackStack(null);
+                fragmentTransaction.commit();
+            }
+        });
+    }
+
+
 
     private boolean isHabit(List<String> list) {
-        int emissions = Integer.parseInt(list.get(2));
+        double emissions = Double.parseDouble(list.get(2));
         return emissions < 0 && !list.get(1).equals("Cycling/Walking");
     }
 
@@ -674,7 +692,7 @@ public class EcoTrackerFragment extends Fragment {
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
         transaction.add(R.id.fragment_container, fragment);
-        transaction.addToBackStack(null);
+        //transaction.addToBackStack(null);
         transaction.commit();
     }
 }

@@ -4,6 +4,8 @@ import android.content.Intent;
 import static androidx.navigation.fragment.FragmentKt.findNavController;
 import static java.security.AccessController.getContext;
 
+import static utilities.Constants.STAY_LOGGED_ON;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -37,6 +39,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //This block only for when user selects "Retake Survey" from survey results page
+        Intent intent = getIntent();
+        if (intent.hasExtra("retakeSurvey") &&
+        intent.getBooleanExtra("retakeSurvey", false)) {
+            loadFragment(new SurveyFragment());
+            return;
+        }
+
 
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         userRef = db.getReference("user data");
@@ -88,15 +99,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void takeToHomePage() {
-        //change this later
-        String userID = UserData.getUserID(getApplicationContext());
+        userRef.get().addOnCompleteListener(task -> {
+            DataSnapshot users = task.getResult();
+            String userID = UserData.getUserID(getApplicationContext());
+            for(DataSnapshot user:users.getChildren()) {
+                Object inu = user.child("is_new_user").getValue();
+                boolean cond1 = user.getKey().toString().trim().equals(userID);
+                boolean cond2 = inu != null && inu.toString().equals("true");
 
-        if (UserData.isNewUser(getApplicationContext())) {
-            loadFragment(new SurveyFragment());
-        }
-        else {
-            navigateToHomeActivity();
-        }
+                if (cond1 && cond2) {
+                    loadFragment(new SurveyFragment());
+                    break;
+                }
+                else if (cond1) {
+                    navigateToHomeActivity();
+                    break;
+                }
+
+            }
+        });
+
 
     }
 
@@ -119,9 +141,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeData() {
         boolean isLoggedIn = UserData.isLoggedIn(getApplicationContext());
-        boolean stayLoggedOn = UserData.stayLoggedOn(getApplicationContext());
+        boolean stayLoggedOn = UserData.getSetting(getApplicationContext(),STAY_LOGGED_ON);
         if (isLoggedIn && !stayLoggedOn) {
             UserData.logout(getApplicationContext());
         }
+        UserData.initialize(getApplicationContext());
     }
 }

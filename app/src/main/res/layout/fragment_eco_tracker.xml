@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".EcoTrackerFragment"
-    android:background="@color/default_background_white">
+    android:background="@color/default_background_white"
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/fragment_container"
+        android:id="@+id/eco_tracker"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -35,9 +36,9 @@
             android:background="@color/palette_turquoise"
             android:gravity="center"
             android:text="0.0 kg of CO2 Emitted"
-            android:textStyle="bold"
-            android:textSize="20sp"
             android:textColor="@color/white"
+            android:textSize="20sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="@+id/title"
             app:layout_constraintStart_toStartOf="@+id/title"
             app:layout_constraintTop_toBottomOf="@+id/title"
@@ -119,33 +120,38 @@
 
         <!-- activities and habits stuff below -->
         <com.google.android.material.button.MaterialButtonToggleGroup
-            android:id="@+id/toggleButton"
-            android:layout_width="wrap_content"
+            android:id="@+id/toggleBtn"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="@+id/scrollView2"
-            app:layout_constraintEnd_toEndOf="@+id/scrollView2"
             app:layout_constraintBottom_toTopOf="@+id/scrollView2"
+            app:layout_constraintEnd_toEndOf="@+id/scrollView2"
+            app:layout_constraintStart_toStartOf="@+id/scrollView2"
+            app:selectionRequired="true"
             app:singleSelection="true">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/activitiesBtn"
                 style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Activities"
-                android:textColor="@color/palette_turquoise"
-                tools:layout_editor_absoluteX="89dp"
-                tools:layout_editor_absoluteY="411dp" />
+                android:textColor="@color/palette_light_gray"
+                app:backgroundTint="@color/custom_button_group_background"
+                app:rippleColor="@color/palette_turquoise_tint_200"
+                app:strokeColor="@color/palette_turquoise" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/habitsBtn"
                 style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Habits"
-                android:textColor="@color/palette_turquoise"
-                tools:layout_editor_absoluteX="192dp"
-                tools:layout_editor_absoluteY="22dp" />
+                android:textColor="@color/palette_light_gray"
+                app:backgroundTint="@color/custom_button_group_background"
+                app:rippleColor="@color/palette_turquoise_tint_200"
+                app:strokeColor="@color/palette_turquoise" />
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
 
@@ -242,6 +248,16 @@
             app:layout_constraintStart_toStartOf="@+id/editBtn"
             app:layout_constraintTop_toBottomOf="@+id/editBtn" />
 
+        <Button
+            android:id="@+id/annualEmissionsBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="See Survey Results"
+            android:textStyle="italic"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+</ScrollView>

@@ -4,8 +4,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.NavController;
-import androidx.navigation.fragment.NavHostFragment;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.search.SearchBar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -27,31 +26,27 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+import customDataStructures.EmissionNode;
+import customDataStructures.EmissionNodeCollection;
 import utilities.Constants;
 import utilities.UserData;
+import utilities.UserEmissionsData;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link AddHabit#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class AddHabit extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-    private String mParam1;
-    private String mParam2;
-    private String date;
+    private boolean returnToEcoTracker = true;
     private View globalView;
     private final String[] categories = Constants.categories;
     private final String[] impacts = Constants.impacts;
     FirebaseDatabase db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-    private String userId;
+    private static String userId;
     private HashMap<String, Object> calendar;
     List<List<String>> allHabits;
     List<List<String>> currentHabits;
@@ -64,32 +59,14 @@ public class AddHabit extends Fragment {
     public AddHabit() {
         // Required empty public constructor
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AddHabit.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AddHabit newInstance(String param1, String param2) {
-        AddHabit fragment = new AddHabit();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public AddHabit(boolean b) {
+        returnToEcoTracker = b;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        if (returnToEcoTracker) getParentFragmentManager().popBackStack();
 
         userId = UserData.getUserID(getContext());
         //sets user's calendar right away
@@ -109,8 +86,8 @@ public class AddHabit extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        Bundle args = getArguments();  //needed solely for when returning to EcoTracker
-        date = args.getString("date");
+        //returns to ecotracker if we just did some navigation through the app
+        if (returnToEcoTracker) getParentFragmentManager().popBackStack();
 
         userId = UserData.getUserID(getContext());
 
@@ -361,15 +338,16 @@ public class AddHabit extends Fragment {
                 allHabitsBtn.setSelected(false);
                 String s = "Adopt";
                 actionBtn.setText(s);
-                displayRecommendedHabitsTexts(true);
 
                 Spinner categorySpinner = globalView.findViewById(R.id.categorySpinner);
                 categorySpinner.setSelection(0);
                 Spinner impactSpinner = globalView.findViewById(R.id.impactSpinner);
                 impactSpinner.setSelection(0);
 
+                getEmissionsSnapshot(userId);
                 //resets displayed habits list to recommended habits
                 computeRecommendedHabits();
+                displayRecommendedHabitsTexts(true);
                 populateHabitList(globalView, recommendedHabits);
             }
         });
@@ -386,14 +364,19 @@ public class AddHabit extends Fragment {
     private void computeRecommendedHabits() {
         Spinner categorySpinner = globalView.findViewById(R.id.categorySpinner);
         Spinner impactSpinner = globalView.findViewById(R.id.impactSpinner);
-        String[] orderOfHighestEmissions = {""};
-                //should be getOrderOfHighestEmissions(); or getOrderOfActivityFrequency();
+        impactSpinner.setSelection(0); categorySpinner.setSelection(0);
+        String[] orderOfHighestEmissions = getOrderOfHighestEmissions();
 
-        recommendedHabits = null;
+        recommendedHabits = new ArrayList<>();
         for (int i = 0; i < orderOfHighestEmissions.length; i++) {
             if (hasCategory(allHabits, orderOfHighestEmissions[i])) {
-                categorySpinner.setSelection(i);
-                recommendedHabits = setDisplayHabits(categorySpinner, impactSpinner);
+                for (int j = 0; j < allHabits.size(); j++) {
+                    if (allHabits.get(j).get(0).equals(orderOfHighestEmissions[i])) {
+                        recommendedHabits.add(allHabits.get(j));
+                    }
+                }
+
+                populateHabitList(globalView, recommendedHabits);
                 return;
             }
         }
@@ -585,13 +568,7 @@ public class AddHabit extends Fragment {
 
     private void returnToEcoTracker() {
         EcoTrackerFragment.fetchSnapshot();
-        Bundle bundle = new Bundle();
-        bundle.putString("date", date);
-        bundle.putBoolean("habitsToggled", true);
-
-        NavController navController = NavHostFragment.findNavController(requireActivity().getSupportFragmentManager()
-                .findFragmentById(R.id.fragment));
-        navController.navigate(R.id.EcoTrackerFragment, bundle);
+        getParentFragmentManager().popBackStack();
     }
 
 
@@ -600,28 +577,64 @@ public class AddHabit extends Fragment {
 
 
     //HELPER/MISCELLANEOUS FUNCTIONS BELOW
+    private static UserEmissionsData userEmissionsData;
+    private static List<EmissionNodeCollection> listOfEmissionNodeCollections = new ArrayList<>();
 
-
-    /*private String[] getOrderOfActivityFrequency() {
-        int transportation = 0, food = 0, housing = 0, consumption = 0;
-        List<String> past29days = AddActivity.getPast29Days(date);
-        for (int i = 0; i < past29days.size(); i++) {
-            if (calendar.containsKey(past29days.get(i))) {
-                List<List<String>> activities = (List<List<String>>) calendar.get(past29days.get(i));
-                for (int j = 0; j < activities.size(); j++) {
-                    switch (activities.get(j).get(0)) {
-                        case "Transportation": transportation++; break;
-                        case "Food": food++; break;
-                        case "Housing": housing++; break;
-                        default: consumption++; break;
-                    }
+    /**
+     *
+     * @return a list of strings ("Transportation", "Energy", "Food", "Consumption")
+     * representing activity categories sorted in terms of highest emissions over past 30 days
+     * for the user
+     */
+    private String[] getOrderOfHighestEmissions() {
+        //note: activities have categories transportation, food, energy, consumption
+        //habits have categories transportation, food, housing, consumption
+        double[] emissionsPerType = new double[4];
+        System.out.println(listOfEmissionNodeCollections.size());
+        for (int i = 0; i < listOfEmissionNodeCollections.size(); i++) {  //for each EmissionNodeCollection
+            List<EmissionNode> listOfEmissionNodes = listOfEmissionNodeCollections.get(i).getData();
+            for (int j = 0; j < listOfEmissionNodes.size(); j++) {  //for each EmissionNode
+                double amount = listOfEmissionNodes.get(j).getEmissionsAmount();  //gets amount of the EmissionNode
+                switch (listOfEmissionNodes.get(j).getEmissionType()) {
+                    case "Transportation":
+                        emissionsPerType[0] += amount; break;
+                    case "Food":
+                        emissionsPerType[1] += amount; break;
+                    case "Consumption":
+                        emissionsPerType[2] += amount; break;
+                    default:  //Housing
+                        emissionsPerType[3] += amount; break;
                 }
             }
         }
+        List<EmissionNode> emissionNodes = new ArrayList<>();
+        emissionNodes.add(new EmissionNode("Transportation", (float) emissionsPerType[0]));
+        emissionNodes.add(new EmissionNode("Food", (float) emissionsPerType[1]));
+        emissionNodes.add(new EmissionNode("Consumption", (float) emissionsPerType[2]));
+        emissionNodes.add(new EmissionNode("Housing", (float) emissionsPerType[3]));
+        emissionNodes.sort(Comparator.comparingDouble(EmissionNode::getEmissionsAmount));
 
-        //List<String>
+        String[] sortedTypes = new String[4];
+        for (int i = 0; i < sortedTypes.length; i++) {
+            sortedTypes[i] = emissionNodes.get(i).getEmissionType();
+        }
 
-    }*/
+        return sortedTypes;
+    }
+
+    public static void getEmissionsSnapshot(String userId) {
+        userEmissionsData = new UserEmissionsData(userId, false,
+                new UserEmissionsData.DataReadyListener() {
+                    @Override
+                    public void start(){}
+                    @Override
+                    public void onDataReady(){
+                        listOfEmissionNodeCollections = userEmissionsData.getUserEmissionsData(30);
+                    }
+                    @Override
+                    public void onError(String s){}
+                });
+    }
 
 
     private boolean hasCategory(List<List<String>> habits, String category) {
@@ -642,7 +655,7 @@ public class AddHabit extends Fragment {
         }
         recommended.setVisibility(View.VISIBLE);
         noRecs.setVisibility(View.INVISIBLE);
-        if (recommendedHabits == null) {
+        if (recommendedHabits.isEmpty()) {
             noRecs.setVisibility(View.VISIBLE);
         }
     }
