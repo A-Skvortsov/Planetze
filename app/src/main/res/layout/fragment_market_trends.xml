@@ -107,14 +107,13 @@
 
                 <TextView
                     android:id="@+id/hyperlink1"
-                    android:layout_width="180dp"
+                    android:layout_width="185dp"
                     android:layout_height="210dp"
-                    android:layout_marginTop="30dp"
                     android:layout_marginStart="25dp"
+                    android:layout_marginTop="30dp"
                     android:layout_toEndOf="@+id/appliance"
                     android:text="@string/hlink1"
-                    android:textSize="20sp"
-                    android:textStyle="bold|italic" />
+                    android:textSize="20sp" />
             </RelativeLayout>
 
         </androidx.cardview.widget.CardView>
@@ -174,12 +173,11 @@
                     android:id="@+id/hyperlink2"
                     android:layout_width="220dp"
                     android:layout_height="200dp"
-                    android:layout_marginTop="40dp"
                     android:layout_marginStart="25dp"
+                    android:layout_marginTop="40dp"
                     android:layout_toEndOf="@+id/imgfashion"
                     android:text="@string/hlink2"
-                    android:textSize="20sp"
-                    android:textStyle="bold|italic" />
+                    android:textSize="20sp" />
             </RelativeLayout>
 
         </androidx.cardview.widget.CardView>
