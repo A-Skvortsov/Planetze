@@ -4,55 +4,57 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/palette_turquoise"
     tools:context=".CleanAirFragment">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:fillViewport="true">
 
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
         android:orientation="vertical"
-        android:background="@color/palette_turquoise"
         tools:context=".Details">
 
         <androidx.cardview.widget.CardView
-            android:layout_width="320dp"
+            android:layout_width="360dp"
             android:layout_height="200dp"
-            android:layout_marginStart="45dp"
+            android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"
             android:layout_marginTop="30dp"
             app:cardElevation="60dp"
             app:cardCornerRadius="20dp">
 
 
-            <ImageView
+
+        <ImageView
                 android:id="@+id/detailImage"
-                android:layout_width="320dp"
-                android:layout_height="200dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:src="@mipmap/clean_air" />
 
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
-            android:layout_width="320dp"
+            android:layout_width="360dp"
             android:layout_height="70dp"
-            android:layout_marginStart="45dp"
+            android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"
             android:layout_marginTop="30dp"
             app:cardElevation="60dp"
             app:cardCornerRadius="20dp">
 
-            <TextView
+
+        <TextView
                 android:id="@+id/detailDescription"
                 android:layout_width="250dp"
                 android:layout_height="match_parent"
-                android:layout_marginStart="40dp"
+                android:layout_marginStart="60dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/white"
                 android:text="Grow Clean Air"
@@ -66,22 +68,23 @@
 
 
         <androidx.cardview.widget.CardView
-            android:layout_width="320dp"
-            android:layout_height="200dp"
-            android:layout_marginStart="45dp"
+            android:layout_width="360dp"
+            android:layout_height="260dp"
+            android:layout_marginStart="25dp"
             android:layout_marginEnd="30dp"
             android:layout_marginTop="30dp"
             app:cardElevation="60dp"
             app:cardCornerRadius="20dp">
 
+
             <TextView
                 android:id="@+id/detailsParapgraph"
-                android:layout_width="280dp"
-                android:layout_height="170dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp"
+                android:layout_width="310dp"
+                android:layout_height="190dp"
+               android:layout_gravity="center"
                 android:fontFamily="sans-serif"
                 android:text="Tree Canada’s Grow Clean Air program supports improved forest management practices led by coastal First Nations communities living in the Great Bear Rainforest. You can offset your carbon emissions by helping to protect old-growth trees in British Columbia. Users can help prevent deforestation and land clearing, which then prevents the release of carbon, through these trees."
+                android:textSize="16sp"
                 android:textStyle="bold" />
         </androidx.cardview.widget.CardView>
 
@@ -90,7 +93,7 @@
             android:layout_width="180dp"
             android:layout_height="70dp"
             android:layout_marginStart="110dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="40dp"
             android:backgroundTint="#d1fffc"
             android:text="Click here to Donate"
             android:textColor="@color/black"

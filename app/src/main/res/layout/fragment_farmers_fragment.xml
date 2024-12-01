@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/palette_turquoise"
     tools:context=".FarmersFragment">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:fillViewport="true">
 
@@ -18,13 +19,12 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             android:orientation="vertical"
-            android:background="@color/palette_turquoise"
             tools:context=".Details">
 
             <androidx.cardview.widget.CardView
-                android:layout_width="320dp"
+                android:layout_width="360dp"
                 android:layout_height="200dp"
-                android:layout_marginStart="45dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginTop="30dp"
                 app:cardElevation="60dp"
@@ -33,16 +33,16 @@
 
                 <ImageView
                     android:id="@+id/detailImage"
-                    android:layout_width="320dp"
-                    android:layout_height="200dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:src="@mipmap/farmers" />
 
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:layout_width="320dp"
+                android:layout_width="360dp"
                 android:layout_height="70dp"
-                android:layout_marginStart="45dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginTop="30dp"
                 app:cardElevation="60dp"
@@ -51,9 +51,8 @@
                 <TextView
                     android:id="@+id/detailDescription"
                     android:layout_width="270dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="25dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
                     android:background="@color/white"
                     android:text="Support Farmers"
                     android:textColor="@color/palette_turquoise"
@@ -66,9 +65,9 @@
 
 
             <androidx.cardview.widget.CardView
-                android:layout_width="320dp"
-                android:layout_height="200dp"
-                android:layout_marginStart="45dp"
+                android:layout_width="360dp"
+                android:layout_height="260dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginTop="30dp"
                 app:cardElevation="60dp"
@@ -77,11 +76,11 @@
                 <TextView
                     android:id="@+id/detailsParapgraph"
                     android:layout_width="280dp"
-                    android:layout_height="150dp"
-                    android:layout_marginStart="30dp"
-                    android:layout_marginTop="30dp"
+                    android:layout_height="170dp"
+                    android:layout_gravity="center"
                     android:fontFamily="sans-serif"
                     android:text="Trees for the Future is a registered 501(c)(3) nonprofit organization, that provides hands-on agroforestry training and resources to farming communities. Thorugh through training Trees for the Future helps fight climate change, reduce poverty,  and develop economic growth within communities."
+                    android:textSize="16sp"
                     android:textStyle="bold" />
             </androidx.cardview.widget.CardView>
 
@@ -90,7 +89,7 @@
                 android:layout_width="180dp"
                 android:layout_height="70dp"
                 android:layout_marginStart="110dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="40dp"
                 android:backgroundTint="#d1fffc"
                 android:text="Click here to Donate"
                 android:textColor="@color/black"

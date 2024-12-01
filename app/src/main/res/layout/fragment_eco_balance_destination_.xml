@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/palette_turquoise"
     tools:context=".EcoBalanceDestinationFragment">
     <ScrollView
         android:layout_width="match_parent"
@@ -18,7 +19,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:fitsSystemWindows="true"
-        android:background="@color/palette_turquoise"
         tools:context=".EcoBalanceDestination">
 
         <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"

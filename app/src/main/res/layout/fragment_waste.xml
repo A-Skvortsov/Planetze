@@ -3,12 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/palette_turquoise"
+
     android:layout_height="match_parent"
     tools:context=".WasteFragment">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:fillViewport="true">
 
@@ -18,31 +20,31 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             android:orientation="vertical"
-            android:background="@color/palette_turquoise"
             tools:context=".Details">
 
             <androidx.cardview.widget.CardView
-                android:layout_width="320dp"
+                android:layout_width="360dp"
                 android:layout_height="200dp"
-                android:layout_marginStart="45dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginTop="30dp"
                 app:cardElevation="60dp"
                 app:cardCornerRadius="20dp">
 
 
-                <ImageView
+
+            <ImageView
                     android:id="@+id/detailImage"
-                    android:layout_width="320dp"
-                    android:layout_height="200dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:src="@mipmap/waste" />
 
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:layout_width="320dp"
+                android:layout_width="360dp"
                 android:layout_height="70dp"
-                android:layout_marginStart="45dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginTop="30dp"
                 app:cardElevation="60dp"
@@ -51,9 +53,8 @@
                 <TextView
                     android:id="@+id/detailDescription"
                     android:layout_width="290dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center"
                     android:background="@color/white"
                     android:text="Waste Management"
                     android:textColor="@color/palette_turquoise"
@@ -66,9 +67,9 @@
 
 
             <androidx.cardview.widget.CardView
-                android:layout_width="320dp"
-                android:layout_height="200dp"
-                android:layout_marginStart="45dp"
+                android:layout_width="360dp"
+                android:layout_height="280dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginTop="30dp"
                 app:cardElevation="60dp"
@@ -76,12 +77,13 @@
 
                 <TextView
                     android:id="@+id/detailsParapgraph"
-                    android:layout_width="280dp"
-                    android:layout_height="170dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_width="300dp"
+                    android:layout_height="235dp"
+                    android:layout_gravity="center"
                     android:fontFamily="sans-serif"
-                    android:text= "TEA's goal is to create a waste-free future for Toronto. Through reducing, reusing, and recycling, individuals can use fewer natural resources, generate less greenhouse gas emissions, and create good green jobs. These are all methods that can significantly help reduce one's carbon footprint. Through donating to TEA users can help TEA accomplish its goals, of a more eco-friendly environment, while at the same time helping to reduce their carbon footprint."                    android:textStyle="bold" />
+                    android:text="TEA's goal is to create a waste-free future for Toronto. Through reducing, reusing, and recycling, individuals can use fewer natural resources, generate less greenhouse gas emissions, and create good green jobs. These are all methods that can significantly help reduce one's carbon footprint. Through donating to TEA users can help TEA accomplish its goals, of a more eco-friendly environment, while at the same time helping to reduce their carbon footprint."
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
             </androidx.cardview.widget.CardView>
 
 
@@ -89,7 +91,7 @@
                 android:layout_width="180dp"
                 android:layout_height="70dp"
                 android:layout_marginStart="110dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="40dp"
                 android:backgroundTint="#d1fffc"
                 android:text="Click here to Donate"
                 android:textColor="@color/black"

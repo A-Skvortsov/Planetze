@@ -3,12 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:background="@color/palette_turquoise"
     android:layout_height="match_parent"
     tools:context=".TechnologyFragment">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:fillViewport="true">
 
@@ -17,14 +18,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            android:orientation="vertical"
             android:background="@color/palette_turquoise"
+
+            android:orientation="vertical"
             tools:context=".Details">
 
             <androidx.cardview.widget.CardView
-                android:layout_width="320dp"
+                android:layout_width="360dp"
                 android:layout_height="200dp"
-                android:layout_marginStart="45dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginTop="30dp"
                 app:cardElevation="60dp"
@@ -33,16 +35,16 @@
 
                 <ImageView
                     android:id="@+id/detailImage"
-                    android:layout_width="320dp"
-                    android:layout_height="200dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:src="@mipmap/solar" />
 
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                android:layout_width="320dp"
+                android:layout_width="360dp"
                 android:layout_height="70dp"
-                android:layout_marginStart="45dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginTop="30dp"
                 app:cardElevation="60dp"
@@ -50,14 +52,14 @@
 
                 <TextView
                     android:id="@+id/detailDescription"
-                    android:layout_width="313dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_width="310dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="32dp"
+                    android:layout_marginTop="15dp"
                     android:background="@color/white"
                     android:text="Sustainable Technology"
                     android:textColor="@color/palette_turquoise"
-                    android:textSize="29dp"
+                    android:textSize="27dp"
                     android:textStyle="bold" />
 
             </androidx.cardview.widget.CardView>
@@ -65,9 +67,9 @@
 
 
             <androidx.cardview.widget.CardView
-                android:layout_width="320dp"
-                android:layout_height="200dp"
-                android:layout_marginStart="45dp"
+                android:layout_width="360dp"
+                android:layout_height="260dp"
+                android:layout_marginStart="25dp"
                 android:layout_marginEnd="30dp"
                 android:layout_marginTop="30dp"
                 app:cardElevation="60dp"
@@ -75,12 +77,12 @@
 
                 <TextView
                     android:id="@+id/detailsParapgraph"
-                    android:layout_width="280dp"
+                    android:layout_width="300dp"
                     android:layout_height="150dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="35dp"
+                   android:layout_gravity="center"
                     android:fontFamily="sans-serif"
                     android:text="GivePower Foundation is a foundation that supplies eco-friendly equipment like solar panels, to developing regions who need it the most. Using Solar technology helps stop using other technologies that rely on fossil fuels, which are responsible for 40% of the carbon dioxide emitted in the world."
+                    android:textSize="16sp"
                     android:textStyle="bold" />
             </androidx.cardview.widget.CardView>
 
@@ -89,7 +91,7 @@
                 android:layout_width="180dp"
                 android:layout_height="70dp"
                 android:layout_marginStart="110dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="40dp"
                 android:backgroundTint="#d1fffc"
                 android:text="Click here to Donate"
                 android:textColor="@color/black"
