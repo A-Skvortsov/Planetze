@@ -83,8 +83,30 @@ We have provided offset emission  projects, which can help offset you carbon emi
     <string name="add_item">Add Item</string>
     <string name="back">Back</string>
 
-    <string name="hlink1">hlink1</string>
-    <string name="hlink2">hlink2</string>
+    <string name="hlink1">
+        <a href="https://natural-resources.canada.ca/energy-efficiency/products/appliances-for-residential-use/clothes-dryers/13696"> - Clothes Dryer\n</a>
+        <a href="https://natural-resources.canada.ca/energy-efficiency/products/appliances-for-residential-use/freezers/13995">- Freezer\n</a>
+        <a href="https://natural-resources.canada.ca/energy-efficiency/products/cooling-and-ventilating-equipment-for-residential-use/central-air-conditioners/16183">- Air Condition\n</a>
+        <a href="https://natural-resources.canada.ca/energy-efficiency/products/appliances-for-residential-use/air-purifiers/14001">- Air purifiers\n</a>
+        <a href="https://natural-resources.canada.ca/energy-efficiency/products/appliances-for-residential-use/dishwashers/13991">- Dishwasher\n</a>
+        <a href="https://natural-resources.canada.ca/energy-efficiency/products/appliances-for-residential-use/refrigerators/13999">- Refrigerators\n</a>
+        <a href="https://natural-resources.canada.ca/energy-efficiency/energy-star-canada/energy-star-products/list-energy-star-certified-products/residential-electric-cooking-products/26135">- Electrical Cooking\n</a>
+    </string>
+    <string name="hlink2">
+
+        <a href="https://natural-resources.canada.ca/energy-efficiency/products/appliances-for-residential-use/clothes-dryers/13696"> - Eileen Fisher\n</a>
+        <a href="https://www.patagonia.com/shop/womens?irclickid=Uj%3AScNWaUxyKTfzR62zwD29ZUkCVybWNrXSGQw0&amp;sharedid=&amp;irpid=274622&amp;iradid=1948563&amp;utm_source=The%20Good%20Trade%E2%80%8A&amp;utm_medium=affiliate&amp;utm_content=%22Content%22&amp;irgwc=1">- Patagonia\n</a>
+        <a href="https://www.tentree.ca/">- tentree\n</a>
+        <a href="https://www.taylorstitch.com/?clickid=Uj%3AScNWaUxyKTfzR62zwD29ZUkCVyYSxrXSGQw0&amp;irgwc=1&amp;utm_medium=affiliate&amp;utm_source=ir&amp;iradid=451752&amp;iradname=Online%20Tracking%20Link&amp;prodsku=&amp;mpname=The%20Good%20Trade%E2%80%8A&amp;mpid=274622&amp;utm_campaign=The%20Good%20Trade%E2%80%8A">- Taylor Stitch\n</a>
+        <a href="https://wearpact.com/men/apparel?utm_source=147620&amp;utm_medium=affiliate&amp;utm_campaign=MAID1144&amp;utm_content=147620&amp;pjclkid=4930688027&amp;clickId=4930688027">- Pact\n</a>
+        <a href="https://www.buckmason.com/?sscid=b1k8_1au2n9&amp;g=men">- Buck Mason\n</a>
+        <a href="https://www.on.com/en-us/shop/womens/shoes?clickref=1011lzYwVdBJ&amp;utm_source=Partnerize&amp;utm_medium=affiliate&amp;utm_campaign=thegoodtrade&amp;utm_content=AMR-CA">- On\n</a>
+
+
+
+
+
+    </string>
 
     <!-- Settings page -->
     <string name="settings">Settings</string>
