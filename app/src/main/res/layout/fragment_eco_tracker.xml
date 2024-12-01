@@ -121,7 +121,7 @@
         <!-- activities and habits stuff below -->
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/toggleBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toTopOf="@+id/scrollView2"
             app:layout_constraintEnd_toEndOf="@+id/scrollView2"
@@ -129,27 +129,29 @@
             app:selectionRequired="true"
             app:singleSelection="true">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/activitiesBtn"
                 style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Activities"
-                android:textColor="@color/palette_turquoise"
-                tools:layout_editor_absoluteX="89dp"
-                tools:layout_editor_absoluteY="411dp"
-                android:backgroundTint="@drawable/toggle_btn_background"/>
+                android:textColor="@color/palette_light_gray"
+                app:backgroundTint="@color/custom_button_group_background"
+                app:rippleColor="@color/palette_turquoise_tint_200"
+                app:strokeColor="@color/palette_turquoise" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/habitsBtn"
                 style="?attr/materialButtonOutlinedStyle"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Habits"
-                android:textColor="@color/palette_turquoise"
-                tools:layout_editor_absoluteX="192dp"
-                tools:layout_editor_absoluteY="22dp"
-                android:backgroundTint="@drawable/toggle_btn_background"/>
+                android:textColor="@color/palette_light_gray"
+                app:backgroundTint="@color/custom_button_group_background"
+                app:rippleColor="@color/palette_turquoise_tint_200"
+                app:strokeColor="@color/palette_turquoise" />
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
 
