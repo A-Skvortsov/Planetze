@@ -441,11 +441,19 @@
             android:id="@+id/homeBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:backgroundTint="@color/white"
             android:text="Home"
             android:textColor="@color/palette_black"
             app:layout_constraintEnd_toEndOf="@+id/trend1graph_card"
+            app:layout_constraintTop_toBottomOf="@+id/trend1graph_card" />
+
+        <Button
+            android:id="@+id/retakeSurveyBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/white"
+            android:text="Retake Survey"
+            android:textColor="@color/palette_black"
             app:layout_constraintStart_toStartOf="@+id/trend1graph_card"
             app:layout_constraintTop_toBottomOf="@+id/trend1graph_card" />
 

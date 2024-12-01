@@ -40,6 +40,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //This block only for when user selects "Retake Survey" from survey results page
+        Intent intent = getIntent();
+        if (intent.hasExtra("retakeSurvey") &&
+        intent.getBooleanExtra("retakeSurvey", false)) {
+            loadFragment(new SurveyFragment());
+            return;
+        }
+
 
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         userRef = db.getReference("user data");

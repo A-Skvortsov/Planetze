@@ -19,6 +19,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -248,6 +249,7 @@ public class SurveyResults extends Fragment {
 
     public void initHomeBtn(View view, int i) {
         Button homeBtn = view.findViewById(R.id.homeBtn);
+        Button retakeSurveyBtn = view.findViewById(R.id.retakeSurveyBtn);
 
         if (i == 0) {
             homeBtn.setOnClickListener(new View.OnClickListener() {
@@ -268,6 +270,17 @@ public class SurveyResults extends Fragment {
                 }
             });
         }
+
+        retakeSurveyBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //loadFragment(new SurveyFragment());
+
+                Intent intent = new Intent(getContext(), MainActivity.class);
+                intent.putExtra("retakeSurvey", true);
+                startActivity(intent);
+            }
+        });
     }
 
 
@@ -318,6 +331,12 @@ public class SurveyResults extends Fragment {
             }
         }
         return x;
+    }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction()
+                .replace(R.id.main, fragment);
+        transaction.commit();
     }
 
 }
