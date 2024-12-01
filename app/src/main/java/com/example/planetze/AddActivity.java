@@ -173,6 +173,9 @@ public class AddActivity extends Fragment {
                 if (spinnerListeners) {
                     String selectedCat = (String) parent.getItemAtPosition(position);
                     setActivitySpinner(selectedCat, actSpinner);
+
+                    box1.clearCheck(); box2.clearCheck();
+                    box1.removeAllViews(); box2.removeAllViews();
                 } spinnerListeners = true;
             }
             @Override
@@ -309,6 +312,7 @@ public class AddActivity extends Fragment {
      */
     public void displayInputs(RadioGroup box1, RadioGroup box2,
                               TextView txt1, TextView txt2, String act) {
+        box1.clearCheck(); box2.clearCheck();
         box1.removeAllViews(); box2.removeAllViews();
         box1.setVisibility(View.INVISIBLE); box2.setVisibility(View.INVISIBLE);
         txt1.setVisibility(View.INVISIBLE); txt2.setVisibility(View.INVISIBLE);
