@@ -135,9 +135,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Activities"
-                android:textColor="@color/palette_black"
+                android:textColor="@color/palette_turquoise"
                 tools:layout_editor_absoluteX="89dp"
-                tools:layout_editor_absoluteY="411dp" />
+                tools:layout_editor_absoluteY="411dp"
+                android:backgroundTint="@drawable/toggle_btn_background"/>
 
             <Button
                 android:id="@+id/habitsBtn"
@@ -145,9 +146,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Habits"
-                android:textColor="@color/palette_black"
+                android:textColor="@color/palette_turquoise"
                 tools:layout_editor_absoluteX="192dp"
-                tools:layout_editor_absoluteY="22dp" />
+                tools:layout_editor_absoluteY="22dp"
+                android:backgroundTint="@drawable/toggle_btn_background"/>
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
 
@@ -248,7 +250,7 @@
             android:id="@+id/annualEmissionsBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="See My Annual Emissions"
+            android:text="See Survey Results"
             android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -668,7 +668,7 @@ public class EcoTrackerFragment extends Fragment {
         annualEmissionsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SurveyResults surveyResults = new SurveyResults();
+                SurveyResults surveyResults = new SurveyResults(true);
                 FragmentManager fragmentManager = getChildFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.eco_tracker, surveyResults);
