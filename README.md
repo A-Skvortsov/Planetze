@@ -10,6 +10,16 @@
 
 ## Code Documentation
 
+LINKS
+
+This repo: https://github.com/A-Skvortsov/Planetze
+Jira: https://andreyskvortsov.atlassian.net/jira/software/projects/SCRUM/boards/1
+
+EXISTING SIGN-IN CREDENTIALS:
+
+Email: andreyskv49@gmail.com
+Password: hellohello1
+
 USER FLOW
 
  	1. user opens app  
@@ -115,8 +125,17 @@ ASSUMPTIONS
 	18: Eco Guage trendline graph: for any selected time period, if there exist days in the time period for which no activity data is logged by the user, it is assumed that  
 		this is "missing data" and such days are omitted from the trendline graph (as per the advice of Professor Rawad)  
 		
-EXTRA DETAILS
+IMPLEMENTATION DETAILS/DEVELOPER GUIDE
 
-	1. Some libraries used
-		i. MPAndroidChart for Eco Guage charts
-		ii. MaterialCalendarView, an extension of the built-in CalendarView library, for the Eco Tracker calendar
+	1. Libraries/Dependencies  
+		i. MPAndroidChart for Eco Guage charts  
+		ii. MaterialCalendarView, an extension of the built-in CalendarView library, for the Eco Tracker calendar  
+		
+	2. Code Structure  
+		i. Eco Tracker  
+			a) EcoTrackerFragment.java (business logic) and fragment_eco_tracker.xml (UI)  
+			b) AddActivity.java and fragment_add_activity.xml  
+			c) AddHabit.java and fragment_add_habit.xml  
+			d) CalendarFragment.java and fragment_calendar.xml  
+		ii. Eco Guage  
+			a)  
