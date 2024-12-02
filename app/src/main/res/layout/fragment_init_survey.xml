@@ -123,7 +123,7 @@
                 android:id="@+id/getStartedPrompt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/getStartedSurveyPrompt"
+                android:text="@string/get_started_survey_prompt"
                 android:textColor="@color/palette_black"
                 android:textAlignment="center"
                 android:textSize="30sp"
@@ -152,7 +152,7 @@
                 android:layout_margin="10dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Begin!"
+                android:text="@string/begin_survey"
                 android:layout_gravity="center"/>
 
             <!-- "Please select an answer" prompt for when user tries to proceed without answering-->

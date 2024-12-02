@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:gravity="center_horizontal"
-            android:text="My Annual Carbon Footprint"
+            android:text="@string/my_annual_carbon_footprint"
             android:textColor="@color/white"
             android:textSize="26sp"
             android:textStyle="bold|italic"
@@ -65,7 +65,7 @@
 
                     android:layout_marginTop="16dp"
                     android:gravity="center_vertical"
-                    android:text="Transportation"
+                    android:text="@string/transportation"
                     android:textSize="11sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -78,7 +78,7 @@
                     android:layout_marginTop="24dp"
 
                     android:gravity="center_vertical"
-                    android:text="Food"
+                    android:text="@string/food"
                     android:textSize="11sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/transport_label" />
@@ -91,7 +91,7 @@
                     android:layout_marginTop="24dp"
 
                     android:gravity="center_vertical"
-                    android:text="Housing"
+                    android:text="@string/housing"
                     android:textSize="11sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/food_label" />
@@ -104,8 +104,8 @@
                     android:layout_marginTop="24dp"
 
                     android:gravity="center_vertical"
-                    android:text="Consumption"
-                    android:textSize="11dp"
+                    android:text="@string/consumption"
+                    android:textSize="11sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/housing_label" />
 
@@ -126,9 +126,10 @@
                     android:layout_marginTop="24dp"
                     android:background="@color/palette_turquoise"
                     android:gravity="center"
-                    android:text="0"
+                    android:text="@string/_0"
                     android:textColor="@color/palette_light_gray"
                     android:textSize="11sp"
+
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/transport" />
 
@@ -140,7 +141,7 @@
                     android:layout_marginTop="24dp"
                     android:background="@color/palette_turquoise"
                     android:gravity="center"
-                    android:text="0"
+                    android:text="@string/_0"
                     android:textColor="@color/palette_light_gray"
                     android:textSize="11sp"
 
@@ -155,10 +156,10 @@
                     android:layout_marginTop="16dp"
                     android:background="@color/palette_turquoise"
                     android:gravity="center"
-                    android:text="0"
+                    android:text="@string/_0"
                     android:textColor="@color/palette_light_gray"
 
-                    android:textSize="10dp"
+                    android:textSize="11sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -170,9 +171,9 @@
                     android:layout_marginTop="24dp"
                     android:background="@color/palette_turquoise"
                     android:gravity="center"
-                    android:text="0"
+                    android:text="@string/_0"
                     android:textColor="@color/palette_light_gray"
-                    android:textSize="10dp"
+                    android:textSize="11sp"
 
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/housing" />
@@ -187,8 +188,8 @@
                     android:layout_marginTop="16dp"
 
                     android:gravity="center_vertical"
-                    android:text="negligible - Good Job!"
-                    android:textSize="10dp"
+                    android:text="@string/negligible_good_job"
+                    android:textSize="11sp"
                     android:visibility="invisible"
                     app:layout_constraintStart_toEndOf="@+id/transport"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -201,8 +202,8 @@
                     android:layout_marginTop="24dp"
                     android:gravity="center_vertical"
 
-                    android:text="negligible - Good Job!"
-                    android:textSize="10dp"
+                    android:text="@string/negligible_good_job"
+                    android:textSize="11sp"
                     android:visibility="invisible"
                     app:layout_constraintStart_toEndOf="@+id/food"
                     app:layout_constraintTop_toBottomOf="@+id/t_negligible" />
@@ -215,8 +216,8 @@
                     android:layout_marginTop="24dp"
                     android:gravity="center_vertical"
 
-                    android:text="negligible - Good Job!"
-                    android:textSize="10dp"
+                    android:text="@string/negligible_good_job"
+                    android:textSize="11sp"
                     android:visibility="invisible"
                     app:layout_constraintStart_toEndOf="@+id/housing"
                     app:layout_constraintTop_toBottomOf="@+id/f_negligible" />
@@ -229,8 +230,8 @@
                     android:layout_marginTop="24dp"
                     android:gravity="center_vertical"
 
-                    android:text="negligible - Good Job!"
-                    android:textSize="10dp"
+                    android:text="@string/negligible_good_job"
+                    android:textSize="11sp"
                     android:visibility="invisible"
                     app:layout_constraintStart_toEndOf="@+id/consumption"
                     app:layout_constraintTop_toBottomOf="@+id/h_negligible" />
@@ -243,9 +244,9 @@
             android:id="@+id/bycategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Breakdown by Category (tons):"
+
+            android:text="@string/breakdown_by_category_tons"
             android:textColor="@color/white"
-            android:layout_marginBottom="5dp"
             android:textSize="15sp"
             android:textStyle="italic"
             app:layout_constraintBottom_toTopOf="@+id/trend_graph_card"
@@ -256,7 +257,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="Comparing with:"
+            android:text="@string/comparing_with"
             android:textColor="@color/white"
             android:textStyle="italic"
             app:layout_constraintBottom_toTopOf="@+id/trend1graph_card"
@@ -277,9 +278,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="Comparison by Country"
+            android:text="@string/comparison_by_country"
             android:textColor="@color/white"
-            android:textSize="18dp"
+            android:textSize="18sp"
             android:textStyle="italic"
             app:layout_constraintBottom_toTopOf="@+id/spinner"
             app:layout_constraintEnd_toEndOf="@+id/trend1graph_card"
@@ -293,9 +294,22 @@
             android:layout_marginTop="20dp"
             android:textSize="16sp"
             android:gravity="center"
-            android:text="502.2 tons of CO2 emitted annually"
+            android:text="@string/_502_2_tons_of_co2_emitted_annually"
+            android:textColor="@color/palette_black"
+            app:layout_constraintStart_toEndOf="@+id/total"
+
+            app:layout_constraintTop_toBottomOf="@+id/title" />
+
+        <TextView
+            android:id="@+id/total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginStart="64dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/total"
             android:textColor="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:textSize="20sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title" />
 
@@ -337,7 +351,7 @@
                     android:layout_width="26dp"
                     android:layout_height="18dp"
                     android:layout_marginStart="92dp"
-                    android:text="You"
+                    android:text="@string/you"
                     android:textColor="@color/palette_turquoise"
                     app:layout_constraintBottom_toTopOf="@+id/user_bar"
 
@@ -360,7 +374,7 @@
                     android:layout_height="wrap_content"
 
                     android:layout_marginEnd="52dp"
-                    android:text="National Average"
+                    android:text="@string/national_average"
                     android:textColor="@color/palette_turquoise"
                     app:layout_constraintBottom_toTopOf="@+id/country_bar"
                     app:layout_constraintEnd_toEndOf="parent" />
@@ -379,10 +393,10 @@
                     android:id="@+id/your_emissions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="502.0   "
+                    android:text="@string/_502_0"
                     android:textColor="@color/black"
 
-                    android:textSize="10dp"
+                    android:textSize="11sp"
                     app:layout_constraintEnd_toStartOf="@+id/user_bar"
                     app:layout_constraintTop_toTopOf="@+id/user_bar" />
 
@@ -390,10 +404,10 @@
                     android:id="@+id/country_emissions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="502.0   "
+                    android:text="@string/_502_0"
 
                     android:textColor="@color/black"
-                    android:textSize="10dp"
+                    android:textSize="11sp"
                     app:layout_constraintEnd_toStartOf="@+id/country_bar"
                     app:layout_constraintTop_toTopOf="@+id/country_bar" />
 
@@ -405,9 +419,9 @@
                     android:layout_marginBottom="88dp"
 
                     android:rotation="270"
-                    android:text="Emitted CO2/year (tons)"
+                    android:text="@string/emitted_co2_year_tons"
                     android:textColor="@color/black"
-                    android:textSize="10dp"
+                    android:textSize="11sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/user_bar" />
 
@@ -442,7 +456,7 @@
                     android:id="@+id/countryStat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Comparison to country"
+                    android:text="@string/comparison_to_country"
                     android:textAlignment="center"
                     android:textColor="@color/palette_black"
                     android:textSize="15sp"
@@ -456,7 +470,7 @@
                     android:id="@+id/globalTargetStat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Comparison to global target"
+                    android:text="@string/comparison_to_global_target"
                     android:textAlignment="center"
                     android:textColor="@color/palette_black"
                     android:textSize="15sp"
@@ -472,8 +486,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
-            android:text="Home"
-            android:layout_margin="10dp"
+            android:text="@string/home"
             android:textColor="@color/palette_black"
             app:layout_constraintTop_toBottomOf="@id/extraInfo"
             app:layout_constraintEnd_toEndOf="@+id/extraInfo"/>
@@ -483,8 +496,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
-            android:text="Retake"
-            android:layout_margin="10dp"
+            android:text="@string/retake_survey"
             android:textColor="@color/palette_black"
             app:layout_constraintTop_toBottomOf="@id/extraInfo"
             app:layout_constraintStart_toStartOf="@+id/extraInfo"/>
@@ -493,10 +505,9 @@
             android:id="@+id/stats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:text="Statistics:"
+            android:text="@string/statistics"
             android:textColor="@color/white"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:textStyle="italic"
             app:layout_constraintBottom_toTopOf="@id/extraInfo"
             app:layout_constraintStart_toStartOf="@id/extraInfo"/>

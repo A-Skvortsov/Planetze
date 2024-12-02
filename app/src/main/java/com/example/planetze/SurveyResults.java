@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,8 +86,6 @@ public class SurveyResults extends Fragment {
                     results = kgToTons(results);
                     userE = sum(results);  //saves user result immediately
                     setGlobalTargetComparison(view);
-                } else {
-                    Log.d("FirebaseData:", "Array does not exist for this user.");
                 }
 
                 //initializes some basics
@@ -104,9 +101,7 @@ public class SurveyResults extends Fragment {
                 setUserDataComparisonGraph(view, userE);
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                System.out.println("FirebaseData" + "Error: " + databaseError.getMessage());
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
 
         //spinner change listener

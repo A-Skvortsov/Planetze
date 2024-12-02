@@ -11,7 +11,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/eco_tracker"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
 
         <!-- mini calendar image displaying selected date-->
@@ -22,9 +22,9 @@
             android:layout_height="wrap_content"
 
             android:layout_marginTop="64dp"
-            android:text="Today's Total:"
+            android:text="@string/todays_total"
             android:textColor="@color/black"
-            android:textSize="20dp"
+            android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -35,7 +35,7 @@
             android:layout_height="40dp"
             android:background="@color/palette_turquoise"
             android:gravity="center"
-            android:text="0.0 kg of CO2 Emitted"
+            android:text="@string/daily_total_default_emissions"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -74,7 +74,7 @@
             android:id="@+id/yearText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2024"
+            android:text="@string/current_year"
             app:layout_constraintEnd_toEndOf="@+id/dateText"
             app:layout_constraintStart_toStartOf="@+id/dateText"
             app:layout_constraintTop_toBottomOf="@+id/dateText" />
@@ -85,7 +85,7 @@
             android:id="@+id/calendarToggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="View Calendar"
+            android:text="@string/view_calendar"
             app:layout_constraintEnd_toEndOf="@+id/date"
             app:layout_constraintHorizontal_bias="0.515"
             app:layout_constraintStart_toStartOf="@+id/date"
@@ -106,15 +106,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="@id/calendarToggle"
             app:layout_constraintVertical_bias="0.499">
-
-            <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-                android:id="@+id/calendar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:mcv_selectionColor="@color/palette_turquoise"
-                app:mcv_showOtherDates="all"
-                app:mcv_tileSize="50dp" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
@@ -135,7 +126,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Activities"
+                android:text="@string/activities_btn"
                 android:textColor="@color/palette_light_gray"
                 app:backgroundTint="@color/custom_button_group_background"
                 app:rippleColor="@color/palette_turquoise_tint_200"
@@ -147,7 +138,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Habits"
+                android:text="@string/habits_btn"
                 android:textColor="@color/palette_light_gray"
                 app:backgroundTint="@color/custom_button_group_background"
                 app:rippleColor="@color/palette_turquoise_tint_200"
@@ -159,7 +150,7 @@
             android:id="@+id/addBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add"
+            android:text="@string/add_btn"
             app:layout_constraintStart_toStartOf="@+id/scrollView2"
             app:layout_constraintTop_toBottomOf="@+id/scrollView2"
             tools:layout_editor_absoluteX="64dp"
@@ -169,7 +160,7 @@
             android:id="@+id/editBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Edit"
+            android:text="@string/edit_btn"
             app:layout_constraintEnd_toEndOf="@+id/scrollView2"
             app:layout_constraintHorizontal_bias="0.496"
             app:layout_constraintStart_toStartOf="@+id/scrollView2"
@@ -181,7 +172,7 @@
             android:id="@+id/delBtn"
             android:layout_width="98dp"
             android:layout_height="52dp"
-            android:text="Delete"
+            android:text="@string/delete_btn"
             app:layout_constraintEnd_toEndOf="@+id/scrollView2"
             app:layout_constraintTop_toBottomOf="@+id/scrollView2"
             tools:layout_editor_absoluteX="279dp"
@@ -214,8 +205,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="No activities today yet"
-            android:textSize="15dp"
+            android:text="@string/no_activities_today_yet"
+            android:textSize="15sp"
             android:textStyle="bold|italic"
             android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@+id/editBtn"
@@ -227,9 +218,9 @@
             android:id="@+id/issuePrompt1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="*"
+            android:text="@string/issue_prompt_star"
             android:textColor="@android:color/holo_red_light"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:textStyle="bold|italic"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/issuePrompt2"
@@ -240,8 +231,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:text="Please select an activity to edit/delete"
-            android:textSize="15dp"
+            android:text="@string/issue_prompt_eco_tracker"
+            android:textSize="15sp"
             android:textStyle="bold|italic"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="@+id/editBtn"
@@ -252,7 +243,7 @@
             android:id="@+id/annualEmissionsBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="See Survey Results"
+            android:text="@string/see_survey_results_btn"
             android:textStyle="italic"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
