@@ -1,5 +1,8 @@
 package com.example.planetze;
 
+//import static com.google.firebase.database.core.operation.OperationSource.Source.User;
+
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +19,7 @@ import com.example.planetze.Login.LoginView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class ResendConfirmFragment extends Fragment {

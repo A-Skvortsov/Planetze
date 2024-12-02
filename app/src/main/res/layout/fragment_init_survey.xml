@@ -123,20 +123,37 @@
                 android:id="@+id/getStartedPrompt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/getStartedSurveyPrompt"
+                android:text="@string/get_started_survey_prompt"
                 android:textColor="@color/palette_black"
                 android:textAlignment="center"
-                android:textSize="20sp"
-                android:textStyle="italic|bold"
-                android:layout_marginBottom="70dp"/>
+                android:textSize="30sp"
+                android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/beginSurveyBtn"
-                android:layout_width="wrap_content"
+            <View
+                android:layout_height="0dp"
+                android:layout_width="0dp"
+                android:layout_weight="1">
+            </View>
+
+            <TextView
+                android:id="@+id/beginWithSurveyText"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Begin Survey"
-                android:layout_gravity="center"/>
+                android:text="@string/we_ll_begin_with_a_survey"
+                android:textColor="@color/palette_light_gray"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="10dp"/>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/beginSurveyBtn"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_margin="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/begin_survey"
+                android:layout_gravity="center"/>
 
             <!-- "Please select an answer" prompt for when user tries to proceed without answering-->
             <!-- also part of the "select an answer" prompt-->

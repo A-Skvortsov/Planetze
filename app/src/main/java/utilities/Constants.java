@@ -29,8 +29,8 @@ public class Constants {
     public static final int housing_qs = 7;
     public static final int consumption_qs = 4;
 
-    //settings
-
+    // Firebase retrieval constants
+    public static final String USER_DATA = "user data";
     public static final String STAY_LOGGED_ON = "stay_logged_on";
     public static final String INTERPOLATE_EMISSIONS_DATA = "interpolate_emissions_data";
     public static final String HIDE_GRID_LINES = "hide_grid_lines";
@@ -39,7 +39,6 @@ public class Constants {
     public static final String DEFAULT_CAR = "default_car";
     public static final String EMAIL = "email";
     public static final String USERNAME = "name";
-
 
     // All survey questions. Each sub array is a question followed by all possible answer options
     public static final String[][] questions = {
@@ -315,7 +314,7 @@ public class Constants {
             "Zambia",
             "Zimbabwe"
     };
-    public static final String default_country = country[38];
+
     public static final double[] country_emissions = {
             0.29536375,
             0.99422127,
@@ -708,21 +707,21 @@ public class Constants {
                                             3200,  //natural gas
                                             1800,  //electricity
                                             14000,  //oil
-                                            0,  //propane; this is missing from given database. Ask instructors
+                                            5800,  //propane
                                             4510  //wood
                                     },
                                     {  //$150-200/month
                                             3400,  //natural gas
                                             2700,  //electricity
                                             17500,  //oil
-                                            0,  //propane; missing from given data
+                                            5852,  //propane
                                             4680  //wood
                                     },
                                     {  //>$200/month
                                             3600,  //natural gas
                                             3600,  //electricity
                                             21000,  //oil
-                                            0,  //propane; missing
+                                            6100,  //propane
                                             5000  //wood
                                     }}},
                     {  //2 people
@@ -817,21 +816,21 @@ public class Constants {
                                             3400,
                                             2100,
                                             15500,
-                                            0,  //missing propane
+                                            6410,
                                             5010
                                     },
                                     {  //$150-200/month
                                             3600,
                                             3100,
                                             18100,
-                                            0,
+                                            6560,
                                             5180
                                     },
                                     {  //>$200/month
                                             3800,
                                             3800,
                                             22000,
-                                            0,
+                                            6840,
                                             5500
                                     }}},
                     {  //3-4 people
@@ -887,13 +886,13 @@ public class Constants {
                                             3500,	1500,	12500,	7240,	5640
                                     },
                                     {  //$100-150/month
-                                            3700,	2300,	16250, 0,	5710  //missing propane
+                                            3700,	2300,	16250, 7300,	5710
                                     },
                                     {  //$150-200/month
-                                            4100,	3400,	20000, 0,		5980  //missing propane
+                                            4100,	3400,	20000, 7600,	5980
                                     },
                                     {  //>$200/month
-                                            4100,	4000,	23500, 0,		6250  //missing propane
+                                            4100,	4000,	23500, 7890,	6250
                                     }}},
                     {  //5 people
                             {  //<1000 sqft
@@ -936,13 +935,13 @@ public class Constants {
                                             3800,	1800,	14000,	8140,	6340
                                     },
                                     {  //$100-150/month
-                                            4000,	2700,	17500, 0,		6510  //missing propane
+                                            4000,	2700,	17500, 8230,	6510
                                     },
                                     {  //$150-200/month
-                                            4400,	3600,	21000, 0,		6680  //missing propane
+                                            4400,	3600,	21000, 8300,	6680
                                     },
                                     {  //>$200/month
-                                            4400,	4200,	25000, 0,		7000  //missing propane
+                                            4400,	4200,	25000, 8710,	7000
                                     }}}},
             {  //semi
                     {  //1 person

@@ -24,6 +24,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.Objects;
 
+import utilities.UserData;
+
 public class HomeActivity extends AppCompatActivity {
 
     private Button userSettings;
@@ -54,10 +56,12 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
+
         userSettings = findViewById(R.id.usersetting_button);
         userSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                UserData.initialize(getApplicationContext());
                 Intent j = new Intent(getApplicationContext(), SettingActivity.class);
                 startActivity(j);
 

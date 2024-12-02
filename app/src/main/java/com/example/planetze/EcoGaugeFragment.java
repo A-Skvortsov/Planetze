@@ -8,6 +8,7 @@ import static utilities.Colors.PALETTE_TURQUOISE_TINT_500;
 import static utilities.Colors.PALETTE_TURQUOISE_TINT_600;
 import static utilities.Colors.PALETTE_TURQUOISE_TINT_800;
 import static utilities.Constants.DAILY;
+import static utilities.Constants.DEFAULT_COUNTRY;
 import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.HIDE_TREND_LINE_POINTS;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
@@ -16,7 +17,6 @@ import static utilities.Constants.OVERALL;
 import static utilities.Constants.WEEKLY;
 import static utilities.Constants.YEARLY;
 import static utilities.Constants.country;
-import static utilities.Constants.default_country;
 
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -58,12 +58,14 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.android.material.button.MaterialButtonToggleGroup;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import utilities.CountryEmissionsData;
 import customDataStructures.EmissionNode;
@@ -101,6 +103,7 @@ public class EcoGaugeFragment extends Fragment
     private boolean interpolate;
     private boolean hideTrendLinePoints;
     private boolean hideGridLines;
+    private String defaultCountry;
 
 
     @Override
@@ -110,6 +113,11 @@ public class EcoGaugeFragment extends Fragment
         interpolate = UserData.getSetting(getContext(), INTERPOLATE_EMISSIONS_DATA);
         hideTrendLinePoints = UserData.getSetting(getContext(), HIDE_TREND_LINE_POINTS);
         hideGridLines = UserData.getSetting(getContext(), HIDE_GRID_LINES);
+        defaultCountry = UserData.getData(requireContext(), DEFAULT_COUNTRY);
+
+        if (defaultCountry == null) {
+            defaultCountry = "Canada";
+        }
 
         View view = inflater.inflate(R.layout.fragment_eco_gauge, container, false);
 
@@ -130,15 +138,10 @@ public class EcoGaugeFragment extends Fragment
 
         this.countryEmissions = new CountryEmissionsData(requireContext());
 
-        // TODO: THE SOURCE OF THE ID BELOW SHOULD BE CHANGED TO ACCURATELY REFLECT THE CURRENT USER
-        this.userEmissionsData = new UserEmissionsData(userId, interpolate, new UserEmissionsData.DataReadyListener() {
-            @Override
-            public void start() {
-                // Display loading indicator
-                loadingIndicator.setVisibility(View.VISIBLE);
-            }
+        this.userEmissionsData = new UserEmissionsData(userId, interpolate,
+                new UserEmissionsData.DataReadyListener() {
 
-            @Override
+                    @Override
             public void onDataReady() {
                 if (userEmissionsData.userHasData()) {
                     // Hide loading indicator when data is ready
@@ -192,7 +195,7 @@ public class EcoGaugeFragment extends Fragment
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                renderComparisonChart(default_country);
+                renderComparisonChart(defaultCountry);
             }
         });
 
@@ -249,15 +252,16 @@ public class EcoGaugeFragment extends Fragment
      * countries that can be compared with.
      */
     private void renderComparisonUI() {
+
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(),
                 android.R.layout.simple_spinner_item, country);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         comparisonSpinner.setAdapter(adapter);
 
         // Set the default country on the spinner
-        comparisonSpinner.setSelection(adapter.getPosition(default_country));
+        comparisonSpinner.setSelection(adapter.getPosition(defaultCountry));
 
-        renderComparisonChart(default_country);
+        renderComparisonChart(defaultCountry);
     }
 
     /**
@@ -278,23 +282,23 @@ public class EcoGaugeFragment extends Fragment
             case DAILY:
                 return "You emitted "
                         + Math.round(userEmissionsData.getUserEmissions(DAILY) * 100) / 100.0
-                        + " kg CO2e today.";
+                        + " kg CO₂e today.";
             case WEEKLY:
                 return "You emitted "
                         + Math.round(userEmissionsData.getUserEmissions(WEEKLY) * 100) / 100.0
-                        + " kg CO2e this week.";
+                        + " kg CO₂e this week.";
             case MONTHLY:
                 return "You emitted "
                         + Math.round(userEmissionsData.getUserEmissions(MONTHLY) * 100) / 100.0
-                        + " kg CO2e this month.";
+                        + " kg CO₂e this month.";
             case YEARLY:
                 return "You emitted "
                         + Math.round(userEmissionsData.getUserEmissions(YEARLY) * 100) / 100.0
-                        + " kg CO2e this year.";
+                        + " kg CO₂e this year.";
             default:
                 return "You emitted "
                         + Math.round(userEmissionsData.getUserEmissions(OVERALL) * 100) / 100.0
-                        + " kg CO2e.";
+                        + " kg CO₂e.";
         }
     }
 
@@ -354,7 +358,7 @@ public class EcoGaugeFragment extends Fragment
         gradientDrawable.setCornerRadius(0f);
 
         // Chart data configuration. See https://weeklycoding.com/mpandroidchart-documentation/
-        LineDataSet lineDataSet = new LineDataSet(entries, "Emission");
+        LineDataSet lineDataSet = new LineDataSet(entries, "kg CO₂e");
         lineDataSet.setCircleHoleColor(PALETTE_TURQUOISE_TINT_800);
         lineDataSet.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         lineDataSet.setCircleColor(PALETTE_TURQUOISE);
@@ -528,7 +532,7 @@ public class EcoGaugeFragment extends Fragment
 
 
         List<BarEntry> barEntries = new ArrayList<>(Arrays.asList(barEntry1, barEntry2));
-        BarDataSet barDataSet = new BarDataSet(barEntries, "");
+        BarDataSet barDataSet = new BarDataSet(barEntries, "kg CO₂e");
 
         // Chart data configuration. See https://weeklycoding.com/mpandroidchart-documentation/
         barDataSet.setColors(colors);
@@ -540,7 +544,7 @@ public class EcoGaugeFragment extends Fragment
         comparisonChart.getXAxis().setPosition(XAxis.XAxisPosition.BOTTOM);
         comparisonChart.animateY(2000, Easing.EaseInOutExpo);
         comparisonChart.getAxisRight().setEnabled(false);
-        comparisonChart.getDescription().setText("");
+        comparisonChart.getDescription().setEnabled(false);
         comparisonChart.setData(barData);
 
         // Hide grid lines
@@ -568,7 +572,9 @@ public class EcoGaugeFragment extends Fragment
      *                                  the selected time period.
      */
     private void showComparisonPercentage(float userEmissions, float countryEmissions) {
-        if (userEmissions > countryEmissions) {
+        double epsilon = 0.01;
+
+        if (userEmissions > countryEmissions + epsilon) {
             // Calculate percent difference and round to one decimal point.
             double percentage = Math.round(((userEmissions - countryEmissions)
                     / countryEmissions * 100.0) * 10) / 10.0;
@@ -576,7 +582,7 @@ public class EcoGaugeFragment extends Fragment
             String text = "+" + percentage + "%";
             comparisonPercentageText.setText(text);
             comparisonPercentageText.setTextColor(Color.RED);
-        } else if (userEmissions < countryEmissions) {
+        } else if (userEmissions < countryEmissions - epsilon) {
             // Calculate percent difference and round to one decimal point.
             double percentage = Math.round(((countryEmissions - userEmissions)
                     / countryEmissions * 100.0) * 10) / 10.0;
@@ -615,7 +621,7 @@ public class EcoGaugeFragment extends Fragment
     @Override
     public void onValueSelected(Entry e, Highlight h) {
         // Update the TextView with the emissions value of the selected point on the chart
-        String emissionsText = Math.round(e.getY() * 100) / 100.0 + " kg CO2e";
+        String emissionsText = "Emitted " + Math.round(e.getY() * 100) / 100.0 + " kg CO₂e";
         emissionsOverviewTextView.setText(emissionsText);
     }
 

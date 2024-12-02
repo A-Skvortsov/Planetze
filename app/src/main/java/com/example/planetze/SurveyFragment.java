@@ -1,5 +1,7 @@
 package com.example.planetze;
 
+import static utilities.Constants.USER_DATA;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -159,7 +161,7 @@ public class SurveyFragment extends Fragment {
         //firebase stuff used to store what car uses drives by default (needed for "Drive personal
         //vehicle" activity in EcoTracker)
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-        DatabaseReference userRef = db.getReference("user data")
+        DatabaseReference userRef = db.getReference(USER_DATA)
                 .child(userId);
         Map<String, Object> c = new HashMap<>();
 
@@ -347,19 +349,20 @@ public class SurveyFragment extends Fragment {
     private void initSurvey(View view) {
         TextView getStartedPrompt = view.findViewById(R.id.getStartedPrompt);
         Button beginSurveyBtn = view.findViewById(R.id.beginSurveyBtn);
+        TextView beingWithSurveyText = view.findViewById(R.id.beginWithSurveyText);
+
         nextBtn = view.findViewById(R.id.nextBtn);
         category = view.findViewById(R.id.category);
 
-        beginSurveyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getStartedPrompt.setVisibility(View.INVISIBLE);
-                beginSurveyBtn.setVisibility(View.INVISIBLE);
+        beginSurveyBtn.setOnClickListener(v -> {
+            getStartedPrompt.setVisibility(View.INVISIBLE);
+            beginSurveyBtn.setVisibility(View.INVISIBLE);
+            beingWithSurveyText.setVisibility(View.INVISIBLE);
 
-                nextBtn.setVisibility(View.VISIBLE);
-                category.setVisibility(View.VISIBLE);
-                beginFirstQuestion(view);
-            }
+
+            nextBtn.setVisibility(View.VISIBLE);
+            category.setVisibility(View.VISIBLE);
+            beginFirstQuestion(view);
         });
     }
 
@@ -392,6 +395,7 @@ public class SurveyFragment extends Fragment {
              * @param v The view that was clicked.
              */
             public void onClick(View v) {
+                System.out.println(current_q);
                 //if no answer selected, should not proceed. Should prompt user to answer
                 if (!saveAnswer(options, current_cat, current_q)) {  //saves user's answer to prev question
                     pleaseAnswer1.setVisibility(View.VISIBLE); pleaseAnswer2.setVisibility(View.VISIBLE);
@@ -407,7 +411,7 @@ public class SurveyFragment extends Fragment {
                         list.add(co2PerCategory[i]);
                     }
 
-                    DatabaseReference userRef = db.getReference("user data")
+                    DatabaseReference userRef = db.getReference(USER_DATA)
                             .child(userId);
                     //send survey results to firebase as Map<String, List<Double>>
                     Map<String, Object> c = new HashMap<>();
@@ -435,16 +439,17 @@ public class SurveyFragment extends Fragment {
              * @param v The view that was clicked.
              */
             public void onClick(View v) {
+                System.out.println(current_q);
                 if (current_q == 5 && transport_ans[0] == 1) current_q -= 2;  //skips follow-ups if user says no to car
                 if (current_q == 7 && transport_ans[3] == 0) current_q -= 1;  //same but for public transport
                 if (current_q == 15 && food_ans[0] != 3) current_q -= 4;  //skips follow-ups if user says no to meat
 
                 current_q--;
-                if (current_q == 0) backBtn.setVisibility(View.INVISIBLE);
                 if (questions[current_q][0].equals("-")) {
                     current_q--;
                     current_cat--;
                 }
+                if (current_q == 0) backBtn.setVisibility(View.INVISIBLE);
                 updateSurvey(options, question, category, current_q, current_cat);
             }
         });
@@ -458,7 +463,7 @@ public class SurveyFragment extends Fragment {
      */
     private void saveDefaultCountry(int btnId) {
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-        DatabaseReference userRef = db.getReference("user data")
+        DatabaseReference userRef = db.getReference(USER_DATA)
                 .child(userId);
         Map<String, Object> c = new HashMap<>();
         c.put("default_country", questions[0][btnId + 1]);

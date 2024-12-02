@@ -9,6 +9,7 @@ import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
 import static utilities.Constants.HIDE_TREND_LINE_POINTS;
 import static utilities.Constants.STAY_LOGGED_ON;
+import static utilities.Constants.USER_DATA;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -105,7 +106,7 @@ public class SignUpFragment extends Fragment {
         });
 
         db = FirebaseDatabase.getInstance(FIREBASE_LINK);
-        userRef = db.getReference("user data");
+        userRef = db.getReference(USER_DATA);
 
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
