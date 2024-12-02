@@ -126,7 +126,6 @@
     <string name="lk4"> <a href="https://www.torontoenvironment.org/donate"> Click here to Donate  </a></string>
     <string name="lk5"> <a href="https://trees.org/"> Click here to Donate  </a></string>
     <string name="lk6"> <a href="https://act.earthjustice.org/a/givetoday?ms=web_menu_header"> Click here to Donate  </a></string>
-    <string name="delete_account">Delete Account</string>
     <string name="get_started_survey_prompt">Let\'s get started! We will calculate your current carbon footprint based on your lifestyle. You only need to do this survey once.</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="back_btn">Back</string>
