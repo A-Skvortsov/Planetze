@@ -11,8 +11,8 @@ public class Constants {
     public static final String[] categories = {"Transportation", "Food", "Housing", "Consumption"};
     //categories1 is used specifically because of the first survey question regarding country of residence
     public static final String[] categories1 = {"Area of Residence", "Transportation", "Food", "Housing", "Consumption"};
-    public static final String[] impacts = {"Select an impact level", "Small impact (< 25kg CO2)",
-            "Medium impact (< 50kg CO2)", "Big impact (> 50kg CO2)"};
+    public static final String[] impacts = {"Select an impact level", "Low Emissions (< 1kg CO2)",
+            "Medium Emissions (< 5kg CO2)", "High Emissions (> 5kg CO2)"};
 
 
     public static final int DAILY = 1;

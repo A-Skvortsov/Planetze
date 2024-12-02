@@ -191,12 +191,12 @@ public class AddHabit extends Fragment {
             habitsByImpact.add(new ArrayList<>());
         }
 
-        int impact = 0;
+        double impact = 0.0;
         for (int i = 0; i < allHabits.size(); i++) {
             impact = getImpactLevel(allHabits.get(i));
-            if (impact <= 25) {  //for hard coded constants 25, 50, see "impact" array in Constants.java
+            if (impact <= 1.0) {  //for hard coded constants 25, 50, see "impact" array in Constants.java
                 habitsByImpact.get(0).add(allHabits.get(i));
-            } else if (impact <= 50) {
+            } else if (impact < 5.0) {
                 habitsByImpact.get(1).add(allHabits.get(i));
             } else {
                 habitsByImpact.get(2).add(allHabits.get(i));
@@ -232,6 +232,7 @@ public class AddHabit extends Fragment {
         List<List<String>> habitList;
         //either filters user's habits or all habits
         if (viewingUserHabits()) habitList = clone(currentHabits);
+        else if (viewingRecommendedHabits()) habitList = clone(recommendedHabits);
         else habitList = clone(allHabits);
 
         String category = (String) categorySpinner.getSelectedItem();
@@ -455,6 +456,11 @@ public class AddHabit extends Fragment {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                TextView issuePrompt1 = globalView.findViewById(R.id.issuePrompt1);
+                TextView issuePrompt2 = globalView.findViewById(R.id.issuePrompt2);
+                issuePrompt1.setVisibility(View.INVISIBLE);
+                issuePrompt2.setVisibility(View.INVISIBLE);
+
                 Spinner categorySpinner = globalView.findViewById(R.id.categorySpinner);
                 Spinner impactSpinner = globalView.findViewById(R.id.impactSpinner);
 
@@ -472,6 +478,10 @@ public class AddHabit extends Fragment {
 
     private boolean viewingUserHabits() {
         Button btn = globalView.findViewById(R.id.yourHabitsBtn);
+        return btn.isSelected();
+    }
+    private boolean viewingRecommendedHabits() {
+        Button btn = globalView.findViewById(R.id.recommendedBtn);
         return btn.isSelected();
     }
 
@@ -507,8 +517,18 @@ public class AddHabit extends Fragment {
      */
     private void adoptHabit(String habitToAdopt) {
         ListView listView = globalView.findViewById(R.id.listView);
+        TextView issuePrompt1 = globalView.findViewById(R.id.issuePrompt1);
+        TextView issuePrompt2 = globalView.findViewById(R.id.issuePrompt2);
+        issuePrompt1.setVisibility(View.INVISIBLE);
+        issuePrompt2.setVisibility(View.INVISIBLE);
+        if (habitToAdopt.isEmpty()) {
+            issuePrompt1.setVisibility(View.VISIBLE);
+            issuePrompt2.setVisibility(View.VISIBLE);
+            return;
+        }
         //should be viewing all habits. User habits are already adopted ones
-        if (viewingUserHabits()) return;
+        if (viewingUserHabits() || allHabits == null
+                || allHabits.isEmpty()) return;
 
         for (int i = 0; i < allHabits.size(); i++) {
             //second index of a habit in allHabits is the habit name
@@ -532,8 +552,18 @@ public class AddHabit extends Fragment {
 
     private void quitHabit(String habitToQuit) {
         ListView listView = globalView.findViewById(R.id.listView);
+        TextView issuePrompt1 = globalView.findViewById(R.id.issuePrompt1);
+        TextView issuePrompt2 = globalView.findViewById(R.id.issuePrompt2);
+        issuePrompt1.setVisibility(View.INVISIBLE);
+        issuePrompt2.setVisibility(View.INVISIBLE);
+        if (habitToQuit.isEmpty()) {
+            issuePrompt1.setVisibility(View.VISIBLE);
+            issuePrompt2.setVisibility(View.VISIBLE);
+            return;
+        }
         //Should be viewing user habits. Those are the adopted ones that we can now quit
-        if (!viewingUserHabits()) return;
+        if (!viewingUserHabits() || currentHabits == null
+                || currentHabits.isEmpty()) return;
 
         for (int i = 0; i < currentHabits.size(); i++) {
             if (habitToQuit.equals(currentHabits.get(i).get(1))) {
@@ -681,9 +711,9 @@ public class AddHabit extends Fragment {
      * @param habit the habit to compute the impact level for
      * @return
      */
-    private int getImpactLevel(List<String> habit) {
+    private double getImpactLevel(List<String> habit) {
         String str = habit.get(2);  //3rd index always contains impact level
-        int i = Math.abs(Integer.valueOf(str));  //we just use positive values for comparison **
+        double i = Math.abs(Double.parseDouble(str));  //we just use positive values for comparison **
         return i;
 
         //** in reality, all habits have a negative value for impact level, representing

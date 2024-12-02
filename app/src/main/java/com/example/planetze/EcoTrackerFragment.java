@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -41,16 +42,14 @@ import utilities.UserData;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link EcoTrackerFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class EcoTrackerFragment extends Fragment {
 
-    View globalView;
-    final String[] months = Constants.months;
+    static View globalView;
+    final static String[] months = Constants.months;
     private FirebaseDatabase db;
-    //String userId = "QMCLRlEKD9h2Np1II1vrNU0vpxt2";  //this should be changed to the particular logged in user once everything works
-    String userId;
+    public static String userId;
     private static DatabaseReference calendarRef;  //this is static so that we can call fetchSnapshot()
             //from addActivity fragment when returning to ecotrackerfragment in order to update
             //ecotracker activity info upon return
@@ -60,20 +59,11 @@ public class EcoTrackerFragment extends Fragment {
     private static View.OnClickListener addListener;
     private static View.OnClickListener editListener;
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     HashMap<String, Object> days = new HashMap<>();  //used to store the days of a user calendar
     List<List<String>> acts = new ArrayList<>();  //used to store the activities of a day
     List<List<String>> currentHabits = new ArrayList<>();
     List<String> activityToEdit = new ArrayList<>();  //used to store the activity selected for editing
-    String date = "";
+    public static String date = "";
     int presetCalendar = 0;
     boolean habitsToggled = false;
 
@@ -81,23 +71,6 @@ public class EcoTrackerFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EcoTrackerFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static EcoTrackerFragment newInstance(String param1, String param2) {
-        EcoTrackerFragment fragment = new EcoTrackerFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public void onResume() {
@@ -109,10 +82,6 @@ public class EcoTrackerFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
 
         Bundle args = getArguments();
         if (args != null && args.containsKey("date")) {
@@ -155,11 +124,8 @@ public class EcoTrackerFragment extends Fragment {
         habitsRef = db.getReference().child("user data")
                         .child(userId).child("current_habits");
         Log.d("Firebase", "Reference Path: " + calendarRef);  //for debugging
-        setCalendarDecorators();
 
         final Button calendarToggle = view.findViewById(R.id.calendarToggle);  //button to toggle calendar
-        final ConstraintLayout calendarView = view.findViewById(R.id.calendarView);  //view containing calendar
-        final MaterialCalendarView calendar = view.findViewById(R.id.calendar);  //calendar itself
         final TextView dateText = view.findViewById(R.id.dateText);
         final TextView yearText = view.findViewById(R.id.yearText);
         final TextView dailyTotal = view.findViewById(R.id.dailyTotal);
@@ -229,35 +195,8 @@ public class EcoTrackerFragment extends Fragment {
         calendarToggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (calendarView.getVisibility() == View.VISIBLE) {
-                    calendarView.setVisibility(View.INVISIBLE);
-                    calendarToggle.setText("View Calendar");
-                } else {
-                    calendarView.setVisibility(View.VISIBLE);
-                    calendarToggle.setText("Select");
-                }
-
-            }
-        });
-
-
-        //updates information when new date selected
-        calendar.setOnDateChangedListener(new OnDateSelectedListener() {
-            @Override
-            public void onDateSelected(MaterialCalendarView view, CalendarDay day, boolean s) {
-                if (habitsToggled) {
-                    String prompt = "Log a habit to reduce your carbon emissions!";
-                    issuePrompt2.setText(prompt);
-                } else {
-                    issuePrompt2.setVisibility(View.INVISIBLE);
-                } issuePrompt1.setVisibility(View.INVISIBLE);  //don't want a red warning star regardless
-
-                int d = day.getDay(); int m = day.getMonth(); int y = day.getYear();
-                String date1 = d + " " + months[m-1];
-                dateText.setText(date1);
-                yearText.setText(String.valueOf(y));
-                date = y + "-" + m + "-" + d;
-                fetchSnapshot();  //updates displayed info to be for the selected date
+                DialogFragment cal = new CalendarFragment();
+                cal.show(getParentFragmentManager(), "Calendar");
             }
         });
 
@@ -431,7 +370,6 @@ public class EcoTrackerFragment extends Fragment {
         } else {
             switchToActivities();
         }
-        setCalendarDecorators();
     }
 
     public void switchToHabits() {
@@ -623,48 +561,6 @@ public class EcoTrackerFragment extends Fragment {
     }
 
 
-    /**
-     * Puts little dots on calendar days with activities so user knows what days have activities
-     */
-    private void setCalendarDecorators() {
-        MaterialCalendarView calendarView = globalView.findViewById(R.id.calendar);
-        DatabaseReference calendarRef = db.getReference("user data")
-                .child(userId).child("calendar");
-        calendarRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                HashMap<String, Object> calendar = (HashMap<String, Object>) snapshot.getValue();
-                Set<String> dates = (Set<String>) calendar.keySet();
-                dates.remove("0000-00-00");  //gets rid of default date
-                List<CalendarDay> eventDates = new ArrayList<>();
-                for (String date : dates) {
-                    String[] ymd = date.split("-");
-                    int y = Integer.parseInt(ymd[0]);
-                    int m = Integer.parseInt(ymd[1]);
-                    int d = Integer.parseInt(ymd[2]);
-                    eventDates.add(CalendarDay.from(y, m, d));
-                }
-
-                calendarView.addDecorator(new DayViewDecorator() {
-                    @Override
-                    public boolean shouldDecorate(CalendarDay day) {
-                        return eventDates.contains(day);
-                    }
-                    @Override
-                    public void decorate(DayViewFacade view) {
-                        view.addSpan(new DotSpan(10, Color.MAGENTA));
-                    }
-                });
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("FirebaseError", "Failed to fetch event dates", error.toException());
-            }
-        });
-    }
-
-
     private void setAnnualEmissionsBtn(View view) {
         Button annualEmissionsBtn = view.findViewById(R.id.annualEmissionsBtn);
         annualEmissionsBtn.setOnClickListener(new View.OnClickListener() {
@@ -687,6 +583,18 @@ public class EcoTrackerFragment extends Fragment {
         return emissions < 0 && !list.get(1).equals("Cycling/Walking");
     }
 
+
+    public static void updateDate(CalendarDay day) {
+        TextView dateText = globalView.findViewById(R.id.dateText);
+        TextView yearText = globalView.findViewById(R.id.yearText);
+
+        int d = day.getDay(); int m = day.getMonth(); int y = day.getYear();
+        String date1 = d + " " + months[m-1];
+        dateText.setText(date1);
+        yearText.setText(String.valueOf(y));
+        date = y + "-" + m + "-" + d;
+        fetchSnapshot();  //updates displayed info to be for the selected date
+    }
 
 
     private void loadFragment(Fragment fragment) {

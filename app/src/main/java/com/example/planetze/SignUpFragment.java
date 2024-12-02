@@ -419,6 +419,7 @@ public class SignUpFragment extends Fragment {
                     String id = UserData.getUserID(getContext());
                     String name = auth.getCurrentUser().getDisplayName();
                     String email = UserData.getData(getContext(),EMAIL);
+
                     UserData.setDefaultSettings(id,email, name);
                     loadFragment(new SurveyFragment());
                 }

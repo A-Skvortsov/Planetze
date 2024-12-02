@@ -81,6 +81,7 @@ public class LoginModel {
                     if (user.hasChild("email")) {
                         String email = user.child("email").getValue().toString().trim();
                         String name = user.child("name").getValue().toString().trim();
+                      
                         String userID = UserData.getUserID(presenter.getViewContext());
                         if (email.equals(auth.getCurrentUser().getEmail().trim())) {
                             unverifiedRef.child(userID).removeValue();
@@ -102,6 +103,7 @@ public class LoginModel {
         userRef.get().addOnCompleteListener(task -> {
             DataSnapshot users = task.getResult();
             String userID = UserData.getUserID(presenter.getViewContext());
+
             if (users.hasChild(userID)) {
                 for(DataSnapshot user:users.getChildren()) {
                     Object inu = user.child("is_new_user").getValue();
@@ -187,9 +189,11 @@ public class LoginModel {
                 }
 
                 if (!equalsEmail) {
+
                     String id = UserData.getUserID(presenter.getViewContext());
                     String name = auth.getCurrentUser().getDisplayName();
                     String email = UserData.getData(presenter.getViewContext(), EMAIL);
+
                     setDefaultSettings(id,email, name);
                     presenter.takeToSurvey();
                 }
