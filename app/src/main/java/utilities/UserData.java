@@ -143,6 +143,7 @@ public class UserData {
 
         auth.getCurrentUser().delete();
         auth.signOut();
+        
         userRef.child(UserData.getUserID(context)).removeValue();
         UserData.logout(context);
     }
@@ -213,7 +214,7 @@ public class UserData {
                 boolean cond1 = user.getKey().toString().trim().equals(userID);
 
                 if (user.hasChild(dataName) && cond1) {
-                    String data = user.child(dataName).toString().trim();
+                    String data = user.child(dataName).getValue().toString().trim();
                     setData(context, dataName, data);
                     break;
                 }

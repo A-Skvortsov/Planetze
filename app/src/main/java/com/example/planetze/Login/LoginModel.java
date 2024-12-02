@@ -81,8 +81,8 @@ public class LoginModel {
                     if (user.hasChild("email")) {
                         String email = user.child("email").getValue().toString().trim();
                         String name = user.child("name").getValue().toString().trim();
-                        String userID = auth.getCurrentUser().getUid().toString().trim();
-                        if (email.equals(UserData.getData(presenter.getViewContext(), EMAIL))) {
+                        String userID = UserData.getUserID(presenter.getViewContext());
+                        if (email.equals(auth.getCurrentUser().getEmail().trim())) {
                             unverifiedRef.child(userID).removeValue();
                             UserData.setDefaultSettings(userID, email, name);
                             break;
@@ -102,7 +102,7 @@ public class LoginModel {
         userRef.get().addOnCompleteListener(task -> {
             DataSnapshot users = task.getResult();
             String userID = UserData.getUserID(presenter.getViewContext());
-            if (users.hasChild(UserData.getUserID(presenter.getViewContext()))) {
+            if (users.hasChild(userID)) {
                 for(DataSnapshot user:users.getChildren()) {
                     Object inu = user.child("is_new_user").getValue();
                     boolean cond1 = user.getKey().toString().trim().equals(userID);
