@@ -4,6 +4,7 @@ import static android.app.Activity.RESULT_OK;
 
 import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
 
+import static utilities.Constants.EMAIL;
 import static utilities.Constants.FIREBASE_LINK;
 import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
@@ -80,8 +81,9 @@ public class LoginModel {
                     if (user.hasChild("email")) {
                         String email = user.child("email").getValue().toString().trim();
                         String name = user.child("name").getValue().toString().trim();
-                        String userID = auth.getCurrentUser().getUid().toString().trim();
-                        if (email.equals(UserData.getEmail(presenter.getViewContext()))) {
+                      
+                        String userID = UserData.getUserID(presenter.getViewContext());
+                        if (email.equals(auth.getCurrentUser().getEmail().trim())) {
                             unverifiedRef.child(userID).removeValue();
                             UserData.setDefaultSettings(userID, email, name);
                             break;
@@ -101,7 +103,8 @@ public class LoginModel {
         userRef.get().addOnCompleteListener(task -> {
             DataSnapshot users = task.getResult();
             String userID = UserData.getUserID(presenter.getViewContext());
-            if (users.hasChild(UserData.getUserID(presenter.getViewContext()))) {
+
+            if (users.hasChild(userID)) {
                 for(DataSnapshot user:users.getChildren()) {
                     Object inu = user.child("is_new_user").getValue();
                     boolean cond1 = user.getKey().toString().trim().equals(userID);
@@ -179,16 +182,18 @@ public class LoginModel {
                     if (user.hasChild("email")) {
                         currentemail = user.child("email").getValue(String.class).toString().trim();
                     }
-                    if (currentemail.equals(auth.getCurrentUser().getEmail().trim())) {
+                    if (currentemail.equals(UserData.getData(presenter.getViewContext(), EMAIL))) {
                         equalsEmail = true;
                     }
 
                 }
 
                 if (!equalsEmail) {
-                    String id = auth.getCurrentUser().getUid();
-                    String email = auth.getCurrentUser().getDisplayName();
-                    String name = auth.getCurrentUser().getEmail();
+
+                    String id = UserData.getUserID(presenter.getViewContext());
+                    String name = auth.getCurrentUser().getDisplayName();
+                    String email = UserData.getData(presenter.getViewContext(), EMAIL);
+
                     setDefaultSettings(id,email, name);
                     presenter.takeToSurvey();
                 }

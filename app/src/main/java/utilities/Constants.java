@@ -35,6 +35,11 @@ public class Constants {
     public static final String INTERPOLATE_EMISSIONS_DATA = "interpolate_emissions_data";
     public static final String HIDE_GRID_LINES = "hide_grid_lines";
     public static final String HIDE_TREND_LINE_POINTS = "show_trend_line_points";
+    public static final String DEFAULT_COUNTRY = "default_country";
+    public static final String DEFAULT_CAR = "default_car";
+    public static final String EMAIL = "email";
+    public static final String USERNAME = "name";
+
 
     // All survey questions. Each sub array is a question followed by all possible answer options
     public static final String[][] questions = {

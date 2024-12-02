@@ -1,12 +1,17 @@
 package utilities;
 
+import static android.provider.Telephony.Carriers.PASSWORD;
 import static java.lang.Thread.sleep;
 
+import static utilities.Constants.DEFAULT_CAR;
+import static utilities.Constants.DEFAULT_COUNTRY;
+import static utilities.Constants.EMAIL;
 import static utilities.Constants.FIREBASE_LINK;
 import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
 import static utilities.Constants.HIDE_TREND_LINE_POINTS;
 import static utilities.Constants.STAY_LOGGED_ON;
+import static utilities.Constants.USERNAME;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -22,7 +27,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.gson.Gson;
 
 public class UserData {
 
@@ -37,70 +41,7 @@ public class UserData {
         return p.getString("UserID", "");
     }
 
-    public static String getUsername(Context context) {
-        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-        return p.getString("Username", "");
-    }
 
-    private static void retrieveUsername(Context context) {
-
-        FirebaseDatabase db = FirebaseDatabase.getInstance(FIREBASE_LINK);
-        DatabaseReference userRef = db.getReference("user data");
-
-        userRef.get().addOnCompleteListener(task -> {
-            DataSnapshot users = task.getResult();
-            String userID = UserData.getUserID(context);
-            for(DataSnapshot user:users.getChildren()) {
-                Object name = user.child("name").getValue();
-                boolean cond1 = name != null && user.getKey().toString().trim().equals(userID);
-                if (cond1) {
-                    setUsername(context, name.toString().trim());
-                    break;
-                }
-            }
-        });
-
-    }
-
-    private static void setUsername(Context context, String name) {
-        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-        SharedPreferences.Editor e = p.edit();
-        e.putString("Username", name);
-        e.apply();
-    }
-
-    public static String getEmail(Context context) {
-        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-        return p.getString("Email", "");
-    }
-
-    private static void retrieveEmail(Context context) {
-
-        FirebaseDatabase db = FirebaseDatabase.getInstance(FIREBASE_LINK);
-        DatabaseReference userRef = db.getReference("user data");
-
-        userRef.get().addOnCompleteListener(task -> {
-            DataSnapshot users = task.getResult();
-            String userID = UserData.getUserID(context);
-            for(DataSnapshot user:users.getChildren()) {
-                Object email = user.child("email").getValue();
-                boolean cond1 = email != null && user.getKey().toString().trim().equals(userID);
-                if (cond1) {
-                    setEmail(context, email.toString().trim());
-                    break;
-                }
-            }
-        });
-
-    }
-
-
-    private static void setEmail(Context context, String email) {
-        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-        SharedPreferences.Editor e = p.edit();
-        e.putString("Email", email);
-        e.apply();
-    }
 
     public static void login(Context context, String userID, String key) {
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
@@ -178,8 +119,10 @@ public class UserData {
 
 
     public static void initialize(Context context) {
-        retrieveEmail(context);
-        retrieveUsername(context);
+        retrieveData(context,DEFAULT_COUNTRY);
+        retrieveData(context,DEFAULT_CAR);
+        retrieveData(context,EMAIL);
+        retrieveData(context,USERNAME);
 
         retrieveSetting(context,STAY_LOGGED_ON);
         retrieveSetting(context,INTERPOLATE_EMISSIONS_DATA);
@@ -195,11 +138,12 @@ public class UserData {
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
 
         String key = p.getString("privateKey","");
-        AuthCredential credential = EmailAuthProvider.getCredential(getEmail(context), key);
+        AuthCredential credential = EmailAuthProvider.getCredential(UserData.getData(context,EMAIL), key);
         auth.getCurrentUser().reauthenticate(credential);
 
         auth.getCurrentUser().delete();
         auth.signOut();
+        
         userRef.child(UserData.getUserID(context)).removeValue();
         UserData.logout(context);
     }
@@ -253,5 +197,41 @@ public class UserData {
         userRef.child(userID+"/calendar/0000-00-00/0").setValue(0);
 
     }
+
+    public static String getData(Context context, String dataName) {
+        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
+        return p.getString(dataName, "");
+    }
+
+    private static void retrieveData(Context context, String dataName) {
+        FirebaseDatabase db = FirebaseDatabase.getInstance(FIREBASE_LINK);
+        DatabaseReference userRef = db.getReference("user data");
+
+        userRef.get().addOnCompleteListener(task -> {
+            DataSnapshot users = task.getResult();
+            String userID = UserData.getUserID(context);
+            for(DataSnapshot user:users.getChildren()) {
+                boolean cond1 = user.getKey().toString().trim().equals(userID);
+
+                if (user.hasChild(dataName) && cond1) {
+                    String data = user.child(dataName).getValue().toString().trim();
+                    setData(context, dataName, data);
+                    break;
+                }
+                else if (cond1) {
+                    break;
+                }
+
+            }
+        });
+    }
+
+    private static void setData(Context context, String dataName, String data) {
+        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
+        SharedPreferences.Editor e = p.edit();
+        e.putString(dataName, data);
+        e.apply();
+    }
+
 
 }

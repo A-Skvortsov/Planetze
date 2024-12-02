@@ -1,10 +1,12 @@
 package com.example.planetze;
 
+import static utilities.Constants.EMAIL;
 import static utilities.Constants.FIREBASE_LINK;
 import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
 import static utilities.Constants.HIDE_TREND_LINE_POINTS;
 import static utilities.Constants.STAY_LOGGED_ON;
+import static utilities.Constants.USERNAME;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -68,8 +70,8 @@ public class SettingActivity extends AppCompatActivity {
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
 
-        name.setText(UserData.getUsername(getApplicationContext()));
-        email.setText(UserData.getEmail(getApplicationContext()));
+        name.setText(UserData.getData(getApplicationContext(), USERNAME));
+        email.setText(UserData.getData(getApplicationContext(), EMAIL));
 
         db = FirebaseDatabase.getInstance(FIREBASE_LINK);
         userRef = db.getReference("user data");
@@ -89,7 +91,6 @@ public class SettingActivity extends AppCompatActivity {
 
             alert.setTitle("Enter new name");
 
-// Set an EditText view to get user input
             EditText input = new EditText(getApplicationContext());
             alert.setView(input);
 
