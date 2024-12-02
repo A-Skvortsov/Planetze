@@ -412,12 +412,14 @@ public class EcoTrackerFragment extends Fragment {
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AddHabit addHabit = new AddHabit(false);  //"false" prevents immediate return to ecotracker
+                /*AddHabit addHabit = new AddHabit(false);  //"false" prevents immediate return to ecotracker
                 FragmentManager fragmentManager = getChildFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.eco_tracker, addHabit);
                 fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                fragmentTransaction.commit();*/
+                DialogFragment addHabit = new AddHabit();
+                addHabit.show(getParentFragmentManager(), "AddHabit");
             }
         });
 

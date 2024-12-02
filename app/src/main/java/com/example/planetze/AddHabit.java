@@ -3,6 +3,7 @@ package com.example.planetze;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -40,7 +41,7 @@ import utilities.UserEmissionsData;
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
  */
-public class AddHabit extends Fragment {
+public class AddHabit extends DialogFragment {
     private boolean returnToEcoTracker = true;
     private View globalView;
     private final String[] categories = Constants.categories;

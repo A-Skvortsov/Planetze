@@ -3,6 +3,7 @@ package com.example.planetze;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -41,7 +42,7 @@ import utilities.UserData;
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
  */
-public class AddActivity extends Fragment {
+public class AddActivity extends DialogFragment {
     private final String msg1 = "Select a Category";
     private final String msg2 = "Select an Activity";
     private final String catactPrompt = "Please select a category and activity";
