@@ -12,23 +12,23 @@
 
 USER FLOW
 
-  1. user opens app<br>
-	2. user is presented with a sign-up/login module
-		i. for sign-up:
-			a) user is prompted to enter account information
-			b) user is denied the ability to create an account with an email for which an account already exists
-			c) user must confirm password (password also has some basic restrictions i.e. no spaces)
-			d) if account information is valid, user is sent a verification email and taken to the login page where they can login once email is verified
-		ii. for login:
-			a) if user tries to login before having verified their email, they will be denied login
-			b) if user enters invalid credentials, they are prevented from logging in and told that credentials are invalid
-			c) if user enters valid credentials, proceed to 3.
-	3. upon logging in:
-		i. if it is the user's first login, they are taken to the initialization/annual carbon emissions survey
-		ii. otherwise, they are taken directly to the app home page, set as Eco Tracker
-	4. initalization/annual carbon emissions survey
-		i. a bunch of questions are asked, each multiple choice
-		ii. "back" button exists so user can go back and redo answers to questions as they do the survey
+  	1. user opens app<br>
+  	2. user is presented with a sign-up/login module<br>
+		i. for sign-up:<br>
+			a) user is prompted to enter account information<br>
+			b) user is denied the ability to create an account with an email for which an account already exists<br>
+			c) user must confirm password (password also has some basic restrictions i.e. no spaces)<br>
+			d) if account information is valid, user is sent a verification email and taken to the login page where they can login once email is verified<br>
+			ii. for login:<br>
+			a) if user tries to login before having verified their email, they will be denied login<br>
+			b) if user enters invalid credentials, they are prevented from logging in and told that credentials are invalid<br>
+			c) if user enters valid credentials, proceeds to app (see 3.)<br>
+	3. upon logging in:<br>
+		i. if it is the user's first login, they are taken to the initialization/annual carbon emissions survey<br>
+		ii. otherwise, they are taken directly to the app home page, set as Eco Tracker<br>
+	4. initalization/annual carbon emissions survey<br>
+		i. a bunch of questions are asked, each multiple choice<br>
+		ii. "back" button exists so user can go back and redo answers to questions as they do the survey<br>
 		iii. certain answers to certain questions will prevent related questions from being asked (i.e. if user answer "no" to "do you have a car?", no further questions about cars will be asked)
 		iv. default country and default car values are saved from inputs to this survey
 		v. upon completion of the survey, user is taken to survey results page
@@ -47,7 +47,7 @@ USER FLOW
 FEATURE SUMMARY
 
   1. Eco Tracker
-  		i. displays user's total emissions (in kg of co2) for the current date at the top of the screen
+  		i. displays user's total emissions (in kg of co2) for the current date at the top of those screen
   		ii. displays current date in a calendar image along with a "view calendar" button which, when clicked, gives a calendar popup from which user can select a new date
   			note: days with logged activities have indicators on them for user-friendliness
   		iii. main part of the screen has a listview that (upon toggle) will show a breakdown of the user's logged activities (with CO2 for each activity) for the selected day (including habit logs) or user's current habits
