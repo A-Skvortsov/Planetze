@@ -12,7 +12,7 @@
 
 USER FLOW
 
-  1. user opens app
+  1. user opens app<br>
 	2. user is presented with a sign-up/login module
 		i. for sign-up:
 			a) user is prompted to enter account information
@@ -38,16 +38,48 @@ USER FLOW
 		iii. a graph showing the comparison between the user's annual emissions and the annual emissions of a country selected from a dropdown list of countries (default country, as specified in 4iv, is set first)
 		iv. a "statistics" module showing statistical (percentage-based) comparisons of user's annual emissions to (1) the national average for the selected country and (2) the global target of 2 tons of co2 per year per person (2 tons global target was given on Piazza)
 		v. an option to retake the survey at the bottom of the page (button)
-		vi. an option to proceed to "home" (Eco Tracker and central navigation area of the app)
+		vi. an option to proceed to "Home" (Eco Tracker and central navigation area of the app)
 	6. Home/central navigation area of the app
 		i. user always has a navigation bar on the bottom of the screen from which they can access Eco Tracker, Eco Guage, Eco Balance and Eco Hub
 		ii. user always has a top bar (top of the screen) naming the page they are currently on (out of those mentioned previously) and having a settings option in the top right corner
-		iii. settings option clicked opens a new page
+		iii. settings option clicked opens a new page with several extra options i.e. logout, stay logged in, Eco Guage chart modifications, etc.
 
 FEATURE SUMMARY
 
-  sdfs
+  1. Eco Tracker
+  		i. displays user's total emissions (in kg of co2) for the current date at the top of the screen
+  		ii. displays current date in a calendar image along with a "view calendar" button which, when clicked, gives a calendar popup from which user can select a new date
+  			note: days with logged activities have indicators on them for user-friendliness
+  		iii. main part of the screen has a listview that (upon toggle) will show a breakdown of the user's logged activities (with CO2 for each activity) for the selected day (including habit logs) or user's current habits
+  		iv. add, edit and delete buttons exist for the activities, log and edit buttons exist for the habits.
+  		v. user can access annual carbon emissions survey results page anytime from a button on the bottom of Eco Tracker
+  		vi. calendar notes:
+  			a) upon selection of a new day, Eco Tracker info updates to show data logged for the selected day
+  			b) user can select past and future dates to edit past activities (using the edit button, where add activity screen is displayed with pre-loaded settings corresponding to the logged activity) and plan future activities (or delete activities)
+  		vii. activity feature:
+  			a) selecting add, user is taken to a page where they can select an activity category, an activity and is prompted to manually input data for the activity before saving
+  		viii. habit feature:
+  			a) when habits are toggled, user can "edit" their habits which takes them to a new page displaying (upon toggle) all available habits (from a pre-defined habit list), user's current habits or recommended habits
+  			b) upon adopting a habit, user is reminded to log activities related to the habit using the "log" button
+  			c) habit progress is shown as logged habits appear as activities in the "activities"-toggled listview so user can see when they complete the habit
+  			d) searching and filter: user has a searchbar above the habitlist in the edit habit screen as well as filter dropdowns which activate filters upon pressing the "apply" button
+  			e) personalized recommendations: user is recommended particular habits based on the category (transportation, food, etc.) of highest activity emissions over the past 30 days
+  	2. Eco guage
+  		i. user view their total co2 emissions for the selected time period at the top of the screen
+  		ii. user can select different time periods (i.e. 1 day, 1 week, etc.) at the bottom of the screen
+  		iii. Emissions trend graph: user is shown a trend graph showing their total emissions over the selected time period
+  		iv. Emissions breakdown by category: user is shown a pie chart showing the percentage breakdown of user emissions by emissions categories (transportation, food, etc.)
+  		v. Comparison to global/national averages: user is shown a bar graph comparing their emissions to the emissions of a selected country along with a percentage relation between the user emissions and the emissions of the selected country
+  	3. Eco Balance
+  		i. user is shown an introductory screen with a description of the purpose of Eco Balance along with a button to help them find emissions offset projects
+  		ii. upon clicking the button, user can explore offset projects each with a description, location and some statistics
+  		iii. selecting offset projects allows user to access links to external websites that provide further information and opportunities to explore the offset projects
+  	4. Eco Hub
+  		i. user is presented with an introductory screen showing learning resources and market trends buttons
+  		ii. selecting learning resources takes user to a screen with a list of informational YouTube videos on carbon emissions reduction
+  		iii. selecting market trends takes user to a screen showing recommended websites/products/services related to emissions and carbon footprint reduction
+  			a) linked websites involve latest market trends towards carbon emissions efforts
 
 ASSUMPTIONS
 
-  asdfasd
+	
