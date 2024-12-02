@@ -42,7 +42,7 @@ import utilities.UserData;
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
  */
-public class AddActivity extends DialogFragment {
+public class AddActivity extends Fragment {
     private final String msg1 = "Select a Category";
     private final String msg2 = "Select an Activity";
     private final String catactPrompt = "Please select a category and activity";
