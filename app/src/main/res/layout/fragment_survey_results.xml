@@ -22,7 +22,7 @@
             android:text="@string/my_annual_carbon_footprint"
             android:textColor="@color/white"
             android:textSize="26sp"
-            android:textStyle="bold|italic"
+            android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +62,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="20dp"
                     android:layout_marginStart="16dp"
-
                     android:layout_marginTop="16dp"
                     android:gravity="center_vertical"
                     android:text="@string/transportation"
@@ -76,7 +75,6 @@
                     android:layout_height="20dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
-
                     android:gravity="center_vertical"
                     android:text="@string/food"
                     android:textSize="11sp"
@@ -89,7 +87,6 @@
                     android:layout_height="20dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
-
                     android:gravity="center_vertical"
                     android:text="@string/housing"
                     android:textSize="11sp"
@@ -117,7 +114,6 @@
                     app:layout_constraintGuide_begin="90dp" />
 
                 <!-- Bars -->
-
                 <TextView
                     android:id="@+id/food"
                     android:layout_width="10dp"
@@ -129,7 +125,6 @@
                     android:text="@string/_0"
                     android:textColor="@color/palette_light_gray"
                     android:textSize="11sp"
-
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/transport" />
 
@@ -158,7 +153,6 @@
                     android:gravity="center"
                     android:text="@string/_0"
                     android:textColor="@color/palette_light_gray"
-
                     android:textSize="11sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -174,7 +168,6 @@
                     android:text="@string/_0"
                     android:textColor="@color/palette_light_gray"
                     android:textSize="11sp"
-
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/housing" />
 
@@ -186,7 +179,6 @@
                     android:layout_height="20dp"
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="16dp"
-
                     android:gravity="center_vertical"
                     android:text="@string/negligible_good_job"
                     android:textSize="11sp"
@@ -201,7 +193,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
                     android:gravity="center_vertical"
-
                     android:text="@string/negligible_good_job"
                     android:textSize="11sp"
                     android:visibility="invisible"
@@ -215,7 +206,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
                     android:gravity="center_vertical"
-
                     android:text="@string/negligible_good_job"
                     android:textSize="11sp"
                     android:visibility="invisible"
@@ -229,7 +219,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="24dp"
                     android:gravity="center_vertical"
-
                     android:text="@string/negligible_good_job"
                     android:textSize="11sp"
                     android:visibility="invisible"
@@ -244,9 +233,9 @@
             android:id="@+id/bycategory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:text="@string/breakdown_by_category_tons"
             android:textColor="@color/white"
+            android:layout_marginBottom="5dp"
             android:textSize="15sp"
             android:textStyle="italic"
             app:layout_constraintBottom_toTopOf="@+id/trend_graph_card"
@@ -256,7 +245,7 @@
             android:id="@+id/select_country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="5dp"
             android:text="@string/comparing_with"
             android:textColor="@color/white"
             android:textStyle="italic"
@@ -267,7 +256,7 @@
             android:id="@+id/spinner"
             android:layout_width="227dp"
             android:layout_height="22dp"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="5dp"
             android:background="@color/white"
             android:textAlignment="center"
             app:layout_constraintBottom_toTopOf="@+id/trend1graph_card"
@@ -294,22 +283,8 @@
             android:layout_marginTop="20dp"
             android:textSize="16sp"
             android:gravity="center"
-            android:text="@string/_502_2_tons_of_co2_emitted_annually"
-            android:textColor="@color/palette_black"
-            app:layout_constraintStart_toEndOf="@+id/total"
-
-            app:layout_constraintTop_toBottomOf="@+id/title" />
-
-        <TextView
-            android:id="@+id/total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_marginStart="64dp"
-            android:layout_marginTop="20dp"
-            android:text="@string/total"
             android:textColor="@color/white"
-            android:textSize="20sp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title" />
 
@@ -372,7 +347,6 @@
                     android:id="@+id/country"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:layout_marginEnd="52dp"
                     android:text="@string/national_average"
                     android:textColor="@color/palette_turquoise"
@@ -393,9 +367,7 @@
                     android:id="@+id/your_emissions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/_502_0"
                     android:textColor="@color/black"
-
                     android:textSize="11sp"
                     app:layout_constraintEnd_toStartOf="@+id/user_bar"
                     app:layout_constraintTop_toTopOf="@+id/user_bar" />
@@ -404,8 +376,6 @@
                     android:id="@+id/country_emissions"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/_502_0"
-
                     android:textColor="@color/black"
                     android:textSize="11sp"
                     app:layout_constraintEnd_toStartOf="@+id/country_bar"
@@ -417,7 +387,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="12dp"
                     android:layout_marginBottom="88dp"
-
                     android:rotation="270"
                     android:text="@string/emitted_co2_year_tons"
                     android:textColor="@color/black"
@@ -425,9 +394,7 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/user_bar" />
 
-
             </androidx.constraintlayout.widget.ConstraintLayout>
-
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
@@ -456,7 +423,7 @@
                     android:id="@+id/countryStat"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/comparison_to_country"
+                    android:text="@string/comparison_by_country"
                     android:textAlignment="center"
                     android:textColor="@color/palette_black"
                     android:textSize="15sp"
@@ -487,6 +454,7 @@
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
             android:text="@string/home"
+            android:layout_margin="10dp"
             android:textColor="@color/palette_black"
             app:layout_constraintTop_toBottomOf="@id/extraInfo"
             app:layout_constraintEnd_toEndOf="@+id/extraInfo"/>
@@ -496,7 +464,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:backgroundTint="@color/white"
-            android:text="@string/retake_survey"
+            android:text="@string/retake"
+            android:layout_margin="10dp"
             android:textColor="@color/palette_black"
             app:layout_constraintTop_toBottomOf="@id/extraInfo"
             app:layout_constraintStart_toStartOf="@+id/extraInfo"/>
@@ -505,6 +474,7 @@
             android:id="@+id/stats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:text="@string/statistics"
             android:textColor="@color/white"
             android:textSize="15sp"

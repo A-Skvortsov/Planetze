@@ -93,8 +93,8 @@
                 app:cardElevation="60dp"
                 app:cardCornerRadius="20dp"
                 android:layout_gravity="center"
-                app:cardBackgroundColor="#d1fffc"
-                android:layout_marginTop="40dp">
+                app:cardBackgroundColor="@color/white"
+                android:layout_marginTop="30dp">
 
 
                 <TextView

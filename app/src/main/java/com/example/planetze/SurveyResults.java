@@ -93,7 +93,7 @@ public class SurveyResults extends Fragment {
                 String sum = String.valueOf(round(userE));
                 your_emissions.setText(sum);
                 final TextView total_bar = view.findViewById(R.id.total_bar);
-                String msg = "You emitted " + sum + " tons of CO₂ annually";
+                String msg = "You emitted " + sum + " tons of CO₂ annually.";
                 total_bar.setText(msg);
                 setCategoryGraph(view, results);  //sets category graph
 
