@@ -1,5 +1,7 @@
 package com.example.planetze;
 
+import static utilities.Constants.USER_DATA;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,7 +20,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.search.SearchBar;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -70,7 +71,7 @@ public class AddHabit extends Fragment {
 
         userId = UserData.getUserID(getContext());
         //sets user's calendar right away
-        DatabaseReference calendarRef = db.getReference().child("user data")
+        DatabaseReference calendarRef = db.getReference().child(USER_DATA)
                 .child(userId).child("calendar");
         calendarRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -143,7 +144,7 @@ public class AddHabit extends Fragment {
      * @return
      */
     private List<List<String>> getCurrentHabits(String userId) {
-        DatabaseReference currentHabitsRef = db.getReference().child("user data")
+        DatabaseReference currentHabitsRef = db.getReference().child(USER_DATA)
                 .child(userId).child("current_habits");
         currentHabitsRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -584,7 +585,7 @@ public class AddHabit extends Fragment {
 
 
     private void writeUsersHabitsToFirebase() {
-        DatabaseReference currentHabitsRef = db.getReference().child("user data")
+        DatabaseReference currentHabitsRef = db.getReference().child(USER_DATA)
                 .child(userId).child("current_habits");
 
         currentHabitsRef.setValue(currentHabits)
@@ -655,8 +656,6 @@ public class AddHabit extends Fragment {
     public static void getEmissionsSnapshot(String userId) {
         userEmissionsData = new UserEmissionsData(userId, false,
                 new UserEmissionsData.DataReadyListener() {
-                    @Override
-                    public void start(){}
                     @Override
                     public void onDataReady(){
                         listOfEmissionNodeCollections = userEmissionsData.getUserEmissionsData(30);

@@ -29,8 +29,8 @@ public class Constants {
     public static final int housing_qs = 7;
     public static final int consumption_qs = 4;
 
-    //settings
-
+    // Firebase retrieval constants
+    public static final String USER_DATA = "user data";
     public static final String STAY_LOGGED_ON = "stay_logged_on";
     public static final String INTERPOLATE_EMISSIONS_DATA = "interpolate_emissions_data";
     public static final String HIDE_GRID_LINES = "hide_grid_lines";
@@ -39,7 +39,6 @@ public class Constants {
     public static final String DEFAULT_CAR = "default_car";
     public static final String EMAIL = "email";
     public static final String USERNAME = "name";
-
 
     // All survey questions. Each sub array is a question followed by all possible answer options
     public static final String[][] questions = {
@@ -315,7 +314,7 @@ public class Constants {
             "Zambia",
             "Zimbabwe"
     };
-    public static final String default_country = country[38];
+
     public static final double[] country_emissions = {
             0.29536375,
             0.99422127,

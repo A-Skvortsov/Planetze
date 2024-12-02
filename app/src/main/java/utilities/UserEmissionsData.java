@@ -31,20 +31,20 @@ import customDataStructures.EmissionNodeCollection;
  * @see Database
  */
 public class UserEmissionsData {
+
     private final String userId;
-    private final DataReadyListener listener;
-    private final SimpleDateFormat simpleDateFormat;
+    private final boolean interpolate;
+
     private HashMap<String, Object> data;
     private List<String> sortedDates;
 
-    // TODO: Source this from the database
-    private final boolean interpolate;
+    private final DataReadyListener listener;
+    private final SimpleDateFormat simpleDateFormat;
 
     /**
      * Interface for handling database events.
      */
     public interface DataReadyListener {
-        void start();
         void onDataReady();
         void onError(String errorMessage);
     }
