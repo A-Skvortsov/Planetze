@@ -209,9 +209,7 @@ public class SettingActivity extends AppCompatActivity {
 
     private void showMessage(String msg) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
         alert.setTitle(msg+"\n\n\n");
-
         alert.show();
     }
 
