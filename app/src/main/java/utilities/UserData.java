@@ -77,8 +77,9 @@ public class UserData {
     }
 
     public static boolean isLoggedIn(Context context) {
-        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-        return p.getBoolean("isLoggedIn", false);
+//        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
+//        return p.getBoolean("isLoggedIn", false);
+        return false;
     }
 
     public static boolean getSetting(Context context, String setting) {
