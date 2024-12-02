@@ -1,5 +1,7 @@
 package com.example.planetze;
 
+import static utilities.Constants.USER_DATA;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
@@ -70,7 +72,7 @@ public class SurveyResults extends Fragment {
 
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
         userId = UserData.getUserID(getContext());
-        DatabaseReference userArrayRef = db.getReference("user data")
+        DatabaseReference userArrayRef = db.getReference(USER_DATA)
                 .child(userId).child("survey_results");
         userArrayRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -80,7 +82,7 @@ public class SurveyResults extends Fragment {
                     for (int i = 0; i < a.size(); i++) {
                         results.add(Double.valueOf(String.valueOf(a.get(i))));
                     }  //conversion necessary because Firebase stores doubles weirld
-                        // (sometimes integers, sometimes Longs, etc.)
+                    // (sometimes integers, sometimes Longs, etc.)
                     results = kgToTons(results);
                     userE = sum(results);  //saves user result immediately
                     setGlobalTargetComparison(view);
@@ -88,10 +90,10 @@ public class SurveyResults extends Fragment {
 
                 //initializes some basics
                 final TextView your_emissions = view.findViewById(R.id.your_emissions);
-                String sum = round(userE) + "   ";
+                String sum = String.valueOf(round(userE));
                 your_emissions.setText(sum);
                 final TextView total_bar = view.findViewById(R.id.total_bar);
-                String msg = sum + " tons of CO2 emitted annually";
+                String msg = "You emitted " + sum + " tons of CO₂ annually";
                 total_bar.setText(msg);
                 setCategoryGraph(view, results);  //sets category graph
 
@@ -125,20 +127,20 @@ public class SurveyResults extends Fragment {
 
     /**
      * Sets the first graph depicting breakdown of user emissions by category
-		 * "public void setCategoryGraph(List<Double> results) {" was the previous method declaration,
-		 * may be useful for future.
+     * "public void setCategoryGraph(List<Double> results) {" was the previous method declaration,
+     * may be useful for future.
      */
     public void setCategoryGraph(View view, List<Double> results) {
         TextView[] bars = {
-                    view.findViewById(R.id.transport),
-                    view.findViewById(R.id.food),
-                    view.findViewById(R.id.housing),
-                    view.findViewById(R.id.consumption)};
+                view.findViewById(R.id.transport),
+                view.findViewById(R.id.food),
+                view.findViewById(R.id.housing),
+                view.findViewById(R.id.consumption)};
         TextView[] extra = {
-                    view.findViewById(R.id.t_negligible),
-                    view.findViewById(R.id.f_negligible),
-                    view.findViewById(R.id.h_negligible),
-                    view.findViewById(R.id.c_negligible)};
+                view.findViewById(R.id.t_negligible),
+                view.findViewById(R.id.f_negligible),
+                view.findViewById(R.id.h_negligible),
+                view.findViewById(R.id.c_negligible)};
         double max_result = max(results);
 
         //preprocessing
@@ -174,7 +176,7 @@ public class SurveyResults extends Fragment {
      * to default country and loads spinner with list of countries
      */
     private void initComparisonGraph(View view) {
-        DatabaseReference countryRef = db.getReference().child("user data")
+        DatabaseReference countryRef = db.getReference().child(USER_DATA)
                 .child(userId).child("default_country");
 
         countryRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -390,5 +392,4 @@ public class SurveyResults extends Fragment {
                 .replace(R.id.main, fragment);
         transaction.commit();
     }
-
 }

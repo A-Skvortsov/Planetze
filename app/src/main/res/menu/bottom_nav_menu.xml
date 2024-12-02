@@ -4,7 +4,7 @@
     <item
         android:id="@+id/EcoTrackerFragment"
         android:title="@string/ecotracker"
-        android:icon="@drawable/eco_tracker_nav_img"
+        android:icon="@drawable/eco_tracker_nav_ic"
         />
     <item
         android:id="@+id/EcoGaugeFragment"
@@ -14,11 +14,11 @@
     <item
         android:id="@+id/EcoBalanceFragment"
         android:title="@string/ecobalance"
-        android:icon="@drawable/eco_balance_img"
+        android:icon="@drawable/eco_balance_nav_ic"
     />
     <item
         android:id="@+id/EcoHubEntryFragment"
         android:title="@string/ecohub"
-        android:icon="@drawable/eco_hub_img"
+        android:icon="@drawable/eco_hub_nav_ic"
     />
 </menu>

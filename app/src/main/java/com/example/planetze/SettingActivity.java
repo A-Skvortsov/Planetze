@@ -1,10 +1,13 @@
 package com.example.planetze;
 
+import static utilities.Constants.EMAIL;
 import static utilities.Constants.FIREBASE_LINK;
 import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
 import static utilities.Constants.HIDE_TREND_LINE_POINTS;
 import static utilities.Constants.STAY_LOGGED_ON;
+import static utilities.Constants.USER_DATA;
+import static utilities.Constants.USERNAME;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -68,11 +71,11 @@ public class SettingActivity extends AppCompatActivity {
         name = findViewById(R.id.name);
         email = findViewById(R.id.email);
 
-        name.setText(UserData.getUsername(getApplicationContext()));
-        email.setText(UserData.getEmail(getApplicationContext()));
+        name.setText(UserData.getData(getApplicationContext(), USERNAME));
+        email.setText(UserData.getData(getApplicationContext(), EMAIL));
 
         db = FirebaseDatabase.getInstance(FIREBASE_LINK);
-        userRef = db.getReference("user data");
+        userRef = db.getReference(USER_DATA);
         String userID = UserData.getUserID(getApplicationContext());
 
         initialize();
@@ -89,7 +92,6 @@ public class SettingActivity extends AppCompatActivity {
 
             alert.setTitle("Enter new name");
 
-// Set an EditText view to get user input
             EditText input = new EditText(getApplicationContext());
             alert.setView(input);
 
@@ -102,7 +104,7 @@ public class SettingActivity extends AppCompatActivity {
                     }
                     else {
                         userRef.child(userID+"/name").setValue(nameText);
-                        showMessage("Name updated successfully");
+                        showMessage("Name changed successfully");
                         UserData.initialize(getApplicationContext());
                         name.setText(nameText);
                     }
@@ -207,9 +209,7 @@ public class SettingActivity extends AppCompatActivity {
 
     private void showMessage(String msg) {
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-
         alert.setTitle(msg+"\n\n\n");
-
         alert.show();
     }
 

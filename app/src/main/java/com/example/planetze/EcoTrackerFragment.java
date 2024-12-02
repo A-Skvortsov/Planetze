@@ -1,5 +1,7 @@
 package com.example.planetze;
 
+import static utilities.Constants.USER_DATA;
+
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -70,7 +72,6 @@ public class EcoTrackerFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -118,9 +119,9 @@ public class EcoTrackerFragment extends Fragment {
         userId = UserData.getUserID(getContext());
 
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-        calendarRef = db.getReference("user data")
+        calendarRef = db.getReference(USER_DATA)
                 .child(userId).child("calendar");
-        habitsRef = db.getReference().child("user data")
+        habitsRef = db.getReference().child(USER_DATA)
                         .child(userId).child("current_habits");
 
         final Button calendarToggle = view.findViewById(R.id.calendarToggle);  //button to toggle calendar
@@ -267,7 +268,7 @@ public class EcoTrackerFragment extends Fragment {
 
                 //code below removes associated activity in firebase rtdb
                 //get the date of the activity we want to remove
-                DatabaseReference dateRef = db.getReference("user data")
+                DatabaseReference dateRef = db.getReference(USER_DATA)
                         .child(userId)
                         .child("calendar")
                         .child(date);
@@ -506,7 +507,7 @@ public class EcoTrackerFragment extends Fragment {
      * @return
      */
     public void startEdit(int id, String userId) {
-        DatabaseReference dateRef = db.getReference("user data")
+        DatabaseReference dateRef = db.getReference(USER_DATA)
                 .child(userId)
                 .child("calendar")
                 .child(date);  //index of the activity in the list of activities for the date

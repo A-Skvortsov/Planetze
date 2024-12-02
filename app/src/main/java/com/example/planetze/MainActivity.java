@@ -5,6 +5,7 @@ import static androidx.navigation.fragment.FragmentKt.findNavController;
 import static java.security.AccessController.getContext;
 
 import static utilities.Constants.STAY_LOGGED_ON;
+import static utilities.Constants.USER_DATA;
 
 import android.os.Bundle;
 
@@ -31,8 +32,8 @@ import utilities.UserData;
 
 public class MainActivity extends AppCompatActivity {
 
-    FirebaseDatabase db;
-    DatabaseReference userRef;
+    private FirebaseDatabase db;
+    private DatabaseReference userRef;
     private FirebaseAuth auth;
 
     @Override
@@ -48,38 +49,15 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-
         db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-        userRef = db.getReference("user data");
+        userRef = db.getReference(USER_DATA);
         auth = FirebaseAuth.getInstance();
 
-        /*
-        DatabaseReference myRef = db.getReference("testDemo");
-        db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-        userRef = db.getReference("user data");
-        auth = FirebaseAuth.getInstance();
-        
-        */
-
-
-        // TODO: Please DON'T delete the comments below
-
-/*        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-
-        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.fragment);
-
-        NavController navController = navHostFragment.getNavController();
-       NavigationUI.setupWithNavController(bottomNavigationView, navController);
-*/
-        //Intent intent = new Intent(MainActivity.this, SurveyResults.class);
-        //startActivity(intent);
 
         initializeData();
 
         if (savedInstanceState == null) {
             onOpenApp();
-            //loadFragment(new LoginView());
         }
     }
 
@@ -119,8 +97,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
     private void navigateToHomeActivity() {
@@ -128,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
 
     private void onOpenApp() {
         if (!UserData.isLoggedIn(getApplicationContext())) {
@@ -139,7 +114,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     private void initializeData() {
         boolean isLoggedIn = UserData.isLoggedIn(getApplicationContext());
         boolean stayLoggedOn = UserData.getSetting(getApplicationContext(),STAY_LOGGED_ON);
@@ -149,6 +123,5 @@ public class MainActivity extends AppCompatActivity {
         if (isLoggedIn) {
             UserData.initialize(getApplicationContext());
         }
-
     }
 }

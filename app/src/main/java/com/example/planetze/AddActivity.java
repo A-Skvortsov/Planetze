@@ -1,5 +1,7 @@
 package com.example.planetze;
 
+import static utilities.Constants.USER_DATA;
+
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -188,7 +190,7 @@ public class AddActivity extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view,
                                        int position, long id) {
                 String selectedActivity = (String) parent.getItemAtPosition(position);
-                DatabaseReference carRef = db.getReference().child("user data")
+                DatabaseReference carRef = db.getReference().child(USER_DATA)
                         .child(userId).child("default_car");
                 carRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -279,7 +281,7 @@ public class AddActivity extends Fragment {
 
         actSpinner.setSelection(j, false);
 
-        DatabaseReference carRef = db.getReference().child("user data")
+        DatabaseReference carRef = db.getReference().child(USER_DATA)
                 .child(userId).child("default_car");
         carRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -404,7 +406,7 @@ public class AddActivity extends Fragment {
 
 
     public void updateFirebase(String date, List<String> activity, int id) {
-        DatabaseReference dateRef = db.getReference("user data")
+        DatabaseReference dateRef = db.getReference(USER_DATA)
                 .child(userId).child("calendar").child(date);
         dateRef.runTransaction(new Transaction.Handler() {
             @NonNull
@@ -432,7 +434,7 @@ public class AddActivity extends Fragment {
 
 
     public static void writeToFirebase(String date, List<String> activity, String userId) {
-        DatabaseReference calendarRef = db.getReference("user data")
+        DatabaseReference calendarRef = db.getReference(USER_DATA)
                 .child(userId).child("calendar");
 
         calendarRef.child(date).runTransaction(new Transaction.Handler() {

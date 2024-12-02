@@ -1,5 +1,7 @@
 package com.example.planetze;
 
+import static utilities.Constants.USER_DATA;
+
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -76,7 +78,7 @@ public class CalendarFragment extends DialogFragment {
      */
     public static void setCalendarDecorators(String userId) {
         MaterialCalendarView calendarView = globalView.findViewById(R.id.cal);
-        DatabaseReference calendarRef = db.getReference("user data")
+        DatabaseReference calendarRef = db.getReference(USER_DATA)
                 .child(userId).child("calendar");
         calendarRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override

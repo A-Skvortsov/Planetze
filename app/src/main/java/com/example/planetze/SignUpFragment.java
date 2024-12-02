@@ -3,11 +3,13 @@ package com.example.planetze;
 
 import static android.app.Activity.RESULT_OK;
 import static java.lang.Character.isLetter;
+import static utilities.Constants.EMAIL;
 import static utilities.Constants.FIREBASE_LINK;
 import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
 import static utilities.Constants.HIDE_TREND_LINE_POINTS;
 import static utilities.Constants.STAY_LOGGED_ON;
+import static utilities.Constants.USER_DATA;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -104,7 +106,7 @@ public class SignUpFragment extends Fragment {
         });
 
         db = FirebaseDatabase.getInstance(FIREBASE_LINK);
-        userRef = db.getReference("user data");
+        userRef = db.getReference(USER_DATA);
 
         signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,19 +193,6 @@ public class SignUpFragment extends Fragment {
         }
         return false;
     }
-
-    /*
-    private boolean hasSpecialCharcter(String string) {
-        for (int i = 0; i < string.length(); i++) {
-            if (isLetter(string.charAt(i))) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-     */
-
 
 
     private boolean notEmpty(String email, String name) {
@@ -421,16 +410,17 @@ public class SignUpFragment extends Fragment {
                     if (user.hasChild("email")) {
                         currentemail = user.child("email").getValue(String.class).toString().trim();
                     }
-                    if (currentemail.equals(auth.getCurrentUser().getEmail().trim())) {
+                    if (currentemail.equals(UserData.getData(getContext(),EMAIL))) {
                         equalsEmail = true;
                     }
 
                 }
 
                 if (!equalsEmail) {
-                    String id = auth.getCurrentUser().getUid();
-                    String email = auth.getCurrentUser().getDisplayName();
-                    String name = auth.getCurrentUser().getEmail();
+                    String id = UserData.getUserID(getContext());
+                    String name = auth.getCurrentUser().getDisplayName();
+                    String email = UserData.getData(getContext(),EMAIL);
+
                     UserData.setDefaultSettings(id,email, name);
                     loadFragment(new SurveyFragment());
                 }
