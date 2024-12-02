@@ -395,6 +395,7 @@ public class SurveyFragment extends Fragment {
              * @param v The view that was clicked.
              */
             public void onClick(View v) {
+                System.out.println(current_q);
                 //if no answer selected, should not proceed. Should prompt user to answer
                 if (!saveAnswer(options, current_cat, current_q)) {  //saves user's answer to prev question
                     pleaseAnswer1.setVisibility(View.VISIBLE); pleaseAnswer2.setVisibility(View.VISIBLE);
@@ -438,16 +439,17 @@ public class SurveyFragment extends Fragment {
              * @param v The view that was clicked.
              */
             public void onClick(View v) {
+                System.out.println(current_q);
                 if (current_q == 5 && transport_ans[0] == 1) current_q -= 2;  //skips follow-ups if user says no to car
                 if (current_q == 7 && transport_ans[3] == 0) current_q -= 1;  //same but for public transport
                 if (current_q == 15 && food_ans[0] != 3) current_q -= 4;  //skips follow-ups if user says no to meat
 
                 current_q--;
-                if (current_q == 0) backBtn.setVisibility(View.INVISIBLE);
                 if (questions[current_q][0].equals("-")) {
                     current_q--;
                     current_cat--;
                 }
+                if (current_q == 0) backBtn.setVisibility(View.INVISIBLE);
                 updateSurvey(options, question, category, current_q, current_cat);
             }
         });
