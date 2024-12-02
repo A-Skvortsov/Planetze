@@ -349,19 +349,20 @@ public class SurveyFragment extends Fragment {
     private void initSurvey(View view) {
         TextView getStartedPrompt = view.findViewById(R.id.getStartedPrompt);
         Button beginSurveyBtn = view.findViewById(R.id.beginSurveyBtn);
+        TextView beingWithSurveyText = view.findViewById(R.id.beginWithSurveyText);
+
         nextBtn = view.findViewById(R.id.nextBtn);
         category = view.findViewById(R.id.category);
 
-        beginSurveyBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getStartedPrompt.setVisibility(View.INVISIBLE);
-                beginSurveyBtn.setVisibility(View.INVISIBLE);
+        beginSurveyBtn.setOnClickListener(v -> {
+            getStartedPrompt.setVisibility(View.INVISIBLE);
+            beginSurveyBtn.setVisibility(View.INVISIBLE);
+            beingWithSurveyText.setVisibility(View.INVISIBLE);
 
-                nextBtn.setVisibility(View.VISIBLE);
-                category.setVisibility(View.VISIBLE);
-                beginFirstQuestion(view);
-            }
+
+            nextBtn.setVisibility(View.VISIBLE);
+            category.setVisibility(View.VISIBLE);
+            beginFirstQuestion(view);
         });
     }
 
