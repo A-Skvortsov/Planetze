@@ -239,6 +239,7 @@ public class UserData {
         });
     }
 
+
     private static void setData(Context context, String dataName, String data) {
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
         SharedPreferences.Editor e = p.edit();
