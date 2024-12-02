@@ -113,4 +113,10 @@ ASSUMPTIONS
 		vii. Emissions for monthly energy bills are computed as (emissions for 2 occupants, detached house under 1000sqft) / 365 days in a year (this value is added to each day for past 30 days, as mentioned in assumption #11)  
 			a) Since emissions for water bills are not mentioned in Formulas file (water HEATING is mentioned, not water use) emissions for water use are made to be the mean (average) of gas and electricity emissions  
 	18: Eco Guage trendline graph: for any selected time period, if there exist days in the time period for which no activity data is logged by the user, it is assumed that  
-		this is "missing data" and such days are omitted from the trendline graph (as per the advice of Professor Rawad)
+		this is "missing data" and such days are omitted from the trendline graph (as per the advice of Professor Rawad)  
+		
+EXTRA DETAILS
+
+	1. Some libraries used
+		i. MPAndroidChart for Eco Guage charts
+		ii. MaterialCalendarView, an extension of the built-in CalendarView library, for the Eco Tracker calendar
