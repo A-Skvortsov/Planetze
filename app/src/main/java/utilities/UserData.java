@@ -1,6 +1,7 @@
 package utilities;
 
 import static android.provider.Telephony.Carriers.PASSWORD;
+import static android.provider.Telephony.Carriers.USER;
 import static java.lang.Thread.sleep;
 
 import static utilities.Constants.DEFAULT_CAR;
@@ -120,14 +121,14 @@ public class UserData {
 
 
     public static void initialize(Context context) {
-        retrieveData(context,DEFAULT_COUNTRY);
-        retrieveData(context,DEFAULT_CAR);
-        retrieveData(context,EMAIL);
-        retrieveData(context,USERNAME);
+        retrieveData(context, DEFAULT_COUNTRY);
+        retrieveData(context, DEFAULT_CAR);
+        retrieveData(context, EMAIL);
+        retrieveData(context, USERNAME);
 
-        retrieveSetting(context,STAY_LOGGED_ON);
-        retrieveSetting(context,INTERPOLATE_EMISSIONS_DATA);
-        retrieveSetting(context,HIDE_GRID_LINES);
+        retrieveSetting(context, STAY_LOGGED_ON);
+        retrieveSetting(context, INTERPOLATE_EMISSIONS_DATA);
+        retrieveSetting(context, HIDE_GRID_LINES);
         retrieveSetting(context, HIDE_TREND_LINE_POINTS);
     }
 
@@ -205,7 +206,7 @@ public class UserData {
 
     private static void retrieveData(Context context, String dataName) {
         FirebaseDatabase db = FirebaseDatabase.getInstance(FIREBASE_LINK);
-        DatabaseReference userRef = db.getReference("user data");
+        DatabaseReference userRef = db.getReference(USER_DATA);
 
         userRef.get().addOnCompleteListener(task -> {
             DataSnapshot users = task.getResult();

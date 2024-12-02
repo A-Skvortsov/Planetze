@@ -8,6 +8,7 @@ import static utilities.Colors.PALETTE_TURQUOISE_TINT_500;
 import static utilities.Colors.PALETTE_TURQUOISE_TINT_600;
 import static utilities.Colors.PALETTE_TURQUOISE_TINT_800;
 import static utilities.Constants.DAILY;
+import static utilities.Constants.DEFAULT_COUNTRY;
 import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.HIDE_TREND_LINE_POINTS;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
@@ -16,7 +17,6 @@ import static utilities.Constants.OVERALL;
 import static utilities.Constants.WEEKLY;
 import static utilities.Constants.YEARLY;
 import static utilities.Constants.country;
-import static utilities.Constants.default_country;
 
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -65,6 +65,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import utilities.CountryEmissionsData;
 import customDataStructures.EmissionNode;
@@ -102,6 +103,7 @@ public class EcoGaugeFragment extends Fragment
     private boolean interpolate;
     private boolean hideTrendLinePoints;
     private boolean hideGridLines;
+    private String defaultCountry;
 
 
     @Override
@@ -111,6 +113,11 @@ public class EcoGaugeFragment extends Fragment
         interpolate = UserData.getSetting(getContext(), INTERPOLATE_EMISSIONS_DATA);
         hideTrendLinePoints = UserData.getSetting(getContext(), HIDE_TREND_LINE_POINTS);
         hideGridLines = UserData.getSetting(getContext(), HIDE_GRID_LINES);
+        defaultCountry = UserData.getData(requireContext(), DEFAULT_COUNTRY);
+
+        if (defaultCountry == null) {
+            defaultCountry = "Canada";
+        }
 
         View view = inflater.inflate(R.layout.fragment_eco_gauge, container, false);
 
@@ -188,7 +195,7 @@ public class EcoGaugeFragment extends Fragment
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                renderComparisonChart(default_country);
+                renderComparisonChart(defaultCountry);
             }
         });
 
@@ -252,9 +259,9 @@ public class EcoGaugeFragment extends Fragment
         comparisonSpinner.setAdapter(adapter);
 
         // Set the default country on the spinner
-        comparisonSpinner.setSelection(adapter.getPosition(default_country));
+        comparisonSpinner.setSelection(adapter.getPosition(defaultCountry));
 
-        renderComparisonChart(default_country);
+        renderComparisonChart(defaultCountry);
     }
 
     /**
