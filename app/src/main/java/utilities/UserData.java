@@ -73,13 +73,13 @@ public class UserData {
         e.putBoolean("isLoggedIn", false);
         e.putString("UserID", " ");
         e.putString("credentials", " ");
+        reset(context);
         e.commit();
     }
 
     public static boolean isLoggedIn(Context context) {
-//        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-//        return p.getBoolean("isLoggedIn", false);
-        return false;
+        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
+        return p.getBoolean("isLoggedIn", false);
     }
 
     public static boolean getSetting(Context context, String setting) {
@@ -144,11 +144,22 @@ public class UserData {
         AuthCredential credential = EmailAuthProvider.getCredential(UserData.getData(context,EMAIL), key);
         auth.getCurrentUser().reauthenticate(credential);
 
+        userRef.child(UserData.getUserID(context)).removeValue();
         auth.getCurrentUser().delete();
         auth.signOut();
 
-        userRef.child(UserData.getUserID(context)).removeValue();
         UserData.logout(context);
+
+    }
+
+    private static void reset(Context context) {
+        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
+        SharedPreferences.Editor e = p.edit();
+        e.putBoolean(STAY_LOGGED_ON, false);
+        e.putBoolean(INTERPOLATE_EMISSIONS_DATA, false);
+        e.putBoolean(HIDE_GRID_LINES, false);
+        e.putBoolean(HIDE_TREND_LINE_POINTS, false);
+        e.apply();
     }
 
     public static void addUserstoDatabase() {
@@ -227,6 +238,7 @@ public class UserData {
             }
         });
     }
+
 
     private static void setData(Context context, String dataName, String data) {
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);

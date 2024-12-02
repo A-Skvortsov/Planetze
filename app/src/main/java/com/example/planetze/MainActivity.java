@@ -4,6 +4,7 @@ import android.content.Intent;
 import static androidx.navigation.fragment.FragmentKt.findNavController;
 import static java.security.AccessController.getContext;
 
+import static utilities.Constants.FIREBASE_LINK;
 import static utilities.Constants.STAY_LOGGED_ON;
 import static utilities.Constants.USER_DATA;
 
@@ -49,16 +50,16 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
+        db = FirebaseDatabase.getInstance(FIREBASE_LINK);
         userRef = db.getReference(USER_DATA);
         auth = FirebaseAuth.getInstance();
-
 
         initializeData();
 
         if (savedInstanceState == null) {
             onOpenApp();
         }
+
     }
 
     public void loadFragment(Fragment fragment) {
