@@ -82,4 +82,28 @@ FEATURE SUMMARY
 
 ASSUMPTIONS
 
+	1. Individual activity emissions are displayed in kilograms (kg) of CO2
+	2. Metric tons (referred to here as tons or tonnes or the unit (t); 1t = 1000kg) are used elsewhere, particularly in emissions total computations i.e. daily totals, annual emissions totals, etc.  
+	3. Emissions measurement units (kg, t) and percentage computations (see statistics section of survey results page) are typically rounded to 1 or 2 decimal places to avoid floating point issues and for readability 
+	4. Habit-related activities (i.e. activities that are logged as a result of selecting a habit in the "habits" section of Eco Tracker) cannot be edited as habits have default information settings including emissions computations preset based on assumptions (see further down)  
+	5. Preset emissions values for habits are reduced versions of regular activity emissions presets. Note that all default habit information (including habit categories, habit names, impact levels) is stored in the Firebase Realtime Database (FRDB)  
+	6. Habit impact levels are split into three categories by assumption; <= 1kgco2 per habit log, <= 5kgco2 per habit log, > 5kgco2 per habit log  
+	7. Habit categories are as follows: transportation, food, housing, consumption 
+	8. A reiteration of personalized habit recommendation: recommended habits are those in the category of highest user activity emissions over the past 30 days, excluding habits already logged by the user (example: if user activity emissions over 30 days are in the following descending order [transportation, food, energy, consumption], then habits in the transportation category are recommended first. If all those are adopted, habits in the second-highest emissions category (food, in this case) are adopted second. So on and so forth)  
+	9. User can adopt or quit habits at any time. Habit-related activities that were logged previously are NOT automatically removed once a user quits a habit (i.e. record is kept on the days the user logged the habit)  
+	10. Activity categories are as follows: transportation, food, consumption, energy (energy is synonymous in this application to monthly energy bills)  
+	11. Monthly energy bill activities are logged as follows: when a user logs a monthly energy bill on day x, app automatically logs a single activity for each day from day x to day x-30 (inclusive), with the activity name and emissions being consistent for each day and based on preset values, replicating consistent user emissions throughout the past month leading to the monthly energy bill  
 	
+	12. If, in the annual emissions survey, user selects "I don't know" as their default car, default car is set to hybrid (as hybrid is the most neutral of all other settings i.e. gasoline/diesel are too high with emissions, electric is too low. Plus, many cars are hybrid nowadays so it is not unreasonable to assume they may have a hybrid car)  
+	13. If, in the annual emissions survey, user selects "no" to whether they have a car, default car is set to none.
+	14. In activity logging, if user selects drive personal vehicle activity, input automatically sets default car (which is taken from annual emissions survey) as the personal vehicle while user retains ability to change this (if default car is none, no automatic selection is performed)  
+	15. Total annual emissions computations in annual emissions survey are taken exactly from "Formulas" excel file provided by teaching team  
+		i. For "I don't know" selection of personal vehicle, emissions computations default to those of hybrid car (as this is most reasonable. We cannot assume 0 emissions since user must have answered "yes" to "do you have a car" question in order to reach this question)  
+		ii. If, in the annual emissions survey, user selects "other" for "what type of energy do you use to heat your home?" or "what type of energy do you use to heat water in your home?", computations default to those of user selecting "electricity" since electricity is one of the most commonly used heating sources in our country of Canada, making it safe to assume that this is what user uses (as oppposed to making up numbers for some unspecified "other" form of energy)  
+		iii. If, in the annual emissions survey, user selects either of the "yes" options for "do you use any renewable energy sources for electricity or heating (e.g., solar, wind)?", the provided values (in the Formula excel file) are subtracted from user total emissions. This may put user emissions into negative values. The survey results allow for and reflect this possibility  
+		
+	Activity emissions
+	
+	2. Eco Guage  
+		i. Trendline graph: for any selected time period, if there exist days in the time period for which no activity data is logged by the user, it is assumed that  
+		this is "missing data" and such days are omitted from the trendline graph (as per the advice of Professor Rawad)
