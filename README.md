@@ -12,13 +12,13 @@
 
 LINKS
 
-This repo: https://github.com/A-Skvortsov/Planetze
-Jira: https://andreyskvortsov.atlassian.net/jira/software/projects/SCRUM/boards/1
+This repo: https://github.com/A-Skvortsov/Planetze  
+Jira: https://andreyskvortsov.atlassian.net/jira/software/projects/SCRUM/boards/1  
 
 EXISTING SIGN-IN CREDENTIALS:
 
-Email: andreyskv49@gmail.com
-Password: hellohello1
+Email: andreyskv49@gmail.com  
+Password: hellohello1  
 
 USER FLOW
 
