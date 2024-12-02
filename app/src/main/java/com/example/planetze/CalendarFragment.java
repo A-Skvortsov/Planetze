@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,9 +106,7 @@ public class CalendarFragment extends DialogFragment {
                 });
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("FirebaseError", "Failed to fetch event dates", error.toException());
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         });
     }
 }

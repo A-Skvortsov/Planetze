@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +40,7 @@ import utilities.UserEmissionsData;
  * A simple {@link Fragment} subclass.
  * create an instance of this fragment.
  */
-public class AddHabit extends DialogFragment {
+public class AddHabit extends Fragment {
     private boolean returnToEcoTracker = true;
     private View globalView;
     private final String[] categories = Constants.categories;
@@ -433,18 +432,16 @@ public class AddHabit extends DialogFragment {
             public boolean onQueryTextSubmit(String query) {
                 //filters listView results based on "query" (search string)
                 ArrayAdapter adapter = (ArrayAdapter) listView.getAdapter();
-                if (adapter != null) {
+                if (adapter != null)
                     adapter.getFilter().filter(query);
-                } else Log.d("SearchView: ", "adapter is null");
                 return false;
             }
             @Override
             public boolean onQueryTextChange(String newText) {
                 //filters listView results as search string updates
                 ArrayAdapter adapter = (ArrayAdapter) listView.getAdapter();
-                if (adapter != null) {
+                if (adapter != null)
                     adapter.getFilter().filter(newText);
-                } else Log.d("SearchView: ", "adapter is null");
                 return false;
             }
         });
@@ -589,12 +586,8 @@ public class AddHabit extends DialogFragment {
                 .child(userId).child("current_habits");
 
         currentHabitsRef.setValue(currentHabits)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("Firebase", "Data written successfully!");
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Firebase", "Failed to write data: " + e.getMessage());
-                });
+                .addOnSuccessListener(aVoid -> {})
+                .addOnFailureListener(e -> {});
     }
 
     private void returnToEcoTracker() {
@@ -621,7 +614,7 @@ public class AddHabit extends DialogFragment {
         //note: activities have categories transportation, food, energy, consumption
         //habits have categories transportation, food, housing, consumption
         double[] emissionsPerType = new double[4];
-        System.out.println(listOfEmissionNodeCollections.size());
+
         for (int i = 0; i < listOfEmissionNodeCollections.size(); i++) {  //for each EmissionNodeCollection
             List<EmissionNode> listOfEmissionNodes = listOfEmissionNodeCollections.get(i).getData();
             for (int j = 0; j < listOfEmissionNodes.size(); j++) {  //for each EmissionNode
@@ -749,6 +742,8 @@ public class AddHabit extends DialogFragment {
      */
     private List<List<String>> clone(List<List<String>> list) {
         List<List<String>> clonedList = new ArrayList<>();
+        if (list == null || list.isEmpty()) return new ArrayList<>();
+
         for (int i = 0; i < list.size(); i++) {
             //related to mutability and deep vs shallow cloning
             clonedList.add(new ArrayList<>(list.get(i)));

@@ -10,7 +10,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -123,7 +122,6 @@ public class EcoTrackerFragment extends Fragment {
                 .child(userId).child("calendar");
         habitsRef = db.getReference().child("user data")
                         .child(userId).child("current_habits");
-        Log.d("Firebase", "Reference Path: " + calendarRef);  //for debugging
 
         final Button calendarToggle = view.findViewById(R.id.calendarToggle);  //button to toggle calendar
         final TextView dateText = view.findViewById(R.id.dateText);
@@ -162,30 +160,23 @@ public class EcoTrackerFragment extends Fragment {
                 if (dataSnapshot.exists()) {
                     // Convert the snapshot into a List
                     days = (HashMap<String, Object>) dataSnapshot.getValue();
-                    Log.d("Firebase", "data loaded successfully" + days);
                     updateDisplay();
                 } else {
-                    Log.d("Firebase", "Array does not exist for this user.");
                 }
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("FirebaseData", "Error: " + databaseError.getMessage());
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
         };
         habitsListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     currentHabits = (List<List<String>>) snapshot.getValue();
-                    Log.d("Firebase", "data loaded successfully" + currentHabits);
                     updateDisplay();
-                }
+                } else currentHabits = new ArrayList<>();  //makes it empty
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("FirebaseData", "Error: " + error.getMessage());
-            }
+            public void onCancelled(@NonNull DatabaseError error) {}
         };
 
         //initializes everything
@@ -288,19 +279,14 @@ public class EcoTrackerFragment extends Fragment {
                         if (dataSnapshot.exists()) {
                             // Convert the snapshot into a List
                             acts = (List<List<String>>) dataSnapshot.getValue();
-                            Log.d("Firebase", "data loaded successfully" + acts);
                             delFromFirebase(dateRef, acts, id, noActivities);  //delete the activity
                             //next line polls firebase for update and updates ui via call to updateDisplay
                             //in "listener"
                             fetchSnapshot();
-                        } else {
-                            Log.d("Firebase", "Array does not exist for this user.");
                         }
                     }
                     @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        Log.e("FirebaseData", "Error: " + databaseError.getMessage());
-                    }
+                    public void onCancelled(@NonNull DatabaseError databaseError) {}
                 });
             }
         });
@@ -412,14 +398,14 @@ public class EcoTrackerFragment extends Fragment {
         editBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*AddHabit addHabit = new AddHabit(false);  //"false" prevents immediate return to ecotracker
+                AddHabit addHabit = new AddHabit(false);  //"false" prevents immediate return to ecotracker
                 FragmentManager fragmentManager = getChildFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.eco_tracker, addHabit);
                 fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();*/
-                DialogFragment addHabit = new AddHabit();
-                addHabit.show(getParentFragmentManager(), "AddHabit");
+                fragmentTransaction.commit();
+                //DialogFragment addHabit = new AddHabit();
+                //addHabit.show(getParentFragmentManager(), "AddHabit");
             }
         });
 
@@ -549,16 +535,10 @@ public class EcoTrackerFragment extends Fragment {
                     fragmentTransaction.replace(R.id.eco_tracker, addActivity);
                     fragmentTransaction.addToBackStack(null);
                     fragmentTransaction.commit();
-                    Log.d("Firebase", "data loaded successfully1" + activityToEdit);
-
-                } else {
-                    Log.d("Firebase", "Array does not exist for this user.");
                 }
             }
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("FirebaseData", "Error: " + databaseError.getMessage());
-            }
+            public void onCancelled(@NonNull DatabaseError databaseError) {}
         });
     }
 

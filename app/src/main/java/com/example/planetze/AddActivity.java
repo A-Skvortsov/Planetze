@@ -6,7 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -413,7 +412,6 @@ public class AddActivity extends Fragment {
             public Transaction.Result doTransaction(@NonNull MutableData currentData) {
                 Object rawData = currentData.getValue();
                 if (rawData == null && recursionLimiter < 100) {
-                    System.out.println("rawData was null, retrying transaction");
                     recursionLimiter++;  //prevents infinite recursion
                     updateFirebase(date, activity, id);  //retries recursively
                     return Transaction.abort();
@@ -421,20 +419,13 @@ public class AddActivity extends Fragment {
 
                 //find date in the firebase
                 List<Object> a = currentData.getValue(new GenericTypeIndicator<List<Object>>() {});
-                System.out.println(a);
                 a.set(id, activity);
                 currentData.setValue(a);  //writes to firebase
                 return Transaction.success(currentData);  //required for Transactions
             }
 
             @Override  //gives logcat message for success/failure
-            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot dataSnapshot) {
-                if (error != null) {
-                    Log.e("Firebase", "Error updating data: " + error.getMessage());
-                } else {
-                    Log.d("Firebase", "Data updated successfully!111");
-                }
-            }
+            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot dataSnapshot) {}
         });
 
     }
@@ -443,19 +434,6 @@ public class AddActivity extends Fragment {
     public static void writeToFirebase(String date, List<String> activity, String userId) {
         DatabaseReference calendarRef = db.getReference("user data")
                 .child(userId).child("calendar");
-
-        /*code in this nest writes and overrides whatever you're writing to. Does not account
-        for existing data (i.e. does not "update" the database, just overrides it with new data;
-        not what we want)*//*
-        Map<String, Object> map = new HashMap<>();
-        map.put(date, activity);
-        calendarRef.updateChildren(map)
-                .addOnSuccessListener(aVoid -> {
-                    Log.d("Firebase", "Data written successfully!");
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("Firebase", "Failed to write data: " + e.getMessage());
-                });*/
 
         calendarRef.child(date).runTransaction(new Transaction.Handler() {
             @NonNull
@@ -472,13 +450,7 @@ public class AddActivity extends Fragment {
             }
 
             @Override  //gives logcat message for success/failure
-            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot dataSnapshot) {
-                if (error != null) {
-                    Log.e("Firebase", "Error updating data: " + error.getMessage());
-                } else {
-                    Log.d("Firebase", "Data updated successfully!");
-                }
-            }
+            public void onComplete(@Nullable DatabaseError error, boolean committed, @Nullable DataSnapshot dataSnapshot) {}
         });
 
     }
