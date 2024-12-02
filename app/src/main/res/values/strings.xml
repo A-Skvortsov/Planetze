@@ -36,7 +36,7 @@
     <string name="goLogin">Go to login page</string>
 
     <!-- Survey -->
-    <string name="getStartedSurveyPrompt">Let\'s get started!</string>
+    <string name="get_started_survey_prompt">Let\'s get started!</string>
     <string name="we_ll_begin_with_a_survey">We\'ll begin with a survey.</string>
 
     <!-- Forgot password page -->
@@ -107,7 +107,6 @@
     </string>
 
     <!-- Survey -->
-    <string name="get_started_survey_prompt">Let\'s get started! We will calculate your current carbon footprint based on your lifestyle. You only need to do this survey once.</string>
     <string name="back_btn">Back</string>
     <string name="issue_prompt_star">*</string>
     <string name="issue_prompt_add_activity">Please select an answer</string>
