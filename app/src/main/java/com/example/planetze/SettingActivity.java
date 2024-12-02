@@ -61,7 +61,7 @@ public class SettingActivity extends AppCompatActivity {
         returnButton = findViewById(R.id.returnButton);
         logoutButton = findViewById(R.id.logoutButton);
         deleteAccountButton = findViewById(R.id.delete_account_button);
-//        changeName = findViewById(R.id.change_name);
+        changeName = findViewById(R.id.change_name);
 
         stayLoggedOnSwitch = findViewById(R.id.stay_logged_in_switch);
         interpolateEmissionsDataSwitch = findViewById(R.id.ied_switch);
@@ -104,7 +104,7 @@ public class SettingActivity extends AppCompatActivity {
                     }
                     else {
                         userRef.child(userID+"/name").setValue(nameText);
-                        showMessage("Name updated successfully");
+                        showMessage("Name changed successfully");
                         UserData.initialize(getApplicationContext());
                         name.setText(nameText);
                     }
