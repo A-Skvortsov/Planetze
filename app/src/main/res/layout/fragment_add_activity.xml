@@ -9,11 +9,10 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView"
-        android:layout_width="409dp"
-        android:layout_height="548dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_marginTop="75dp"
         android:backgroundTint="@color/white"
-        app:cardCornerRadius="16dp"
         android:layout_marginBottom="-10dp"
         app:cardElevation="8dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -136,10 +135,7 @@
                 app:layout_constraintEnd_toEndOf="@+id/saveBtn"
                 app:layout_constraintStart_toStartOf="@+id/backBtn"
                 app:layout_constraintTop_toBottomOf="@+id/inputBox2" />
-
-
         </androidx.constraintlayout.widget.ConstraintLayout>
         </ScrollView>
-
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -93,9 +93,8 @@
                 app:cardElevation="60dp"
                 app:cardCornerRadius="20dp"
                 android:layout_gravity="center"
-                app:cardBackgroundColor="#d1fffc"
-                android:layout_marginTop="40dp">
-
+                app:cardBackgroundColor="@color/white"
+                android:layout_marginTop="30dp">
 
                 <TextView
                     android:id="@+id/bt4"
@@ -106,11 +105,9 @@
                     android:gravity="center"
                     android:text="@string/lk4"
                     android:textAllCaps="true"
-                    android:textColor="@color/black"
                     android:textSize="16sp"
                     android:textStyle="bold" />
             </androidx.cardview.widget.CardView>
         </LinearLayout>
     </ScrollView>
-
 </FrameLayout>

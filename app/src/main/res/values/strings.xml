@@ -58,7 +58,6 @@
 
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-    <string name="home">Home</string>
 
     <string name="intro">You Carbon Emission is:</string>
     <string name="idk">.?.</string>
@@ -107,6 +106,32 @@
         <a href="https://www.on.com/en-us/shop/womens/shoes?clickref=1011lzYwVdBJ&amp;utm_source=Partnerize&amp;utm_medium=affiliate&amp;utm_campaign=thegoodtrade&amp;utm_content=AMR-CA">- On\n</a>
     </string>
 
+    <!-- Survey -->
+    <string name="get_started_survey_prompt">Let\'s get started! We will calculate your current carbon footprint based on your lifestyle. You only need to do this survey once.</string>
+    <string name="back_btn">Back</string>
+    <string name="issue_prompt_star">*</string>
+    <string name="issue_prompt_add_activity">Please select an answer</string>
+    <string name="negligible_good_job">negligible - Good Job!</string>
+    <string name="begin_survey">Begin Survey</string>
+    <string name="my_annual_carbon_footprint">My Annual Carbon Footprint</string>
+    <string name="breakdown_by_category_tons">Breakdown by Category (tons):</string>
+    <string name="consumption">Consumption</string>
+    <string name="_0">0</string>
+    <string name="national_average">National Average</string>
+    <string name="comparison_to_country">Comparison to country</string>
+    <string name="_502_0">502.0</string>
+    <string name="food">Food</string>
+    <string name="comparison_to_global_target">Comparison to global target</string>
+    <string name="you">You</string>
+    <string name="emitted_co2_year_tons">Emitted CO2/year (tons)</string>
+    <string name="housing">Housing</string>
+    <string name="comparing_with">Comparing with:</string>
+    <string name="comparison_by_country">Comparison by Country</string>
+    <string name="total">Total:</string>
+    <string name="retake">Retake</string>
+    <string name="statistics">Statistics:</string>
+    <string name="home">Home</string>
+
     <!-- Settings page -->
     <string name="settings">Settings</string>
     <string name="this_will_increase_eco_gauge_loading_times">
@@ -120,17 +145,14 @@
     <string name="log_out">Log out</string>
     <string name="delete_account">Delete Account</string>
 
-    <string name="lk1"> <a href="https://treecanada.ca/donate"> Click here to Donate  </a></string>
-    <string name="lk2"> <a href="https://treecanada.ca/donate-ngp-individual/"> Click here to Donate  </a></string>
-    <string name="lk3"> <a href="https://donate.givepower.org/donate-now"> Click here to Donate  </a></string>
-    <string name="lk4"> <a href="https://www.torontoenvironment.org/donate"> Click here to Donate  </a></string>
-    <string name="lk5"> <a href="https://trees.org/"> Click here to Donate  </a></string>
-    <string name="lk6"> <a href="https://act.earthjustice.org/a/givetoday?ms=web_menu_header"> Click here to Donate  </a></string>
-    <string name="get_started_survey_prompt">Let\'s get started! We will calculate your current carbon footprint based on your lifestyle. You only need to do this survey once.</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="back_btn">Back</string>
-    <string name="issue_prompt_star">*</string>
-    <string name="issue_prompt_add_activity">Please select an answer</string>
+    <string name="lk1"> <a href="https://treecanada.ca/donate"> Learn more  </a></string>
+    <string name="lk2"> <a href="https://treecanada.ca/donate-ngp-individual/"> Learn more  </a></string>
+    <string name="lk3"> <a href="https://donate.givepower.org/donate-now"> Learn more  </a></string>
+    <string name="lk4"> <a href="https://www.torontoenvironment.org/donate"> Learn more  </a></string>
+    <string name="lk5"> <a href="https://trees.org/"> Learn more  </a></string>
+    <string name="lk6"> <a href="https://act.earthjustice.org/a/givetoday?ms=web_menu_header"> Learn more  </a></string>
+
+    <!-- Habits page -->
     <string name="save_btn">Save</string>
     <string name="action_btn_default">Adopt</string>
     <string name="all_habits_btn">All Habits</string>
@@ -142,6 +164,8 @@
     <string name="no_recommendations">No habits to recommend, keep up the good work!</string>
     <string name="recommendation_description">Recommendations are from category of highest emissions for past 30 days</string>
     <string name="your_habits_btn">Your Habits</string>
+
+    <!-- Activities page -->
     <string name="activities_btn">Activities</string>
     <string name="see_survey_results_btn">See Survey Results</string>
     <string name="todays_total">Today\'s Total:</string>
@@ -154,24 +178,4 @@
     <string name="issue_prompt_eco_tracker">Please select an activity to edit/delete</string>
     <string name="current_year">2024</string>
     <string name="habits_btn">Habits</string>
-    <string name="begin_survey">Begin Survey</string>
-    <string name="my_annual_carbon_footprint">My Annual Carbon Footprint</string>
-    <string name="breakdown_by_category_tons">Breakdown by Category (tons):</string>
-    <string name="negligible_good_job">negligible - Good Job!</string>
-    <string name="consumption">Consumption</string>
-    <string name="_0">0</string>
-    <string name="national_average">National Average</string>
-    <string name="comparison_to_country">Comparison to country</string>
-    <string name="_502_0">502.0</string>
-    <string name="food">Food</string>
-    <string name="comparison_to_global_target">Comparison to global target</string>
-    <string name="you">You</string>
-    <string name="emitted_co2_year_tons">Emitted CO2/year (tons)</string>
-    <string name="housing">Housing</string>
-    <string name="comparing_with">Comparing with:</string>
-    <string name="comparison_by_country">Comparison by Country</string>
-    <string name="_502_2_tons_of_co2_emitted_annually">502.2 tons of CO2 emitted annually</string>
-    <string name="total">Total:</string>
-    <string name="retake_survey">Retake Survey</string>
-    <string name="statistics">Statistics:</string>
 </resources>
