@@ -2,7 +2,7 @@
 
 ## Project Members
 
-- Aqeeb
+- Aqeeb [Ahmad]
 - Minki
 - Adeeb
 - Nethanel
