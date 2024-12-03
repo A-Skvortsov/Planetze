@@ -46,7 +46,7 @@ public class LoginModel {
         auth = FirebaseAuth.getInstance();
         db = FirebaseDatabase.getInstance(FIREBASE_LINK);
         userRef = db.getReference(USER_DATA);
-        //addUserstoDatabase();
+        UserData.addUserstoDatabase();
     }
 
     public void loginUser(String email, String password, LoginPresenter presenter) {
@@ -58,7 +58,7 @@ public class LoginModel {
                     FirebaseUser user = auth.getCurrentUser();
                     String userID = user.getUid().toString().trim();
                     if (user.isEmailVerified()) {
-                        UserData.login(presenter.getViewContext(), userID, password);
+                        UserData.login(presenter.getViewContext(), userID);
                         takeToHomePage(presenter);
                     } else {
                         presenter.setMessage("Account needs to be verified");
@@ -174,7 +174,7 @@ public class LoginModel {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
 
-                UserData.googleLogin(presenter.getViewContext(), auth.getCurrentUser().getUid());
+                UserData.login(presenter.getViewContext(), auth.getCurrentUser().getUid());
                 UserData.initialize(presenter.getViewContext());
                 DataSnapshot users = task.getResult();
                 boolean equalsEmail = false;

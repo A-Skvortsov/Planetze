@@ -45,17 +45,7 @@ public class UserData {
 
 
 
-    public static void login(Context context, String userID, String key) {
-        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-        SharedPreferences.Editor e = p.edit();
-        e.putString("UserID", userID);
-        e.putBoolean("isLoggedIn", true);
-        e.putString("privateKey", key);
-
-        e.apply();
-    }
-
-    public static void googleLogin(Context context, String userID) {
+    public static void login(Context context, String userID) {
         p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
         SharedPreferences.Editor e = p.edit();
         e.putString("UserID", userID);
@@ -138,12 +128,6 @@ public class UserData {
         DatabaseReference userRef = db.getReference(USER_DATA);
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
-        p = context.getSharedPreferences("User", Context.MODE_PRIVATE);
-
-        String key = p.getString("privateKey","");
-        AuthCredential credential = EmailAuthProvider.getCredential(UserData.getData(context,EMAIL), key);
-        auth.getCurrentUser().reauthenticate(credential);
-
         userRef.child(UserData.getUserID(context)).removeValue();
         auth.getCurrentUser().delete();
         auth.signOut();
@@ -172,7 +156,6 @@ public class UserData {
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 DataSnapshot users = task.getResult();
                 for(DataSnapshot user:users.getChildren()) {
-                    String userID = user.getKey();
                     if (user.hasChild("email")) {
                         String email = user.child("email").getValue().toString().trim();
                         String password = user.child("password").getValue().toString().trim();
