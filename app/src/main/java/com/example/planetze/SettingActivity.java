@@ -96,7 +96,6 @@ public class SettingActivity extends AppCompatActivity {
             switchFunction(userID, HIDE_GRID_LINES, hideGridLinesSwitch);
         });
 
-
         hideTrendLinePointsSwitch.setOnClickListener(view -> {
             switchFunction(userID, HIDE_TREND_LINE_POINTS, hideTrendLinePointsSwitch);
         });
