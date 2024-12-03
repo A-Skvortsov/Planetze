@@ -117,7 +117,7 @@ ASSUMPTIONS
 		iii. Food "meal" activity: emissions for a single serving are set, then multiplied by # of servings inputted by user. Single-serving emissions calculated from Formulas file as (emissions if you consume the selected meal daily, as given in Formulas file) divided by ~365 days per year  
 		iv. Emissions for buying a single clothing item are computed as 6kgCO2: computed using formulas file:  
         	a) monthly buyers of clothes get 360kgco2/year  
-            b) suppose 5 clothing items per month @6kgco2 per clothing item. This gets the given 360kgco2/year number. So we use 6kgco2 per clothing item  
+        	b) suppose 5 clothing items per month @6kgco2 per clothing item. This gets the given 360kgco2/year number. So we use 6kgco2 per clothing item  
 		v. For buying electronics, 300kgCO2 set as emissions for one smartphone (as in Formulas file; emissions for buying 1 electronic device), 600kg for one computer, 900kg for one T/V (computer & T/V emissions just taken as 2x and 3x those of a smartphone, respectively). These values are multiplied by # of electronics purchased  
 		vi. For other purchases, 100kgCO2 set as emissions for furniture (by assumption) and 900kgCO2 for appliances (by assumption, as appliances are like big electronic devices, somewhat similar in size and materials to a T/V) then multiplied by # of items purchased  
 		vii. Emissions for monthly energy bills are computed as (emissions for 2 occupants, detached house under 1000sqft) / 365 days in a year (this value is added to each day for past 30 days, as mentioned in assumption #11)  
@@ -132,10 +132,9 @@ IMPLEMENTATION DETAILS/DEVELOPER INFORMATION
 		ii. MaterialCalendarView, an extension of the built-in CalendarView library, for the Eco Tracker calendar (https://github.com/prolificinteractive/material-calendarview)  
 		iii. OpenCSV, a csv file reader, for reading emissions of other countries in Eco Guage comparison chart (https://opencsv.sourceforge.net/)  
 		iv. YouTubePlayer for Eco Hub learning resources videos (https://github.com/PierfrancescoSoffritti/android-youtube-player)  
-		v. Volley (https://google.github.io/volley/)  
-		vi. FirebaseAuth, to access firebase project for authentication and realtime database (https://firebase.google.com/docs/auth)  
-		vii. Mockito, for unit testing of login module (https://site.mockito.org/)  
-		viii. GoogleSignInClient, to sign in using google (https://developers.google.com/android/reference/com/google/android/gms/auth/api/identity/SignInClient)  
+		v. FirebaseAuth, to access firebase project for authentication and realtime database (https://firebase.google.com/docs/auth)  
+		vi. Mockito, for unit testing of login module (https://site.mockito.org/)  
+		vii. GoogleSignInClient, to sign in using google (https://developers.google.com/android/reference/com/google/android/gms/auth/api/identity/SignInClient)  
 		
 	2. Code Structure  
 		i. Eco Tracker  
