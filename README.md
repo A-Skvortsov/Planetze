@@ -20,7 +20,7 @@ EXISTING SIGN-IN CREDENTIALS:
 Email: andreyskv49@gmail.com  
 Password: hellohello1  
 
-USER FLOW
+USER FLOW/USE INSTRUCTIONS
 
  	1. user opens app  
 	2. user is presented with a sign-up/login module  
@@ -125,18 +125,42 @@ ASSUMPTIONS
 	18: Eco Guage trendline graph: for any selected time period, if there exist days in the time period for which no activity data is logged by the user, it is assumed that  
 		this is "missing data" and such days are omitted from the trendline graph (as per the advice of Professor Rawad)  
 		
-IMPLEMENTATION DETAILS/DEVELOPER GUIDE
+IMPLEMENTATION DETAILS/DEVELOPER INFORMATION
 
 	1. Libraries/Dependencies  
 		i. MPAndroidChart for Eco Guage charts (https://github.com/PhilJay/MPAndroidChart)  
 		ii. MaterialCalendarView, an extension of the built-in CalendarView library, for the Eco Tracker calendar (https://github.com/prolificinteractive/material-calendarview)  
 		iii. OpenCSV, a csv file reader, for reading emissions of other countries in Eco Guage comparison chart (https://opencsv.sourceforge.net/)  
+		iv. YouTubePlayer for Eco Hub learning resources videos (https://github.com/PierfrancescoSoffritti/android-youtube-player)  
+		v. Volley (https://google.github.io/volley/)  
+		vi. FirebaseAuth, to access firebase project for authentication and realtime database (https://firebase.google.com/docs/auth)  
+		vii. Mockito, for unit testing of login module (https://site.mockito.org/)  
+		viii. GoogleSignInClient, to sign in using google (https://developers.google.com/android/reference/com/google/android/gms/auth/api/identity/SignInClient)  
 		
 	2. Code Structure  
 		i. Eco Tracker  
-			a) EcoTrackerFragment.java (business logic) and fragment_eco_tracker.xml (UI)  
-			b) AddActivity.java and fragment_add_activity.xml  
-			c) AddHabit.java and fragment_add_habit.xml  
-			d) CalendarFragment.java and fragment_calendar.xml  
+			a) Eco Tracker main page: EcoTrackerFragment.java (business logic) and fragment_eco_tracker.xml (UI)  
+			b) Add/Edit activities feature: AddActivity.java and fragment_add_activity.xml  
+			c) Add/Edit/Remove habits feature: AddHabit.java and fragment_add_habit.xml  
+			d) Calendar feature: CalendarFragment.java and fragment_calendar.xml  
 		ii. Eco Guage  
-			a)  
+			a) Eco Guage main page: EcoGuageFragment.java and fragment_eco_guage.xml  
+		iii. Eco Balance  
+			a) Eco Balance main page: EcoBalanceFragment.java and fragment_eco_balance_fragment.xml  
+			b) Eco balance offset projects page: EcoBalanceDestinationFragment.java and fragment_eco_balance_destination.xml  
+			c) Individual offset project pages: Waste, Technology, Plant a Tree, (fossil) Fuels, Farmers, and Clean Air. Their associated files are easily identifiable  
+		iv. Eco Hub  
+			a) Eco Hub main page: EcoHubEntryFragment.java and fragment_eco_hub_entry.xml  
+			b) Learning resources feature: LearningResourcesFragment.java and fragment_learning_resources.xml  
+			c) Market trends feature: MarketTrendsFragment.java and fragment_market_trends.xml  
+		v. Login and Sign-Up modules  
+			a) (login folder): model-view-presenter structure. Files are easily identifiable  
+			b) SignUpFragment, ForgotPasswordFragment and their associated xml files
+		vi. Navigation  
+			a) Primary (home) activity: HomeActivity.java and activity_home.xml  
+			b) Navigation control files: menu/bottom_nav_menu.xml and navigation/nav_graph.xml  
+		vii. Application startup files  
+			a) AndroidManifest.xml, MainActivity.java and activity_main.xml  
+		viii. Extra computation/logic files of utilities and customDataStructures folders  
+			a) (utilities) Constants.java: constants pertaining to computations made in Eco Guage, Eco Tracker and annual carbon emissions survey features  
+			b) (customDataStructures) EmissionNode.java and EmissionNodeCollection.java: used to retrieve user emissions over specified time periods (Eco Guage and Eco Tracker)  
