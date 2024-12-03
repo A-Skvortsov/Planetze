@@ -116,8 +116,8 @@ ASSUMPTIONS
 		ii. For flight activities, the emissions of a single short-haul flight is set to 225kgCO2 (as taken from Formulas file for 1-2 short-haul flights) and multiplied by number of short-haul flights taken. Same for long-haul flights, but one long-haul flight has 550kgCO2 emitted (double that of a short-haul)  
 		iii. Food "meal" activity: emissions for a single serving are set, then multiplied by # of servings inputted by user. Single-serving emissions calculated from Formulas file as (emissions if you consume the selected meal daily, as given in Formulas file) divided by ~365 days per year  
 		iv. Emissions for buying a single clothing item are computed as 6kgCO2: computed using formulas file:  
-        	a) monthly buyers of clothes get 360kgco2/year  
-        	b) suppose 5 clothing items per month @6kgco2 per clothing item. This gets the given 360kgco2/year number. So we use 6kgco2 per clothing item  
+			a) monthly buyers of clothes get 360kgco2/year  
+			b) suppose 5 clothing items per month @6kgco2 per clothing item. This gets the given 360kgco2/year number. So we use 6kgco2 per clothing item  
 		v. For buying electronics, 300kgCO2 set as emissions for one smartphone (as in Formulas file; emissions for buying 1 electronic device), 600kg for one computer, 900kg for one T/V (computer & T/V emissions just taken as 2x and 3x those of a smartphone, respectively). These values are multiplied by # of electronics purchased  
 		vi. For other purchases, 100kgCO2 set as emissions for furniture (by assumption) and 900kgCO2 for appliances (by assumption, as appliances are like big electronic devices, somewhat similar in size and materials to a T/V) then multiplied by # of items purchased  
 		vii. Emissions for monthly energy bills are computed as (emissions for 2 occupants, detached house under 1000sqft) / 365 days in a year (this value is added to each day for past 30 days, as mentioned in assumption #11)  
