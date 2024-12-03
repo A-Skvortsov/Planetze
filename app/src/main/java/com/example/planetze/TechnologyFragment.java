@@ -15,8 +15,6 @@ public class TechnologyFragment extends Fragment {
 
     TextView textView1;
 
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

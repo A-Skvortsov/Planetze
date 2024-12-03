@@ -52,7 +52,7 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(libs.firebase.auth)
-    implementation("com.github.prolificinteractive:material-calendarview:2.0.1")  //used for calendar
+    implementation("com.github.prolificinteractive:material-calendarview:2.0.1")
     implementation(libs.mpandroidchart)
     implementation(libs.opencsv)
     testImplementation(libs.mockito)
