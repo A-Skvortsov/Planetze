@@ -3,6 +3,7 @@ package com.example.planetze;
 import static android.app.Activity.RESULT_OK;
 import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,11 +29,17 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Keep;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.planetze.Login.LoginModel;
 import com.example.planetze.Login.LoginPresenter;
 import com.example.planetze.Login.LoginView;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import javax.inject.Inject;
 
@@ -46,16 +53,13 @@ public class LoginUnitTest {
     @Mock LoginModel model;
     @Mock LoginView view;
 
-    @Mock Context context;
-
-    //@Rule public MockitoRule rule = MockitoJUnit.rule().strictness(Strictness.LENIENT);
 
     @Test
     public void testNullEmail() {
         LoginPresenter presenter = new LoginPresenter(model,view);
         presenter.loginUser(null, "password123");
         verify(view).setMessage("Email cannot be empty");
-        when(view.testIsLoggedIn()).thenReturn(false);
+        when(model.isLoggedIn()).thenReturn(false);
 
     }
 
@@ -64,7 +68,7 @@ public class LoginUnitTest {
         LoginPresenter presenter = new LoginPresenter(model,view);
         presenter.loginUser("jiangminki0@gmail.com", null);
         verify(view).setMessage("Password cannot be empty");
-        when(view.testIsLoggedIn()).thenReturn(false);
+        when(model.isLoggedIn()).thenReturn(false);
 
     }
 
@@ -73,7 +77,7 @@ public class LoginUnitTest {
         LoginPresenter presenter = new LoginPresenter(model,view);
         presenter.loginUser("", "password123");
         verify(view).setMessage("Email cannot be empty");
-        when(view.testIsLoggedIn()).thenReturn(false);
+        when(model.isLoggedIn()).thenReturn(false);
 
     }
 
@@ -82,7 +86,7 @@ public class LoginUnitTest {
         LoginPresenter presenter = new LoginPresenter(model,view);
         presenter.loginUser("jiangminki0@gmail.com", "");
         verify(view).setMessage("Password cannot be empty");
-        when(view.testIsLoggedIn()).thenReturn(false);
+        when(model.isLoggedIn()).thenReturn(false);
     }
 
     @Test
@@ -90,7 +94,7 @@ public class LoginUnitTest {
         LoginPresenter presenter = new LoginPresenter(model,view);
         presenter.loginUser("     ", "password123");
         verify(view).setMessage("Email cannot be empty");
-        when(view.testIsLoggedIn()).thenReturn(false);
+        when(model.isLoggedIn()).thenReturn(false);
 
     }
 
@@ -99,39 +103,35 @@ public class LoginUnitTest {
         LoginPresenter presenter = new LoginPresenter(model,view);
         presenter.loginUser("jiangminki0@gmail.com", "       ");
         verify(view).setMessage("Password cannot be empty");
-        when(view.testIsLoggedIn()).thenReturn(false);
+        when(model.isLoggedIn()).thenReturn(false);
     }
 
     @Test
     public void testWrongEmailRightPassword() {
         LoginPresenter presenter = new LoginPresenter(model,view);
-        presenter.loginUser("wrongemail@gmail.com", "hellohello");
-        //verify(view).setMessage("Invalid email or password");
-        when(view.testIsLoggedIn()).thenReturn(false);
+        presenter.loginUser("wrongemail@gmail.com", "hellohello1");
+        when(model.isLoggedIn()).thenReturn(false);
     }
 
     @Test
     public void testRightEmailWrongPassword() {
         LoginPresenter presenter = new LoginPresenter(model,view);
         presenter.loginUser("jiangminki0@gmail.com", "wrongpassword");
-        //verify(view).setMessage("Invalid email or password");
-        when(view.testIsLoggedIn()).thenReturn(false);
+        when(model.isLoggedIn()).thenReturn(false);
     }
 
     @Test
     public void testWrongEmailWrongPassword() {
         LoginPresenter presenter = new LoginPresenter(model,view);
         presenter.loginUser("wrongemail@gmail.com", "wrongpassword");
-        //verify(view).setMessage("Invalid email or password");
-        when(view.testIsLoggedIn()).thenReturn(false);
+        when(model.isLoggedIn()).thenReturn(false);
     }
 
     @Test
     public void testRightEmailRightPassword() {
         LoginPresenter presenter = new LoginPresenter(model,view);
-        presenter.loginUser("jiangminki0@gmail.com", "hellohello");
-        //verify(view).takeToHub();
-        when(view.testIsLoggedIn()).thenReturn(true);
+        presenter.loginUser("jiangminki0@gmail.com", "hellohello1");
+        when(model.isLoggedIn()).thenReturn(true);
     }
 
     @Test
@@ -139,6 +139,7 @@ public class LoginUnitTest {
         LoginPresenter presenter = new LoginPresenter(model,view);
         presenter.setMessage("this is a message");
         verify(view).setMessage("this is a message");
+
     }
 
     @Test
@@ -174,7 +175,7 @@ public class LoginUnitTest {
         LoginPresenter presenter = new LoginPresenter(model,view);
         ActivityResult result = null;
         presenter.onSignInResult(result);
-        //verify(view).setMessage("Launched Google sign up");
+        when(model.isLoggedIn()).thenReturn(true);
     }
 
     @Test

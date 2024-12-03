@@ -1,8 +1,18 @@
 package utilities;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class Constants {
 
+    public static final String USER_DATA = "user data";
+
+    public static final String UNVERIFIED_USERS = "unverified users";
     public static final String FIREBASE_LINK = "https://planetze-c3c95-default-rtdb.firebaseio.com/";
+    public static final DatabaseReference USER_REFERENCE = FirebaseDatabase.getInstance(FIREBASE_LINK).getReference(USER_DATA);
+    public static final DatabaseReference UNVERIFIED_USERS_REFERENCE = FirebaseDatabase.getInstance(FIREBASE_LINK).getReference(UNVERIFIED_USERS);
+    public static final FirebaseAuth AUTH = FirebaseAuth.getInstance();
 
     public static final String[] months = {"Jan", "Feb", "Mar", "Apr", "May", "June",
             "July", "Aug", "Sep", "Oct", "Nov", "Dec"};
@@ -30,7 +40,6 @@ public class Constants {
     public static final int consumption_qs = 4;
 
     // Firebase retrieval constants
-    public static final String USER_DATA = "user data";
     public static final String STAY_LOGGED_ON = "stay_logged_on";
     public static final String INTERPOLATE_EMISSIONS_DATA = "interpolate_emissions_data";
     public static final String HIDE_GRID_LINES = "hide_grid_lines";

@@ -3,13 +3,16 @@ package com.example.planetze;
 
 import static android.app.Activity.RESULT_OK;
 import static java.lang.Character.isLetter;
+import static utilities.Constants.AUTH;
 import static utilities.Constants.EMAIL;
 import static utilities.Constants.FIREBASE_LINK;
 import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
 import static utilities.Constants.HIDE_TREND_LINE_POINTS;
 import static utilities.Constants.STAY_LOGGED_ON;
+import static utilities.Constants.UNVERIFIED_USERS_REFERENCE;
 import static utilities.Constants.USER_DATA;
+import static utilities.Constants.USER_REFERENCE;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -57,14 +60,10 @@ import utilities.UserData;
 
 public class SignUpFragment extends Fragment {
 
-    private FirebaseAuth auth;
     private EditText signupEmail, signupPassword,signupConfirmPassword, fullName;
     private Button signupButton;
 
     private TextView inputError, signinLink;
-
-    private DatabaseReference userRef;
-    private FirebaseDatabase db;
     ActivityResultLauncher<Intent> launcher;
     private Button googleSignUp;
 
@@ -114,7 +113,6 @@ public class SignUpFragment extends Fragment {
     }
 
     private void setup(View view) {
-        auth = FirebaseAuth.getInstance();
         signupEmail = view.findViewById(R.id.emailInput);
         signupPassword = view.findViewById(R.id.passwordInput);
         signupConfirmPassword = view.findViewById(R.id.confirmPasswordInput);
@@ -125,9 +123,6 @@ public class SignUpFragment extends Fragment {
 
         signinLink = view.findViewById(R.id.signInLink);
         googleSignUp = view.findViewById(R.id.signUpWithGoogleButton);
-
-        db = FirebaseDatabase.getInstance(FIREBASE_LINK);
-        userRef = db.getReference(USER_DATA);
 
         UserData.addUserstoDatabase();
 
@@ -234,9 +229,8 @@ public class SignUpFragment extends Fragment {
     }
 
     private void checkExistingUnverifiedAccount(String name, String email, String password) {
-        DatabaseReference unverifiedRef = db.getReference("unverified users");
 
-        unverifiedRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        UNVERIFIED_USERS_REFERENCE.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
 
@@ -269,16 +263,15 @@ public class SignUpFragment extends Fragment {
     }
 
     private void recreateAccount(String name, String email, String password, String oldPassword) {
-        DatabaseReference unverifiedRef = db.getReference("unverified users");
 
-        auth.signInWithEmailAndPassword(email, oldPassword)
+        AUTH.signInWithEmailAndPassword(email, oldPassword)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            FirebaseUser user = auth.getCurrentUser();
+                            FirebaseUser user = AUTH.getCurrentUser();
                             String userID = user.getUid().toString().trim();
-                            unverifiedRef.child(userID).removeValue();
+                            UNVERIFIED_USERS_REFERENCE.child(userID).removeValue();
                             initialize(userID, email, password, name);
                             user.updatePassword(password);
                             sendVerification();
@@ -289,13 +282,13 @@ public class SignUpFragment extends Fragment {
     }
 
     private void createAccountOnFirebase(String email, String password, String name) {
-        auth.createUserWithEmailAndPassword(email, password)
+        AUTH.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                         if (task.isSuccessful()) {
-                            String id = auth.getCurrentUser().getUid();
+                            String id = AUTH.getCurrentUser().getUid();
                             initialize(id, email, password, name);
                             sendVerification();
                         } else {
@@ -307,7 +300,7 @@ public class SignUpFragment extends Fragment {
 
     private void sendVerification() {
         Activity activity = getActivity();
-        auth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+        AUTH.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (!task.isSuccessful()) {
@@ -319,11 +312,10 @@ public class SignUpFragment extends Fragment {
     }
 
     private void initialize(String userID, String email, String password, String name) {
-        DatabaseReference unverifiedRef = db.getReference("unverified users");
 
-        unverifiedRef.child(userID+"/email").setValue(email);
-        unverifiedRef.child(userID+"/password").setValue(password);
-        unverifiedRef.child(userID+"/name").setValue(name);
+        UNVERIFIED_USERS_REFERENCE.child(userID+"/email").setValue(email);
+        UNVERIFIED_USERS_REFERENCE.child(userID+"/password").setValue(password);
+        UNVERIFIED_USERS_REFERENCE.child(userID+"/name").setValue(name);
 
     }
 
@@ -343,7 +335,7 @@ public class SignUpFragment extends Fragment {
             try {
                 GoogleSignInAccount signInAccount = accountTask.getResult(ApiException.class);
                 AuthCredential authCredential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(), null);
-                auth.signInWithCredential(authCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                AUTH.signInWithCredential(authCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -363,10 +355,10 @@ public class SignUpFragment extends Fragment {
     }
 
     private void googleSignin() {
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        USER_REFERENCE.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                UserData.login(requireContext(),auth.getCurrentUser().getUid());
+                UserData.login(requireContext(),AUTH.getCurrentUser().getUid());
                 UserData.initialize(getContext());
                 DataSnapshot users = task.getResult();
                 boolean equalsEmail = false;
@@ -383,7 +375,7 @@ public class SignUpFragment extends Fragment {
 
                 if (!equalsEmail) {
                     String id = UserData.getUserID(getContext());
-                    String name = auth.getCurrentUser().getDisplayName();
+                    String name = AUTH.getCurrentUser().getDisplayName();
                     String email = UserData.getData(getContext(),EMAIL);
 
                     UserData.setDefaultSettings(id,email, name);
@@ -399,9 +391,9 @@ public class SignUpFragment extends Fragment {
 
     private void isNewUser() {
         //for google sign in only
-        userRef.get().addOnCompleteListener(task -> {
+        USER_REFERENCE.get().addOnCompleteListener(task -> {
             DataSnapshot users = task.getResult();
-            String userID = auth.getCurrentUser().getUid();
+            String userID = AUTH.getCurrentUser().getUid();
             for(DataSnapshot user:users.getChildren()) {
                 Object inu = user.child("is_new_user").getValue();
                 boolean cond1 = user.getKey().toString().trim().equals(userID);

@@ -8,12 +8,15 @@ import android.content.Intent;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultLauncher;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class LoginPresenter {
 
     private LoginModel model;
     private LoginView view;
 
-    ActivityResultLauncher<Intent> launcher;
+    private String msg;
+
 
     public LoginPresenter(LoginModel model, LoginView view) {
         this.view = view;
@@ -31,6 +34,8 @@ public class LoginPresenter {
         else {
             model.loginUser(email, password, this);
         }
+        //FirebaseAuth auth = FirebaseAuth.getInstance();
+        //return auth.getCurrentUser()!=null;
 
     }
 
@@ -57,6 +62,10 @@ public class LoginPresenter {
     }
 
     public Context getViewContext() {return view.getContext();}
+
+
+
+
 
 
 }

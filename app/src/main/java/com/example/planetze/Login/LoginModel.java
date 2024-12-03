@@ -4,13 +4,16 @@ import static android.app.Activity.RESULT_OK;
 
 import static androidx.activity.result.ActivityResultCallerKt.registerForActivityResult;
 
+import static utilities.Constants.AUTH;
 import static utilities.Constants.EMAIL;
 import static utilities.Constants.FIREBASE_LINK;
 import static utilities.Constants.HIDE_GRID_LINES;
 import static utilities.Constants.INTERPOLATE_EMISSIONS_DATA;
 import static utilities.Constants.HIDE_TREND_LINE_POINTS;
 import static utilities.Constants.STAY_LOGGED_ON;
+import static utilities.Constants.UNVERIFIED_USERS_REFERENCE;
 import static utilities.Constants.USER_DATA;
+import static utilities.Constants.USER_REFERENCE;
 
 import android.app.Activity;
 import android.widget.Toast;
@@ -37,32 +40,24 @@ import utilities.UserData;
 
 public class LoginModel {
 
-    private FirebaseAuth auth;
-    FirebaseDatabase db;
-    DatabaseReference userRef;
-
     public LoginModel() {
-
-        auth = FirebaseAuth.getInstance();
-        db = FirebaseDatabase.getInstance(FIREBASE_LINK);
-        userRef = db.getReference(USER_DATA);
         UserData.addUserstoDatabase();
     }
 
     public void loginUser(String email, String password, LoginPresenter presenter) {
 
-        auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+        AUTH.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
-                    FirebaseUser user = auth.getCurrentUser();
+                    FirebaseUser user = AUTH.getCurrentUser();
                     String userID = user.getUid().toString().trim();
                     if (user.isEmailVerified()) {
                         UserData.login(presenter.getViewContext(), userID);
                         takeToHomePage(presenter);
                     } else {
                         presenter.setMessage("Account needs to be verified");
-                        auth.signOut();
+                        AUTH.signOut();
                     }
 
                 } else {
@@ -73,8 +68,7 @@ public class LoginModel {
     }
 
     private void addUsertoDatabase(LoginPresenter presenter) {
-        DatabaseReference unverifiedRef = db.getReference("unverified users");
-        unverifiedRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        UNVERIFIED_USERS_REFERENCE.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
                 DataSnapshot users = task.getResult();
@@ -84,8 +78,8 @@ public class LoginModel {
                         String name = user.child("name").getValue().toString().trim();
                       
                         String userID = UserData.getUserID(presenter.getViewContext());
-                        if (email.equals(auth.getCurrentUser().getEmail().trim())) {
-                            unverifiedRef.child(userID).removeValue();
+                        if (email.equals(AUTH.getCurrentUser().getEmail().trim())) {
+                            UNVERIFIED_USERS_REFERENCE.child(userID).removeValue();
                             UserData.setDefaultSettings(userID, email, name);
                             break;
                         }
@@ -101,7 +95,7 @@ public class LoginModel {
 
     private void takeToHomePage(LoginPresenter presenter) {
         UserData.initialize(presenter.getViewContext());
-        userRef.get().addOnCompleteListener(task -> {
+        USER_REFERENCE.get().addOnCompleteListener(task -> {
             DataSnapshot users = task.getResult();
             String userID = UserData.getUserID(presenter.getViewContext());
 
@@ -138,7 +132,7 @@ public class LoginModel {
             try {
                 GoogleSignInAccount signInAccount = accountTask.getResult(ApiException.class);
                 AuthCredential authCredential = GoogleAuthProvider.getCredential(signInAccount.getIdToken(), null);
-                auth.signInWithCredential(authCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                AUTH.signInWithCredential(authCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -158,23 +152,23 @@ public class LoginModel {
     }
 
     private void setDefaultSettings(String userID, String email, String name) {
-        userRef.child(userID+"/email").setValue(email);
-        userRef.child(userID+"/name").setValue(name);
-        userRef.child(userID+"/is_new_user").setValue(true);
-        userRef.child(userID+"/settings/"+STAY_LOGGED_ON).setValue(false);
-        userRef.child(userID+"/settings/"+INTERPOLATE_EMISSIONS_DATA).setValue(false);
-        userRef.child(userID+"/settings/"+ HIDE_TREND_LINE_POINTS).setValue(false);
-        userRef.child(userID+"/settings/"+HIDE_GRID_LINES).setValue(false);
-        userRef.child(userID+"/calendar/0000-00-00/0").setValue(0);
+        USER_REFERENCE.child(userID+"/email").setValue(email);
+        USER_REFERENCE.child(userID+"/name").setValue(name);
+        USER_REFERENCE.child(userID+"/is_new_user").setValue(true);
+        USER_REFERENCE.child(userID+"/settings/"+STAY_LOGGED_ON).setValue(false);
+        USER_REFERENCE.child(userID+"/settings/"+INTERPOLATE_EMISSIONS_DATA).setValue(false);
+        USER_REFERENCE.child(userID+"/settings/"+ HIDE_TREND_LINE_POINTS).setValue(false);
+        USER_REFERENCE.child(userID+"/settings/"+HIDE_GRID_LINES).setValue(false);
+        USER_REFERENCE.child(userID+"/calendar/0000-00-00/0").setValue(0);
 
     }
 
     private void googleSignin(LoginPresenter presenter) {
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+        USER_REFERENCE.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
 
-                UserData.login(presenter.getViewContext(), auth.getCurrentUser().getUid());
+                UserData.login(presenter.getViewContext(), AUTH.getCurrentUser().getUid());
                 UserData.initialize(presenter.getViewContext());
                 DataSnapshot users = task.getResult();
                 boolean equalsEmail = false;
@@ -192,7 +186,7 @@ public class LoginModel {
                 if (!equalsEmail) {
 
                     String id = UserData.getUserID(presenter.getViewContext());
-                    String name = auth.getCurrentUser().getDisplayName();
+                    String name = AUTH.getCurrentUser().getDisplayName();
                     String email = UserData.getData(presenter.getViewContext(), EMAIL);
 
                     setDefaultSettings(id,email, name);
@@ -205,6 +199,11 @@ public class LoginModel {
             }
         });
     }
+
+    public boolean isLoggedIn() {
+        return AUTH.getCurrentUser()!=null;
+    }
+
 
 
 }

@@ -1,5 +1,7 @@
 package com.example.planetze.Login;
 
+import static utilities.Constants.FIREBASE_LINK;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +31,7 @@ import com.example.planetze.SurveyFragment;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
 import utilities.UserData;
@@ -39,13 +42,12 @@ public class LoginView extends Fragment  {
 
     private Button login;
 
-    private FirebaseDatabase db;
-
     private TextView inputError, forgotpass;
     private Button googleSignUp;
 
     private LoginPresenter presenter;
 
+    private TextView signUpLink;
 
     ActivityResultLauncher<Intent> launcher;
 
@@ -55,24 +57,7 @@ public class LoginView extends Fragment  {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
-        db = FirebaseDatabase.getInstance("https://planetze-c3c95-default-rtdb.firebaseio.com/");
-
-        TextView signUpLink = view.findViewById(R.id.signUpLink);
-        signUpLink.setOnClickListener(v -> loadFragment(new SignUpFragment()));
-
-        loginEmail = view.findViewById(R.id.emailInput);
-        loginPass = view.findViewById(R.id.passwordInput);
-        login = view.findViewById(R.id.logInButton);
-        inputError = view.findViewById(R.id.error);
-        forgotpass = view.findViewById(R.id.forgotPasswordLink);
-
-        googleSignUp = view.findViewById(R.id.signInWithGoogleButton);
-
-        presenter = new LoginPresenter(new LoginModel(), this);
-
-        presenter.setMessage(" ");
-        presenter.setSignUpLauncher();
-        UserData.logout(getViewContext());
+        initialize(view);
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,7 +81,6 @@ public class LoginView extends Fragment  {
         forgotpass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //auth.sendPasswordResetEmail(email);
                 loadFragment(new ForgotPasswordFragment());
             }
         });
@@ -168,8 +152,24 @@ public class LoginView extends Fragment  {
         launcher.launch(intent);
     }
 
-    public boolean testIsLoggedIn() {
-        return UserData.isLoggedIn(getViewContext());
+    private void initialize(View view) {
+        signUpLink = view.findViewById(R.id.signUpLink);
+        signUpLink.setOnClickListener(v -> loadFragment(new SignUpFragment()));
+
+        loginEmail = view.findViewById(R.id.emailInput);
+        loginPass = view.findViewById(R.id.passwordInput);
+        login = view.findViewById(R.id.logInButton);
+        inputError = view.findViewById(R.id.error);
+        forgotpass = view.findViewById(R.id.forgotPasswordLink);
+
+        googleSignUp = view.findViewById(R.id.signInWithGoogleButton);
+
+        presenter = new LoginPresenter(new LoginModel(), this);
+
+        presenter.setMessage(" ");
+        presenter.setSignUpLauncher();
+        UserData.logout(getViewContext());
     }
+
 
 }
