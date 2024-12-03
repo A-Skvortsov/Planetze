@@ -19,6 +19,7 @@ import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -283,6 +284,7 @@ public class EcoTrackerFragment extends Fragment {
                             delFromFirebase(dateRef, acts, id, noActivities);  //delete the activity
                             //next line polls firebase for update and updates ui via call to updateDisplay
                             //in "listener"
+                            Toast.makeText(getContext(), "Activity Deleted", Toast.LENGTH_SHORT).show();
                             fetchSnapshot();
                         }
                     }
@@ -388,6 +390,7 @@ public class EcoTrackerFragment extends Fragment {
                     return;
                 }
 
+                Toast.makeText(getContext(), "New Activity Logged", Toast.LENGTH_SHORT).show();
                 List<String> habitToLog = currentHabits.get(id);
                 AddActivity.writeToFirebase(date, habitToLog, userId);
 
