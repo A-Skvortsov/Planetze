@@ -130,6 +130,9 @@ IMPLEMENTATION DETAILS/DEVELOPER GUIDE
 	1. Libraries/Dependencies  
 		i. MPAndroidChart for Eco Guage charts  
 		ii. MaterialCalendarView, an extension of the built-in CalendarView library, for the Eco Tracker calendar  
+		iii. FirebaseAuth, to access firebase project for authentication and realtime database
+		iv. Mockito, for unit testing of login module
+		v. GoogleSignInClient, to sign in using google
 		
 	2. Code Structure  
 		i. Eco Tracker  

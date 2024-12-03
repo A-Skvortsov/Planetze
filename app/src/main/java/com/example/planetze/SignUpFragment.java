@@ -61,16 +61,12 @@ public class SignUpFragment extends Fragment {
     private EditText signupEmail, signupPassword,signupConfirmPassword, fullName;
     private Button signupButton;
 
-    private TextView loginRedirectText, inputError, signinLink;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private TextView inputError, signinLink;
 
     private DatabaseReference userRef;
     private FirebaseDatabase db;
     ActivityResultLauncher<Intent> launcher;
     private Button googleSignUp;
-
-    private final String PASSKEY = "4RK2a3WlICVwoQ5yUGSjpsQ0ysc2";
 
     public SignUpFragment() {
         // Required empty public constructor
@@ -81,6 +77,43 @@ public class SignUpFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sign_up, container, false);
 
+        setup(view);
+
+        signinLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loadFragment(new LoginView());
+            }
+        });
+
+        signupButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signup();
+            }
+        });
+
+        googleSignUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                        .requestIdToken(getString(R.string.default_web_client_id))
+                        .requestEmail()
+                        .build();
+
+                GoogleSignInClient client = GoogleSignIn.getClient(getActivity(), options);
+
+                Intent intent = client.getSignInIntent();
+                launcher.launch(intent);
+            }
+        });
+
+        return view;
+
+    }
+
+    private void setup(View view) {
         auth = FirebaseAuth.getInstance();
         signupEmail = view.findViewById(R.id.emailInput);
         signupPassword = view.findViewById(R.id.passwordInput);
@@ -93,45 +126,12 @@ public class SignUpFragment extends Fragment {
         signinLink = view.findViewById(R.id.signInLink);
         googleSignUp = view.findViewById(R.id.signUpWithGoogleButton);
 
-        UserData.addUserstoDatabase();
-
-        Activity activity = getActivity();
-        setSignUpLauncher();
-
-        signinLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                loadFragment(new LoginView());
-            }
-        });
-
         db = FirebaseDatabase.getInstance(FIREBASE_LINK);
         userRef = db.getReference(USER_DATA);
 
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signup();
-            }
-        });
+        UserData.addUserstoDatabase();
 
-        googleSignUp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                GoogleSignInOptions options = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                        .requestIdToken(getString(R.string.default_web_client_id))
-                        .requestEmail()
-                        .build();
-
-                GoogleSignInClient client = GoogleSignIn.getClient(activity, options);
-
-                Intent intent = client.getSignInIntent();
-                launcher.launch(intent);
-            }
-        });
-
-        return view;
-
+        setSignUpLauncher();
     }
 
     private void setMessage(String msg) {
@@ -195,9 +195,11 @@ public class SignUpFragment extends Fragment {
     }
 
 
-    private boolean notEmpty(String email, String name) {
+    private boolean validInput(String email, String name, String password, String confirmPassword) {
         boolean cond1 = name == null || name.trim().isEmpty();
         boolean cond2 = email == null ||email.trim().isEmpty();
+        boolean cond3 = validPassword(password);
+        boolean cond4 = confirmPassword.equals(password);
         if (cond1) {
             setMessage("Name cannot be empty");
             return false;
@@ -206,12 +208,7 @@ public class SignUpFragment extends Fragment {
             setMessage("Email cannot be empty");
             return false;
         }
-        return true;
-    }
-
-    private boolean validPass(String pass, String conf_pass, String name) {
-        boolean cond4 = conf_pass.equals(pass);
-        if (!validPassword(pass)) {
+        if (!cond3) {
             return false;
         }
         else if (!cond4) {
@@ -221,53 +218,27 @@ public class SignUpFragment extends Fragment {
         return true;
     }
 
+
     private void signup() {
+        String email = signupEmail.getText().toString().trim();
+        String password = signupPassword.getText().toString().trim();
+        String confirmPassword = signupConfirmPassword.getText().toString().trim();
+        String name = fullName.getText().toString().trim();
 
-        userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DataSnapshot> task) {
-                String email = signupEmail.getText().toString().trim();
-                String pass = signupPassword.getText().toString().trim();
-                String confirm_pass = signupConfirmPassword.getText().toString().trim();
-                String name = fullName.getText().toString().trim();
+        boolean validInput = validInput(email, name, password, confirmPassword);
 
-                boolean equalsEmail = false;
-
-                if(notEmpty(email, name)) {
-                    DataSnapshot users = task.getResult();
-                    for(DataSnapshot user:users.getChildren()) {
-                        String currentemail = " ";
-
-                        if (user.hasChild("email")) {
-                            currentemail = user.child("email").getValue(String.class).toString().trim();
-                        }
-                        if (currentemail.equals(email)) {
-                            equalsEmail = true;
-                        }
-
-                    }
-                }
-                if (equalsEmail && notEmpty(email, name)) {
-                    setMessage("Email already accociated with an account");
-                }
-                else if (notEmpty(email, name) && validPass(pass,confirm_pass, name)){
-                    createAccount();
-                }
-
-            }
-        });
+        if (validInput) {
+            createAccountOnFirebase(email, password, name);
+        }
 
     }
 
-    private void createAccount() {
+    private void checkExistingUnverifiedAccount(String name, String email, String password) {
         DatabaseReference unverifiedRef = db.getReference("unverified users");
 
         unverifiedRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                String email = signupEmail.getText().toString().trim();
-                String pass = signupPassword.getText().toString().trim();
-                String name = fullName.getText().toString().trim();
 
                 boolean equalsEmail = false;
                 String oldPassword = "";
@@ -288,20 +259,17 @@ public class SignUpFragment extends Fragment {
 
                 }
                 if (equalsEmail) {
-                    recreateAccount(oldPassword);
+                    recreateAccount(name, email, password, oldPassword);
                 }
                 else {
-                    createAccountOnFirebase(email, pass, name);
+                    setMessage("Email already accociated with an account");
                 }
             }
         });
     }
 
-    private void recreateAccount(String oldPassword) {
+    private void recreateAccount(String name, String email, String password, String oldPassword) {
         DatabaseReference unverifiedRef = db.getReference("unverified users");
-        String email = signupEmail.getText().toString().trim();
-        String password = signupPassword.getText().toString().trim();
-        String name = fullName.getText().toString().trim();
 
         auth.signInWithEmailAndPassword(email, oldPassword)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -320,21 +288,18 @@ public class SignUpFragment extends Fragment {
 
     }
 
-    private void createAccountOnFirebase(String email, String pass, String name) {
-        Activity activity = getActivity();
-        auth.createUserWithEmailAndPassword(email, pass)
+    private void createAccountOnFirebase(String email, String password, String name) {
+        auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                         if (task.isSuccessful()) {
-
                             String id = auth.getCurrentUser().getUid();
-                            initialize(id, email, pass, name);
+                            initialize(id, email, password, name);
                             sendVerification();
-
                         } else {
-                            Toast.makeText(activity, "Signup Failed please try again", Toast.LENGTH_SHORT).show();
+                            checkExistingUnverifiedAccount(name, email, password);
                         }
                     }
                 });
@@ -401,7 +366,7 @@ public class SignUpFragment extends Fragment {
         userRef.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DataSnapshot> task) {
-                UserData.googleLogin(requireContext(),auth.getCurrentUser().getUid());
+                UserData.login(requireContext(),auth.getCurrentUser().getUid());
                 UserData.initialize(getContext());
                 DataSnapshot users = task.getResult();
                 boolean equalsEmail = false;
@@ -433,6 +398,7 @@ public class SignUpFragment extends Fragment {
     }
 
     private void isNewUser() {
+        //for google sign in only
         userRef.get().addOnCompleteListener(task -> {
             DataSnapshot users = task.getResult();
             String userID = auth.getCurrentUser().getUid();
