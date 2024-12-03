@@ -157,7 +157,6 @@ public class SettingActivity extends AppCompatActivity {
         });
 
 
-
         stayLoggedOnSwitch.setOnClickListener(view -> {
 
             if (stayLoggedOnSwitch.isChecked()) {

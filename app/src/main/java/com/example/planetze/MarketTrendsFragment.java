@@ -18,14 +18,10 @@ public class MarketTrendsFragment extends Fragment {
     TextView textview1;
     TextView textview2;
 
-
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
     }
 
     @Override

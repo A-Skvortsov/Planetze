@@ -14,12 +14,11 @@
         android:background="@color/white">
 
         <!-- Habits list display -->
-
         <SearchView
             android:id="@+id/searchView"
             android:layout_width="281dp"
             android:layout_height="61dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="20dp"
             android:queryHint="Search for a habit..."
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -43,11 +42,11 @@
             android:id="@+id/backBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="72dp"
+            android:layout_marginTop="28dp"
             android:layout_marginEnd="128dp"
             android:text="@string/back_btn"
             app:layout_constraintEnd_toStartOf="@+id/applyFilterBtn"
-            app:layout_constraintTop_toBottomOf="@+id/filterPrompt" />
+            app:layout_constraintTop_toBottomOf="@+id/impactSpinner" />
 
         <com.google.android.material.button.MaterialButtonToggleGroup
             android:id="@+id/toggleButton"
@@ -65,10 +64,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/all_habits_btn"
-                android:textColor="@color/palette_turquoise"
-                tools:layout_editor_absoluteX="89dp"
-                tools:layout_editor_absoluteY="411dp"
-                android:backgroundTint="@drawable/toggle_btn_background"/>
+                android:textColor="@color/palette_light_gray"
+                app:backgroundTint="@color/custom_button_group_background"
+                app:rippleColor="@color/palette_turquoise_tint_200"
+                app:strokeColor="@color/palette_turquoise"/>
 
             <Button
                 android:id="@+id/yourHabitsBtn"
@@ -76,10 +75,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/your_habits_btn"
-                android:textColor="@color/palette_turquoise"
-                tools:layout_editor_absoluteX="192dp"
-                tools:layout_editor_absoluteY="22dp"
-                android:backgroundTint="@drawable/toggle_btn_background"/>
+                android:textColor="@color/palette_light_gray"
+                app:backgroundTint="@color/custom_button_group_background"
+                app:rippleColor="@color/palette_turquoise_tint_200"
+                app:strokeColor="@color/palette_turquoise"/>
 
             <Button
                 android:id="@+id/recommendedBtn"
@@ -87,22 +86,21 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/recommended_btn"
-                android:textColor="@color/palette_turquoise"
-                tools:layout_editor_absoluteX="192dp"
-                tools:layout_editor_absoluteY="22dp"
-                android:backgroundTint="@drawable/toggle_btn_background"/>
+                android:textColor="@color/palette_light_gray"
+                app:backgroundTint="@color/custom_button_group_background"
+                app:rippleColor="@color/palette_turquoise_tint_200"
+                app:strokeColor="@color/palette_turquoise"/>
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
 
         <!-- Filter section -->
-
         <Button
             android:id="@+id/actionBtn"
-            style="?attr/materialButtonOutlinedStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="52dp"
             android:text="@string/action_btn_default"
+            app:layout_constraintEnd_toEndOf="@+id/toggleButton"
             app:layout_constraintStart_toStartOf="@+id/listView"
             app:layout_constraintTop_toTopOf="@+id/toggleButton" />
 
@@ -110,9 +108,9 @@
             android:id="@+id/categorySpinner"
             android:layout_width="219dp"
             android:layout_height="49dp"
-            android:layout_marginTop="84dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="@+id/listView"
-            app:layout_constraintTop_toBottomOf="@+id/listView" />
+            app:layout_constraintTop_toBottomOf="@+id/actionBtn" />
 
         <TextView
             android:id="@+id/filterPrompt"
