@@ -19,6 +19,7 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -150,7 +151,11 @@ public class AddActivity extends Fragment {
                 List<String> activity = saveActivity(cat, act, input1, input2);
                 if (edit == 1) {
                     updateFirebase(date, activity, id);  //update firebase (for edit mode)
-                } else {writeToFirebase(date, activity, userId);}  //write list to firebase
+                    Toast.makeText(getContext(), "Edit Saved", Toast.LENGTH_SHORT).show();
+                } else {
+                    writeToFirebase(date, activity, userId);  //write list to firebase
+                    Toast.makeText(getContext(), "Activity Added", Toast.LENGTH_SHORT).show();
+                }
                 EcoTrackerFragment.fetchSnapshot();  //update ecotracker info
                 getParentFragmentManager().popBackStack();
             }
@@ -174,6 +179,7 @@ public class AddActivity extends Fragment {
                                        int position, long id) {
                 if (spinnerListeners) {
                     String selectedCat = (String) parent.getItemAtPosition(position);
+                    txt1.setVisibility(View.INVISIBLE); txt2.setVisibility(View.INVISIBLE);
                     setActivitySpinner(selectedCat, actSpinner);
 
                     box1.clearCheck(); box2.clearCheck();
@@ -219,6 +225,17 @@ public class AddActivity extends Fragment {
      * @param actSpinner
      */
     public void setActivitySpinner(String selectedCat, Spinner actSpinner) {
+        if (selectedCat.equals("Select a Category")) {
+            String[] arr = {msg2};
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                    android.R.layout.simple_spinner_item, arr);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            actSpinner.setAdapter(adapter);
+            int x = adapter.getPosition(msg2);  //inits spinner to  "Select an Activity"
+            actSpinner.setSelection(x);
+            return;
+        }
+
         for (int i = 1; i < activityCats.length; i++) {
             if (selectedCat.equals(activityCats[i])) {
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),

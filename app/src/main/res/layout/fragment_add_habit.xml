@@ -26,6 +26,7 @@
             android:backgroundTint="@color/white"/>
 
         <ListView
+            android:nestedScrollingEnabled="true"
             android:id="@+id/listView"
             android:layout_width="347dp"
             android:layout_height="232dp"
