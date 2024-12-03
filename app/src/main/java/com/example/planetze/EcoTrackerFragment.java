@@ -174,8 +174,8 @@ public class EcoTrackerFragment extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
                     currentHabits = (List<List<String>>) snapshot.getValue();
-                    updateDisplay();
                 } else currentHabits = new ArrayList<>();  //makes it empty
+                updateDisplay();
             }
             @Override
             public void onCancelled(@NonNull DatabaseError error) {}
