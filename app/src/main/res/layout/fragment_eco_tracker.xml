@@ -185,6 +185,7 @@
             tools:layout_editor_absoluteY="616dp" />
 
         <ScrollView
+            android:nestedScrollingEnabled="true"
             android:id="@+id/scrollView2"
             android:layout_width="344dp"
             android:layout_height="171dp"
