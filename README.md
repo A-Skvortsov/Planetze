@@ -128,8 +128,9 @@ ASSUMPTIONS
 IMPLEMENTATION DETAILS/DEVELOPER GUIDE
 
 	1. Libraries/Dependencies  
-		i. MPAndroidChart for Eco Guage charts  
-		ii. MaterialCalendarView, an extension of the built-in CalendarView library, for the Eco Tracker calendar  
+		i. MPAndroidChart for Eco Guage charts (https://github.com/PhilJay/MPAndroidChart)  
+		ii. MaterialCalendarView, an extension of the built-in CalendarView library, for the Eco Tracker calendar (https://github.com/prolificinteractive/material-calendarview)  
+		iii. OpenCSV, a csv file reader, for reading emissions of other countries in Eco Guage comparison chart (https://opencsv.sourceforge.net/)  
 		
 	2. Code Structure  
 		i. Eco Tracker  
