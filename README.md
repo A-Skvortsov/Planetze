@@ -12,13 +12,13 @@
 
 LINKS
 
-This repo: https://github.com/A-Skvortsov/Planetze  
-Jira: https://andreyskvortsov.atlassian.net/jira/software/projects/SCRUM/boards/1  
+This repo: https://github.com/A-Skvortsov/Planetze
+Jira: https://andreyskvortsov.atlassian.net/jira/software/projects/SCRUM/boards/1
 
 EXISTING SIGN-IN CREDENTIALS:
 
 Email: andreyskv49@gmail.com  
-Password: hellohello1  
+Password: hellohello1
 
 USER FLOW/USE INSTRUCTIONS
 
@@ -124,7 +124,7 @@ ASSUMPTIONS
 			a) Since emissions for water bills are not mentioned in Formulas file (water HEATING is mentioned, not water use) emissions for water use are made to be the mean (average) of gas and electricity emissions  
 	18: Eco Guage trendline graph: for any selected time period, if there exist days in the time period for which no activity data is logged by the user, it is assumed that  
 		this is "missing data" and such days are omitted from the trendline graph (as per the advice of Professor Rawad)  
-		
+
 IMPLEMENTATION DETAILS/DEVELOPER INFORMATION
 
 	1. Libraries/Dependencies  
