@@ -128,13 +128,12 @@ ASSUMPTIONS
 IMPLEMENTATION DETAILS/DEVELOPER INFORMATION
 
 	1. Libraries/Dependencies  
-		i. MPAndroidChart for Eco Guage charts (https://github.com/PhilJay/MPAndroidChart)  
-		ii. MaterialCalendarView, an extension of the built-in CalendarView library, for the Eco Tracker calendar (https://github.com/prolificinteractive/material-calendarview)  
-		iii. OpenCSV, a csv file reader, for reading emissions of other countries in Eco Guage comparison chart (https://opencsv.sourceforge.net/)  
-		iv. YouTubePlayer for Eco Hub learning resources videos (https://github.com/PierfrancescoSoffritti/android-youtube-player)  
-		v. FirebaseAuth, to access firebase project for authentication and realtime database (https://firebase.google.com/docs/auth)  
-		vi. Mockito, for unit testing of login module (https://site.mockito.org/)  
-		vii. GoogleSignInClient, to sign in using google (https://developers.google.com/android/reference/com/google/android/gms/auth/api/identity/SignInClient)  
+
+		i. MPAndroidChart for Eco Guage charts  
+		ii. MaterialCalendarView, an extension of the built-in CalendarView library, for the Eco Tracker calendar  
+		iii. FirebaseAuth, to access firebase project for authentication and realtime database
+		iv. Mockito, for unit testing of login module
+		v. GoogleSignInClient, to sign in using google
 		
 	2. Code Structure  
 		i. Eco Tracker  
