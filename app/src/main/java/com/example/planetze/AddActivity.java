@@ -174,6 +174,7 @@ public class AddActivity extends Fragment {
                                        int position, long id) {
                 if (spinnerListeners) {
                     String selectedCat = (String) parent.getItemAtPosition(position);
+                    txt1.setVisibility(View.INVISIBLE); txt2.setVisibility(View.INVISIBLE);
                     setActivitySpinner(selectedCat, actSpinner);
 
                     box1.clearCheck(); box2.clearCheck();
@@ -219,7 +220,18 @@ public class AddActivity extends Fragment {
      * @param actSpinner
      */
     public void setActivitySpinner(String selectedCat, Spinner actSpinner) {
-        for (int i = 1; i < activityCats.length; i++) {
+        if (selectedCat.equals("Select a Category")) {
+            String[] arr = {msg2};
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
+                    android.R.layout.simple_spinner_item, arr);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            actSpinner.setAdapter(adapter);
+            int x = adapter.getPosition(msg2);  //inits spinner to  "Select an Activity"
+            actSpinner.setSelection(x);
+            return;
+        }
+
+        for (int i = 1; i < activityCats.length - 1; i++) {
             if (selectedCat.equals(activityCats[i])) {
                 ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(),
                         android.R.layout.simple_spinner_item, activities[i-1]);

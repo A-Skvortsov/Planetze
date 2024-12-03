@@ -562,8 +562,7 @@ public class EcoTrackerFragment extends Fragment {
 
 
     private boolean isHabit(List<String> list) {
-        double emissions = Double.parseDouble(list.get(2));
-        return emissions < 0 && !list.get(1).equals("Cycling/Walking");
+        return list.size() == 3;
     }
 
 
